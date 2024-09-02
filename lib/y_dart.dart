@@ -1,7 +1,10 @@
-// import 'dart:async';
+library y_dart;
+
 import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'y_dart_bindings_generated.dart' as gen;
 
@@ -21,7 +24,7 @@ final ffi.DynamicLibrary _dylib = () {
   throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
 }();
 
-/// The bindings to the native functions in [_dylib].˝
+/// The bindings to the native functions in [_dylib].
 final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
 
 class YDoc {
@@ -67,6 +70,71 @@ class YDoc {
     }
   }
 
+  Uint8List encodeStateVector() {
+    late Uint8List result;
+    _transaction((txn) {
+      final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
+      final stateVecBinaryPtr = _bindings.ytransaction_state_vector_v1(
+        txn,
+        lenPtr,
+      );
+      final len = lenPtr.value;
+      malloc.free(lenPtr);
+
+      // We could avoid a copy if we had a NativeFinalizer to provide to
+      // asTypedList that performed the equivalent of ybinary_destroy.
+      result = Uint8List.fromList(
+        stateVecBinaryPtr.cast<ffi.Uint8>().asTypedList(len),
+      );
+      _bindings.ybinary_destroy(stateVecBinaryPtr, len);
+    });
+    return result;
+  }
+
+  Uint8List encodeStateAsUpdate(Uint8List stateVector) {
+    late Uint8List result;
+    _transaction((txn) {
+      final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
+      final stateVecPtr = malloc<ffi.Uint8>(stateVector.length);
+      stateVecPtr.asTypedList(stateVector.length).setAll(0, stateVector);
+      final diffPtr = _bindings.ytransaction_state_diff_v1(
+        txn,
+        stateVecPtr.cast<ffi.Char>(),
+        stateVector.length,
+        lenPtr,
+      );
+      malloc.free(stateVecPtr);
+      final diffLen = lenPtr.value;
+      malloc.free(lenPtr);
+
+      // We could avoid a copy if we had a NativeFinalizer to provide to
+      // asTypedList that performed the equivalent of ybinary_destroy.
+      result =
+          Uint8List.fromList(diffPtr.cast<ffi.Uint8>().asTypedList(diffLen));
+      _bindings.ybinary_destroy(diffPtr, diffLen);
+    });
+    return result;
+  }
+
+  void applyUpdate(Uint8List update) {
+    _transaction((txn) {
+      // Copy the buffer into native memory.
+      final updatePtr = malloc<ffi.Uint8>(update.length);
+      updatePtr.asTypedList(update.length).setAll(0, update);
+
+      _bindings.ytransaction_apply(
+          txn, updatePtr.cast<ffi.Char>(), update.length);
+      malloc.free(updatePtr);
+    });
+  }
+
+  // getArray(String name) {
+  //   // TODO free pointers!
+  //   final namePtr = name.toNativeUtf8().cast<Char>();
+  //   final branchPtr = _bindings.yarray(_doc, namePtr);
+  //   // return YArray(array);
+  // }
+
   void transaction(void Function() callback) {
     // If we are inside a transaction, we do not need to create a new one.
     if (YTransaction._fromZoneNullable() != null) {
@@ -81,23 +149,40 @@ class YDoc {
     }, zoneValues: {YTransaction: txn});
   }
 
-  void _transaction(void Function(YTransaction txn) callback) {
+  void _transaction(
+    void Function(ffi.Pointer<gen.TransactionInner> txn) callback,
+  ) {
     transaction(() {
       final txn = YTransaction._fromZone();
-      callback(txn);
+      callback(txn._txn);
     });
   }
 
   void destroy() {
     _bindings.ydoc_destroy(_doc);
   }
+}
 
-  // getArray(String name) {
-  //   // TODO free pointers!
-  //   final namePtr = name.toNativeUtf8().cast<Char>();
-  //   final branchPtr = _bindings.yarray(_doc, namePtr);
-  //   // return YArray(array);
-  // }
+sealed class YTextChange {}
+
+class YTextDeleted extends YTextChange {
+  final int index;
+
+  YTextDeleted(this.index);
+}
+
+class YTextInserted extends YTextChange {
+  final String value;
+  final List<(String, Object)> attributes;
+
+  YTextInserted(this.value, this.attributes);
+}
+
+class YTextRetained extends YTextChange {
+  final int index;
+  final List<(String, Object)> attributes;
+
+  YTextRetained(this.index, this.attributes);
 }
 
 final class YText {
@@ -114,7 +199,7 @@ final class YText {
     _doc._transaction((txn) {
       final textPtr = text.toNativeUtf8().cast<ffi.Char>();
       try {
-        _bindings.ytext_insert(_branch, txn._txn, index, textPtr, ffi.nullptr);
+        _bindings.ytext_insert(_branch, txn, index, textPtr, ffi.nullptr);
       } finally {
         malloc.free(textPtr);
       }
@@ -123,15 +208,16 @@ final class YText {
 
   int get length {
     late int len;
+    // Technically only need a read transaction here.
     _doc._transaction((txn) {
-      len = _bindings.ytext_len(_branch, txn._txn);
+      len = _bindings.ytext_len(_branch, txn);
     });
     return len;
   }
 
   void removeRange({required int start, required int length}) {
     _doc._transaction((txn) {
-      _bindings.ytext_remove_range(_branch, txn._txn, start, length);
+      _bindings.ytext_remove_range(_branch, txn, start, length);
     });
   }
 
@@ -155,7 +241,7 @@ final class YText {
   String toString() {
     late final String result;
     _doc._transaction((txn) {
-      final ptr = _bindings.ytext_string(_branch, txn._txn);
+      final ptr = _bindings.ytext_string(_branch, txn);
       try {
         result = ptr.cast<Utf8>().toDartString();
       } finally {
@@ -190,6 +276,14 @@ class YTransaction {
 
 class YUndoManager {}
 
+class YArray extends DelegatingList<Object> {
+  YArray() : super([]);
+}
+
+class YMap extends DelegatingMap<Object, Object> {
+  YMap() : super({});
+}
+
 /// A very short-lived native function.
 ///
 /// For very short-lived functions, it is fine to call them on the main isolate.
@@ -218,8 +312,6 @@ int random() => _bindings.random();
 //   helperIsolateSendPort.send(request);
 //   return completer.future;
 // }
-
-
 
 /*
 
