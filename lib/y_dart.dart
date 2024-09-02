@@ -1,9 +1,194 @@
 // import 'dart:async';
-import 'dart:ffi';
+import 'dart:async';
+import 'dart:ffi' as ffi;
 import 'dart:io';
-// import 'dart:isolate';
+import 'package:ffi/ffi.dart';
+import 'y_dart_bindings_generated.dart' as gen;
 
-import 'y_dart_bindings_generated.dart';
+const String _libName = 'y_dart';
+
+/// The dynamic library in which the symbols for [YDartBindings] can be found.
+final ffi.DynamicLibrary _dylib = () {
+  if (Platform.isMacOS || Platform.isIOS) {
+    return ffi.DynamicLibrary.open('$_libName.framework/$_libName');
+  }
+  if (Platform.isAndroid || Platform.isLinux) {
+    return ffi.DynamicLibrary.open('lib$_libName.so');
+  }
+  if (Platform.isWindows) {
+    return ffi.DynamicLibrary.open('$_libName.dll');
+  }
+  throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
+}();
+
+/// The bindings to the native functions in [_dylib].˝
+final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
+
+class YDoc {
+  YDoc._(this._doc);
+
+  // Generates a doc with a random id.
+  // TODO create other constructors.
+  factory YDoc() {
+    final doc = _bindings.ydoc_new();
+    return YDoc._(doc);
+  }
+
+  factory YDoc.clone(YDoc doc) {
+    final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
+    return YDoc._(clonedDocPtr);
+  }
+
+  final ffi.Pointer<gen.YDoc> _doc;
+
+  late final int id = _bindings.ydoc_id(_doc);
+
+  late final String guid = () {
+    final ptr = _bindings.ydoc_guid(_doc);
+    final String result = ptr.cast<Utf8>().toDartString();
+    _bindings.ystring_destroy(ptr);
+    return result;
+  }();
+
+  late final ffi.Pointer<ffi.Char> _collectionId =
+      _bindings.ydoc_collection_id(_doc);
+
+  late final String? collectionId = _collectionId == ffi.nullptr
+      ? null
+      : _collectionId.cast<Utf8>().toDartString();
+
+  YText getText(String name) {
+    final namePtr = name.toNativeUtf8().cast<ffi.Char>();
+    try {
+      final branchPtr = _bindings.ytext(_doc, namePtr);
+      return YText._(branchPtr, this);
+    } finally {
+      malloc.free(namePtr);
+    }
+  }
+
+  void transaction(void Function() callback) {
+    // If we are inside a transaction, we do not need to create a new one.
+    if (YTransaction._fromZoneNullable() != null) {
+      callback();
+      return;
+    }
+
+    final txn = YTransaction._(this);
+    runZoned(() {
+      callback();
+      txn._commit();
+    }, zoneValues: {YTransaction: txn});
+  }
+
+  void _transaction(void Function(YTransaction txn) callback) {
+    transaction(() {
+      final txn = YTransaction._fromZone();
+      callback(txn);
+    });
+  }
+
+  void destroy() {
+    _bindings.ydoc_destroy(_doc);
+  }
+
+  // getArray(String name) {
+  //   // TODO free pointers!
+  //   final namePtr = name.toNativeUtf8().cast<Char>();
+  //   final branchPtr = _bindings.yarray(_doc, namePtr);
+  //   // return YArray(array);
+  // }
+}
+
+final class YText {
+  // TODO free this once closed
+  final ffi.Pointer<gen.Branch> _branch;
+  final YDoc _doc;
+
+  YText._(this._branch, this._doc);
+
+  void append(String text) => insert(index: length, text: text);
+
+  void insert({required int index, required String text}) {
+    // TODO support text attributes
+    _doc._transaction((txn) {
+      final textPtr = text.toNativeUtf8().cast<ffi.Char>();
+      try {
+        _bindings.ytext_insert(_branch, txn._txn, index, textPtr, ffi.nullptr);
+      } finally {
+        malloc.free(textPtr);
+      }
+    });
+  }
+
+  int get length {
+    late int len;
+    _doc._transaction((txn) {
+      len = _bindings.ytext_len(_branch, txn._txn);
+    });
+    return len;
+  }
+
+  void removeRange({required int start, required int length}) {
+    _doc._transaction((txn) {
+      _bindings.ytext_remove_range(_branch, txn._txn, start, length);
+    });
+  }
+
+  // void _observe(void Function() callback) {
+  //   _observeRaw((_, event) {
+  //     // What can we do with YTextEvent?
+  //     callback();
+  //   });
+  // }
+
+  // void _observeRaw(void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>) callback) {
+  //   final callbackPointer = ffi.Pointer.fromFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>)>(callback);
+  //   final subscription = _bindings.ytext_observe(_branch, ffi.nullptr, callbackPointer);
+  //   // TODO: Handle subscription cleanup
+  // }
+
+  // Does this make sense for fomatted text?
+  // String operator [](int index);
+
+  @override
+  String toString() {
+    late final String result;
+    _doc._transaction((txn) {
+      final ptr = _bindings.ytext_string(_branch, txn._txn);
+      try {
+        result = ptr.cast<Utf8>().toDartString();
+      } finally {
+        _bindings.ystring_destroy(ptr);
+      }
+    });
+    return result;
+  }
+}
+
+class YTransaction {
+  final ffi.Pointer<gen.TransactionInner> _txn;
+  final bool writable;
+
+  YTransaction._init(this._txn, this.writable);
+
+  factory YTransaction._(YDoc doc) {
+    // Note that there's a read transaction too
+    final txn = _bindings.ydoc_write_transaction(doc._doc, 0, ffi.nullptr);
+    const writable = true; // _bindings.ytransaction_writeable(txn) == 1;
+    return YTransaction._init(txn, writable);
+  }
+
+  void _commit() {
+    _bindings.ytransaction_commit(_txn);
+  }
+
+  static YTransaction _fromZone() => Zone.current[YTransaction] as YTransaction;
+  static YTransaction? _fromZoneNullable() =>
+      Zone.current[YTransaction] as YTransaction?;
+}
+
+class YUndoManager {}
 
 /// A very short-lived native function.
 ///
@@ -34,24 +219,7 @@ int random() => _bindings.random();
 //   return completer.future;
 // }
 
-const String _libName = 'y_dart';
 
-/// The dynamic library in which the symbols for [YDartBindings] can be found.
-final DynamicLibrary _dylib = () {
-  if (Platform.isMacOS || Platform.isIOS) {
-    return DynamicLibrary.open('$_libName.framework/$_libName');
-  }
-  if (Platform.isAndroid || Platform.isLinux) {
-    return DynamicLibrary.open('lib$_libName.so');
-  }
-  if (Platform.isWindows) {
-    return DynamicLibrary.open('$_libName.dll');
-  }
-  throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-}();
-
-/// The bindings to the native functions in [_dylib].
-final YDartBindings _bindings = YDartBindings(_dylib);
 
 /*
 

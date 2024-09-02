@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:y_dart/y_dart.dart' as y_dart;
+import 'package:y_dart/y_dart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,10 +15,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late int randomResult;
 
+  late final _controller = TextEditingController();
+  late final yDoc = YDoc();
+  late final yText = yDoc.getText('name');
+
   @override
   void initState() {
     super.initState();
-    randomResult = y_dart.random();
+    randomResult = random();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,6 +57,17 @@ class _MyAppState extends State<MyApp> {
                   style: textStyle,
                   textAlign: TextAlign.center,
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      yText.append(" ${DateTime.now().toIso8601String()}");
+                    });
+                  },
+                  child: const Text("Append"),
+                ),
+                Text('Text length: ${yText.length}'),
+                const Center(child: CircularProgressIndicator()),
+                Text(yText.toString()),
               ],
             ),
           ),
