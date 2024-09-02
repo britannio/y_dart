@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
+# yrs = { path = "../yrs", version = "0.21.1", features = ["weak"] }
+yrs = { version = "0.21.1", features = ["weak"] }
+serde_json = { version = "1.0" }
 
 # For FFI
 [lib]
