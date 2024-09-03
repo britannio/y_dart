@@ -167,18 +167,29 @@ class YDoc {
   //   // return YArray(array);
   // }
 
-  void transaction(void Function() callback) {
-    // If we are inside a transaction, we do not need to create a new one.
-    if (YTransaction._fromZoneNullable() != null) {
-      callback();
-      return;
+  void transaction(void Function() callback, {Uint8List? origin}) {
+    void innterTxn() {
+      // If we are inside a transaction, we do not need to create a new one.
+      if (YTransaction._fromZoneNullable() != null) {
+        // Note that this ignores origin!
+        // Would it be better to store the origin in a zoneValue so we could
+        // nest origins while maintaining the same transaction?
+        callback();
+        return;
+      }
+
+      final txn = YTransaction._(this, origin);
+      runZoned(() {
+        callback();
+        txn._commit();
+      }, zoneValues: {YTransaction: txn});
     }
 
-    final txn = YTransaction._(this);
-    runZoned(() {
-      callback();
-      txn._commit();
-    }, zoneValues: {YTransaction: txn});
+    if (origin != null) {
+      runZoned(() => innterTxn(), zoneValues: {#y_crdt_txn_origin: origin});
+    } else {
+      innterTxn();
+    }
   }
 
   void _transaction(
@@ -287,14 +298,22 @@ final class YText {
 class YTransaction {
   final ffi.Pointer<gen.TransactionInner> _txn;
   final bool writable;
+  final Uint8List? origin;
 
-  YTransaction._init(this._txn, this.writable);
+  YTransaction._init(this._txn, this.writable, this.origin);
 
-  factory YTransaction._(YDoc doc) {
-    // Note that there's a read transaction too
-    final txn = _bindings.ydoc_write_transaction(doc._doc, 0, ffi.nullptr);
+  factory YTransaction._(YDoc doc, Uint8List? origin) {
+    final originLen = origin?.length ?? 0;
+    final originPtr = malloc<ffi.Uint8>(originLen);
+    originPtr.asTypedList(originLen).setAll(0, origin ?? []);
+
+    final txn = _bindings.ydoc_write_transaction(
+      doc._doc,
+      originLen,
+      origin != null ? originPtr.cast<ffi.Char>() : ffi.nullptr,
+    );
     const writable = true; // _bindings.ytransaction_writeable(txn) == 1;
-    return YTransaction._init(txn, writable);
+    return YTransaction._init(txn, writable, origin);
   }
 
   void _commit() {
@@ -306,7 +325,13 @@ class YTransaction {
       Zone.current[YTransaction] as YTransaction?;
 }
 
-class YUndoManager {}
+class YUndoManager {
+  // Constructor with the shared type to manage
+  // optionalloy a Set of tracked origins??
+  void undo() {}
+  void redo() {}
+  void stopCapturing() {}
+}
 
 class YArray extends DelegatingList<Object> {
   YArray() : super([]);
