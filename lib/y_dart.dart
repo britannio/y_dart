@@ -36,7 +36,7 @@ typedef NativeTextObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
 
 mixin _YObservable {
-  static bool shouldEmit(ffi.Pointer<ffi.Void> idPtr) {
+  static bool _shouldEmit(ffi.Pointer<ffi.Void> idPtr) {
     final id = idPtr.cast<ffi.Uint64>().value;
     return _subscriptions.containsKey(id) && !_subscriptions[id]!.isPaused;
   }
@@ -44,7 +44,7 @@ mixin _YObservable {
   static int _nextObserveId = 0;
   static final Map<int, StreamController<dynamic>> _subscriptions = {};
 
-  static StreamController<T> controller<T>(ffi.Pointer<ffi.Void> idPtr) {
+  static StreamController<T> _controller<T>(ffi.Pointer<ffi.Void> idPtr) {
     final id = idPtr.cast<ffi.Uint64>().value;
     if (!_subscriptions.containsKey(id)) {
       throw StateError('No subscription found for id: $id');
@@ -230,8 +230,8 @@ class YDoc with _YObservable {
     int dataLen,
     ffi.Pointer<ffi.Char> data,
   ) {
-    if (!_YObservable.shouldEmit(idPtr)) return;
-    final streamController = _YObservable.controller<Uint8List>(idPtr);
+    if (!_YObservable._shouldEmit(idPtr)) return;
+    final streamController = _YObservable._controller<Uint8List>(idPtr);
     // don't use _bindings.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
@@ -310,34 +310,30 @@ class YDoc with _YObservable {
 sealed class YTextChange {}
 
 class YTextDeleted extends YTextChange {
-  final int index;
+  final int length;
 
-  YTextDeleted(this.index);
+  YTextDeleted(this.length);
 }
 
 class YTextInserted extends YTextChange {
   final String value;
-  final List<(String, Object)> attributes;
+  final Map<String, Object> attributes;
 
   YTextInserted(this.value, this.attributes);
 }
 
 class YTextRetained extends YTextChange {
-  final int index;
-  final List<(String, Object)> attributes;
+  final int length;
+  final Map<String, Object> attributes;
 
-  YTextRetained(this.index, this.attributes);
+  YTextRetained(this.length, this.attributes);
 }
 
-final class YText {
+final class YText with _YObservable {
   YText._(this._branch, this._doc);
   // TODO free this once closed
   final ffi.Pointer<gen.Branch> _branch;
   final YDoc _doc;
-
-  int _nextObserveId = 0;
-  static final Map<int, (StreamController<Uint8List> sc, bool paused)>
-      _observeSubscriptions = {};
 
   void append(String text) => insert(index: length, text: text);
 
@@ -365,54 +361,47 @@ final class YText {
     });
   }
 
-  // static void _observeCallback(
-  //   ffi.Pointer<ffi.Void> idPtr,
-  //   ffi.Pointer<gen.YTextEvent> event,
-  // ) {
-  //   final observeId = idPtr.cast<ffi.Uint64>().value;
-  //   if (!_observeSubscriptions.containsKey(observeId)) return;
-  //   final (streamController, paused) = _observeSubscriptions[observeId]!;
-  //   if (paused) return;
-  //   final deltaLenPtr = malloc<ffi.Uint32>();
-  //   final delta = _bindings.ytext_event_delta(event, deltaLenPtr);
-  //   final deltaLen = deltaLenPtr.value;
-  //   malloc.free(deltaLenPtr);
-  // }
+  static YTextChange _convertDeltaOut(ffi.Pointer<gen.YDeltaOut> delta) {
+    // TODO implement this
+    final ref = delta.ref;
+    switch (ref.tag) {
+      case gen.Y_EVENT_CHANGE_ADD:
+      // return YTextInserted(ref.insert.toDartString(), ref.attributes);
+      case gen.Y_EVENT_CHANGE_DELETE:
+      // return YTextDeleted(ref.len);
+      case gen.Y_EVENT_CHANGE_RETAIN:
+      // return YTextRetained(ref.len, ref.attributes);
+      default:
+        throw Exception('Unknown YDeltaOutTag: $ref.tag');
+    }
+  }
 
-  // Stream<YTextChange> listen() {
-  //   final callbackPtr =
-  //       ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
-  //   final observeId = _nextObserveId++;
-  //   final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+  static void _observeCallback(
+    ffi.Pointer<ffi.Void> idPtr,
+    ffi.Pointer<gen.YTextEvent> event,
+  ) {
+    if (!_YObservable._shouldEmit(idPtr)) return;
 
-  //   final subscription = _bindings.ytext_observe(
-  //     _branch,
-  //     observeIdPtr.cast<ffi.Void>(),
-  //     callbackPtr,
-  //   );
-  //   final streamController = StreamController<YTextChange>(
-  //     onListen: () {},
-  //     onCancel: () {
-  //       _bindings.yunobserve(subscription);
-  //       // _observeSubscriptions.remove(observeId);
-  //       malloc.free(observeIdPtr);
-  //     },
-  //     sync: true,
-  //   );
-  // }
+    final deltaLenPtr = malloc<ffi.Uint32>();
+    final delta = _bindings.ytext_event_delta(event, deltaLenPtr);
+    final deltaLen = deltaLenPtr.value;
+    malloc.free(deltaLenPtr);
+    final textChange = _convertDeltaOut(delta);
+    _bindings.ytext_delta_destroy(delta, deltaLen);
 
-  // void _observe(void Function() callback) {
-  //   _observeRaw((_, event) {
-  //     // What can we do with YTextEvent?
-  //     callback();
-  //   });
-  // }
+    final streamController = _YObservable._controller<YTextChange>(idPtr);
+    streamController.add(textChange);
+  }
 
-  // void _observeRaw(void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>) callback) {
-  //   final callbackPointer = ffi.Pointer.fromFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>)>(callback);
-  //   final subscription = _bindings.ytext_observe(_branch, ffi.nullptr, callbackPointer);
-  //   // TODO: Handle subscription cleanup
-  // }
+  StreamSubscription<YTextChange> listen(void Function(YTextChange) callback) {
+    final callbackPtr =
+        ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
+
+    return _listen<YTextChange>(
+      callback,
+      (state) => _bindings.ytext_observe(_branch, state, callbackPtr),
+    );
+  }
 
   // Does this make sense for fomatted text?
   // String operator [](int index);
