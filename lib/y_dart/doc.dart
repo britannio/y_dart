@@ -1,5 +1,8 @@
 part of 'all.dart';
 
+typedef NativeDocObserveCallback = ffi.Void Function(
+    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
+
 class YDoc with _YObservable {
   YDoc._(this._doc);
 
@@ -84,6 +87,14 @@ class YDoc with _YObservable {
     final branchPtr = _bindings.yxmlfragment(_doc, namePtr);
     malloc.free(namePtr);
     return YXml._(this, branchPtr);
+  }
+
+  YUndoManager getUndoManager({int captureTimeoutMillis = 0}) {
+    final options = calloc<gen.YUndoManagerOptions>();
+    options.ref.capture_timeout_millis = captureTimeoutMillis;
+    final undoManagerPtr = _bindings.yundo_manager(_doc, options);
+    calloc.free(options);
+    return YUndoManager._(undoManagerPtr);
   }
 
   Uint8List state() {
@@ -193,7 +204,7 @@ class YDoc with _YObservable {
     // return streamController.stream.listen(callback);
   }
 
-  void transaction(void Function() callback, {Uint8List? origin}) {
+  void transaction(void Function() callback, {YOrigin? origin}) {
     void innterTxn() {
       // If we are inside a transaction, we do not need to create a new one.
       if (YTransaction._fromZoneNullable() != null) {

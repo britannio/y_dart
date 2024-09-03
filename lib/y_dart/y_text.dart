@@ -1,5 +1,8 @@
 part of 'all.dart';
 
+typedef NativeTextObserveCallback = ffi.Void Function(
+    ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
+
 final class YText extends YType with _YObservable {
   YText._(ffi.Pointer<gen.Branch> branch, this._doc) : super._(branch);
   final YDoc _doc;

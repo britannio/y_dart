@@ -2,7 +2,8 @@ import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  demo1();
+  // demo1();
+  demo3UndoManager();
 }
 
 void demo1() {
@@ -46,4 +47,21 @@ void demo2() async {
 
   d1.getText('test').append('Hello, world!');
   print(d2.getText('test').toString());
+}
+
+void demo3UndoManager() {
+  final d1 = YDoc();
+  final undoManager = d1.getUndoManager();
+  final origin = YOrigin.fromString('alice');
+  undoManager.addOrigin(origin);
+
+  final t = d1.getText('test');
+  undoManager.addScope(t);
+  t.append('Hello, world!');
+  d1.transaction(() => t.append('second'), origin: origin);
+  t.append('third');
+
+  undoManager.undo();
+  undoManager.undo(); // Redundant.
+  log(t.toString());
 }
