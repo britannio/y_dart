@@ -58,7 +58,6 @@ class YDoc {
         shouldLoad == null ? options.should_load : (shouldLoad ? 1 : 0);
 
     final doc = _bindings.ydoc_new_with_options(options);
-
     if (guidPtr != null) malloc.free(guidPtr);
     if (collectionIdPtr != null) malloc.free(collectionIdPtr);
     return YDoc._(doc);
@@ -95,12 +94,30 @@ class YDoc {
 
   YText getText(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
-    try {
-      final branchPtr = _bindings.ytext(_doc, namePtr);
-      return YText._(branchPtr, this);
-    } finally {
-      malloc.free(namePtr);
-    }
+    final branchPtr = _bindings.ytext(_doc, namePtr);
+    malloc.free(namePtr);
+    return YText._(branchPtr, this);
+  }
+
+  YArray getArray(String name) {
+    final namePtr = name.toNativeUtf8().cast<ffi.Char>();
+    final branchPtr = _bindings.yarray(_doc, namePtr);
+    malloc.free(namePtr);
+    return YArray._(this, branchPtr);
+  }
+
+  YMap getMap(String name) {
+    final namePtr = name.toNativeUtf8().cast<ffi.Char>();
+    final branchPtr = _bindings.ymap(_doc, namePtr);
+    malloc.free(namePtr);
+    return YMap._(this, branchPtr);
+  }
+
+  YXml getXml(String name) {
+    final namePtr = name.toNativeUtf8().cast<ffi.Char>();
+    final branchPtr = _bindings.yxmlfragment(_doc, namePtr);
+    malloc.free(namePtr);
+    return YXml._(this, branchPtr);
   }
 
   Uint8List state() {
@@ -222,13 +239,6 @@ class YDoc {
     return streamController.stream.listen(callback);
   }
 
-  // getArray(String name) {
-  //   // TODO free pointers!
-  //   final namePtr = name.toNativeUtf8().cast<Char>();
-  //   final branchPtr = _bindings.yarray(_doc, namePtr);
-  //   // return YArray(array);
-  // }
-
   void transaction(void Function() callback, {Uint8List? origin}) {
     void innterTxn() {
       // If we are inside a transaction, we do not need to create a new one.
@@ -303,11 +313,8 @@ final class YText {
     // TODO support text attributes
     _doc._transaction((txn) {
       final textPtr = text.toNativeUtf8().cast<ffi.Char>();
-      try {
-        _bindings.ytext_insert(_branch, txn, index, textPtr, ffi.nullptr);
-      } finally {
-        malloc.free(textPtr);
-      }
+      _bindings.ytext_insert(_branch, txn, index, textPtr, ffi.nullptr);
+      malloc.free(textPtr);
     });
   }
 
@@ -357,7 +364,7 @@ final class YText {
   }
 }
 
-class YTransaction {
+final class YTransaction {
   final ffi.Pointer<gen.TransactionInner> _txn;
   final bool writable;
   final Uint8List? origin;
@@ -387,7 +394,7 @@ class YTransaction {
       Zone.current[YTransaction] as YTransaction?;
 }
 
-class YUndoManager {
+final class YUndoManager {
   // Constructor with the shared type to manage
   // optionalloy a Set of tracked origins??
   void undo() {}
@@ -395,12 +402,30 @@ class YUndoManager {
   void stopCapturing() {}
 }
 
-class YArray extends DelegatingList<Object> {
-  YArray() : super([]);
+final class YArray extends DelegatingList<Object> {
+  YArray._(
+    this._doc,
+    this._branch,
+  ) : super([]);
+  final YDoc _doc;
+  final ffi.Pointer<gen.Branch> _branch;
 }
 
-class YMap extends DelegatingMap<Object, Object> {
-  YMap() : super({});
+final class YMap extends DelegatingMap<Object, Object> {
+  YMap._(
+    this._doc,
+    this._branch,
+  ) : super({});
+
+  final YDoc _doc;
+  final ffi.Pointer<gen.Branch> _branch;
+}
+
+final class YXml {
+  YXml._(this._doc, this._branch);
+
+  final YDoc _doc;
+  final ffi.Pointer<gen.Branch> _branch;
 }
 
 /// A longer lived native function, which occupies the thread calling it.
