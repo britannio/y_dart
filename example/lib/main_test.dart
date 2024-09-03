@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
@@ -6,9 +7,10 @@ void main() {
   text.append('Hello, world!');
 
   final d2 = YDoc();
-  final d2StateVector = d2.encodeStateVector();
-  final diff = d1.encodeStateAsUpdate(d2StateVector);
-  d2.applyUpdate(diff);
+  final d2Version = d2.state();
+  final diff = d1.diff(d2Version);
+  print(diff);
+  d2.sync(diff);
 
-  print(d2.getText('test').toString());
+  log(d2.getText('test').toString());
 }

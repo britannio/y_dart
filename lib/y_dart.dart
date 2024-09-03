@@ -30,10 +30,34 @@ final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
 class YDoc {
   YDoc._(this._doc);
 
-  // Generates a doc with a random id.
-  // TODO create other constructors.
-  factory YDoc() {
-    final doc = _bindings.ydoc_new();
+  factory YDoc({
+    int? id,
+    String? guid,
+    String? collectionId,
+    bool? skipGc,
+    bool? autoLoad,
+    bool? shouldLoad,
+  }) {
+    final options = _bindings.yoptions();
+
+    options.id = id ?? options.id;
+
+    final guidPtr = guid?.toNativeUtf8().cast<ffi.Char>();
+    options.guid = guidPtr ?? options.guid;
+
+    final collectionIdPtr = collectionId?.toNativeUtf8().cast<ffi.Char>();
+    options.collection_id = collectionIdPtr ?? options.collection_id;
+
+    options.skip_gc = skipGc == null ? options.skip_gc : (skipGc ? 1 : 0);
+    options.auto_load =
+        autoLoad == null ? options.auto_load : (autoLoad ? 1 : 0);
+    options.should_load =
+        shouldLoad == null ? options.should_load : (shouldLoad ? 1 : 0);
+
+    final doc = _bindings.ydoc_new_with_options(options);
+
+    if (guidPtr != null) malloc.free(guidPtr);
+    if (collectionIdPtr != null) malloc.free(collectionIdPtr);
     return YDoc._(doc);
   }
 
@@ -44,8 +68,10 @@ class YDoc {
 
   final ffi.Pointer<gen.YDoc> _doc;
 
+  /// A unique client identifier for the document.
   late final int id = _bindings.ydoc_id(_doc);
 
+  /// A unique identifier for the document.
   late final String guid = () {
     final ptr = _bindings.ydoc_guid(_doc);
     final String result = ptr.cast<Utf8>().toDartString();
@@ -70,7 +96,7 @@ class YDoc {
     }
   }
 
-  Uint8List encodeStateVector() {
+  Uint8List state() {
     late Uint8List result;
     _transaction((txn) {
       final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
@@ -91,16 +117,18 @@ class YDoc {
     return result;
   }
 
-  Uint8List encodeStateAsUpdate(Uint8List stateVector) {
+  Uint8List diff(Uint8List? stateVector) {
+    final sv = stateVector ?? Uint8List.fromList([0]);
     late Uint8List result;
     _transaction((txn) {
       final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
-      final stateVecPtr = malloc<ffi.Uint8>(stateVector.length);
-      stateVecPtr.asTypedList(stateVector.length).setAll(0, stateVector);
+      final stateVecPtr = malloc<ffi.Uint8>(sv.length);
+      stateVecPtr.asTypedList(sv.length).setAll(0, sv);
+
       final diffPtr = _bindings.ytransaction_state_diff_v1(
         txn,
         stateVecPtr.cast<ffi.Char>(),
-        stateVector.length,
+        sv.length,
         lenPtr,
       );
       malloc.free(stateVecPtr);
@@ -109,21 +137,25 @@ class YDoc {
 
       // We could avoid a copy if we had a NativeFinalizer to provide to
       // asTypedList that performed the equivalent of ybinary_destroy.
-      result =
-          Uint8List.fromList(diffPtr.cast<ffi.Uint8>().asTypedList(diffLen));
+      result = Uint8List.fromList(
+        diffPtr.cast<ffi.Uint8>().asTypedList(diffLen),
+      );
       _bindings.ybinary_destroy(diffPtr, diffLen);
     });
     return result;
   }
 
-  void applyUpdate(Uint8List update) {
+  void sync(Uint8List update) {
     _transaction((txn) {
       // Copy the buffer into native memory.
       final updatePtr = malloc<ffi.Uint8>(update.length);
       updatePtr.asTypedList(update.length).setAll(0, update);
 
       _bindings.ytransaction_apply(
-          txn, updatePtr.cast<ffi.Char>(), update.length);
+        txn,
+        updatePtr.cast<ffi.Char>(),
+        update.length,
+      );
       malloc.free(updatePtr);
     });
   }
@@ -284,14 +316,7 @@ class YMap extends DelegatingMap<Object, Object> {
   YMap() : super({});
 }
 
-/// A very short-lived native function.
-///
-/// For very short-lived functions, it is fine to call them on the main isolate.
-/// They will block the Dart execution while running the native function, so
-/// only do this for native functions which are guaranteed to be short-lived.
-// int sum(int a, int b) => _bindings.sum(a, b);
 
-int random() => _bindings.random();
 
 /// A longer lived native function, which occupies the thread calling it.
 ///
