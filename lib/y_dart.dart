@@ -27,10 +27,55 @@ final ffi.DynamicLibrary _dylib = () {
 /// The bindings to the native functions in [_dylib].
 final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
 
-typedef NativeObserveCallback = ffi.Void Function(
+typedef NativeSubscription = ffi.Pointer<gen.YSubscription> Function(
+    ffi.Pointer<ffi.Void> state);
+typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-class YDoc {
+typedef NativeTextObserveCallback = ffi.Void Function(
+    ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
+
+mixin _YObservable {
+  static bool shouldEmit(ffi.Pointer<ffi.Void> idPtr) {
+    final id = idPtr.cast<ffi.Uint64>().value;
+    return _subscriptions.containsKey(id) && !_subscriptions[id]!.isPaused;
+  }
+
+  static int _nextObserveId = 0;
+  static final Map<int, StreamController<dynamic>> _subscriptions = {};
+
+  static StreamController<T> controller<T>(ffi.Pointer<ffi.Void> idPtr) {
+    final id = idPtr.cast<ffi.Uint64>().value;
+    if (!_subscriptions.containsKey(id)) {
+      throw StateError('No subscription found for id: $id');
+    }
+    final streamController = _subscriptions[id]!;
+    return streamController as StreamController<T>;
+  }
+
+  StreamSubscription<T> _listen<T>(
+    void Function(T) callback,
+    NativeSubscription subscribe,
+  ) {
+    final observeId = _nextObserveId++;
+    final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+
+    final ySubscription = subscribe(observeIdPtr.cast<ffi.Void>());
+    final streamController = StreamController<T>(
+      onCancel: () {
+        _bindings.yunobserve(ySubscription);
+        _subscriptions.remove(observeId);
+        malloc.free(observeIdPtr);
+      },
+      sync: true,
+    );
+
+    _subscriptions[observeId] = streamController;
+    return streamController.stream.listen(callback);
+  }
+}
+
+class YDoc with _YObservable {
   YDoc._(this._doc);
 
   factory YDoc({
@@ -67,10 +112,6 @@ class YDoc {
     final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
     return YDoc._(clonedDocPtr);
   }
-
-  static int _nextObserveId = 0;
-  static final Map<int, (StreamController<Uint8List> sc, bool paused)>
-      _observeSubscriptions = {};
 
   final ffi.Pointer<gen.YDoc> _doc;
 
@@ -189,10 +230,8 @@ class YDoc {
     int dataLen,
     ffi.Pointer<ffi.Char> data,
   ) {
-    final observeId = idPtr.cast<ffi.Uint64>().value;
-    if (!_observeSubscriptions.containsKey(observeId)) return;
-    final (streamController, paused) = _observeSubscriptions[observeId]!;
-    if (paused) return;
+    if (!_YObservable.shouldEmit(idPtr)) return;
+    final streamController = _YObservable.controller<Uint8List>(idPtr);
     // don't use _bindings.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
@@ -201,42 +240,32 @@ class YDoc {
 
   StreamSubscription<Uint8List> listen(void Function(Uint8List) callback) {
     final callbackPtr =
-        ffi.Pointer.fromFunction<NativeObserveCallback>(_observeCallback);
-    final observeId = _nextObserveId++;
-    final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+        ffi.Pointer.fromFunction<NativeDocObserveCallback>(_observeCallback);
 
-    final subscription = _bindings.ydoc_observe_updates_v1(
-      _doc,
-      observeIdPtr.cast<ffi.Void>(),
-      callbackPtr,
-    );
-    final streamController = StreamController<Uint8List>(
-      onListen: () {},
-      onPause: () {
-        _observeSubscriptions[observeId] = (
-          _observeSubscriptions[observeId]!.$1,
-          true,
-        );
-      },
-      onResume: () {
-        _observeSubscriptions[observeId] = (
-          _observeSubscriptions[observeId]!.$1,
-          false,
-        );
-      },
-      onCancel: () {
-        _bindings.yunobserve(subscription);
-        _observeSubscriptions.remove(observeId);
-        malloc.free(observeIdPtr);
-      },
-      // Should be safe as we only add to the stream in the last line of the
-      // callback
-      sync: true,
+    return _listen<Uint8List>(
+      callback,
+      (state) => _bindings.ydoc_observe_updates_v1(_doc, state, callbackPtr),
     );
 
-    _observeSubscriptions[observeId] = (streamController, false);
+    // final subscription = _bindings.ydoc_observe_updates_v1(
+    //   _doc,
+    //   observeIdPtr.cast<ffi.Void>(),
+    //   callbackPtr,
+    // );
+    // final streamController = StreamController<Uint8List>(
+    //   onCancel: () {
+    //     _bindings.yunobserve(subscription);
+    //     _observeSubscriptions.remove(observeId);
+    //     malloc.free(observeIdPtr);
+    //   },
+    //   // Should be safe as we only add to the stream in the last line of the
+    //   // callback
+    //   sync: true,
+    // );
 
-    return streamController.stream.listen(callback);
+    // _observeSubscriptions[observeId] = (streamController, false);
+
+    // return streamController.stream.listen(callback);
   }
 
   void transaction(void Function() callback, {Uint8List? origin}) {
@@ -301,11 +330,14 @@ class YTextRetained extends YTextChange {
 }
 
 final class YText {
+  YText._(this._branch, this._doc);
   // TODO free this once closed
   final ffi.Pointer<gen.Branch> _branch;
   final YDoc _doc;
 
-  YText._(this._branch, this._doc);
+  int _nextObserveId = 0;
+  static final Map<int, (StreamController<Uint8List> sc, bool paused)>
+      _observeSubscriptions = {};
 
   void append(String text) => insert(index: length, text: text);
 
@@ -332,6 +364,42 @@ final class YText {
       _bindings.ytext_remove_range(_branch, txn, start, length);
     });
   }
+
+  // static void _observeCallback(
+  //   ffi.Pointer<ffi.Void> idPtr,
+  //   ffi.Pointer<gen.YTextEvent> event,
+  // ) {
+  //   final observeId = idPtr.cast<ffi.Uint64>().value;
+  //   if (!_observeSubscriptions.containsKey(observeId)) return;
+  //   final (streamController, paused) = _observeSubscriptions[observeId]!;
+  //   if (paused) return;
+  //   final deltaLenPtr = malloc<ffi.Uint32>();
+  //   final delta = _bindings.ytext_event_delta(event, deltaLenPtr);
+  //   final deltaLen = deltaLenPtr.value;
+  //   malloc.free(deltaLenPtr);
+  // }
+
+  // Stream<YTextChange> listen() {
+  //   final callbackPtr =
+  //       ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
+  //   final observeId = _nextObserveId++;
+  //   final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+
+  //   final subscription = _bindings.ytext_observe(
+  //     _branch,
+  //     observeIdPtr.cast<ffi.Void>(),
+  //     callbackPtr,
+  //   );
+  //   final streamController = StreamController<YTextChange>(
+  //     onListen: () {},
+  //     onCancel: () {
+  //       _bindings.yunobserve(subscription);
+  //       // _observeSubscriptions.remove(observeId);
+  //       malloc.free(observeIdPtr);
+  //     },
+  //     sync: true,
+  //   );
+  // }
 
   // void _observe(void Function() callback) {
   //   _observeRaw((_, event) {
@@ -427,105 +495,3 @@ final class YXml {
   final YDoc _doc;
   final ffi.Pointer<gen.Branch> _branch;
 }
-
-/// A longer lived native function, which occupies the thread calling it.
-///
-/// Do not call these kind of native functions in the main isolate. They will
-/// block Dart execution. This will cause dropped frames in Flutter applications.
-/// Instead, call these native functions on a separate isolate.
-///
-/// Modify this to suit your own use case. Example use cases:
-///
-/// 1. Reuse a single isolate for various different kinds of requests.
-/// 2. Use multiple helper isolates for parallel execution.
-// Future<int> sumAsync(int a, int b) async {
-//   final SendPort helperIsolateSendPort = await _helperIsolateSendPort;
-//   final int requestId = _nextSumRequestId++;
-//   final _SumRequest request = _SumRequest(requestId, a, b);
-//   final Completer<int> completer = Completer<int>();
-//   _sumRequests[requestId] = completer;
-//   helperIsolateSendPort.send(request);
-//   return completer.future;
-// }
-
-/*
-
-/// A request to compute `sum`.
-///
-/// Typically sent from one isolate to another.
-class _SumRequest {
-  final int id;
-  final int a;
-  final int b;
-
-  const _SumRequest(this.id, this.a, this.b);
-}
-
-/// A response with the result of `sum`.
-///
-/// Typically sent from one isolate to another.
-class _SumResponse {
-  final int id;
-  final int result;
-
-  const _SumResponse(this.id, this.result);
-}
-
-/// Counter to identify [_SumRequest]s and [_SumResponse]s.
-int _nextSumRequestId = 0;
-
-/// Mapping from [_SumRequest] `id`s to the completers corresponding to the correct future of the pending request.
-final Map<int, Completer<int>> _sumRequests = <int, Completer<int>>{};
-
-/// The SendPort belonging to the helper isolate.
-Future<SendPort> _helperIsolateSendPort = () async {
-  // The helper isolate is going to send us back a SendPort, which we want to
-  // wait for.
-  final Completer<SendPort> completer = Completer<SendPort>();
-
-  // Receive port on the main isolate to receive messages from the helper.
-  // We receive two types of messages:
-  // 1. A port to send messages on.
-  // 2. Responses to requests we sent.
-  final ReceivePort receivePort = ReceivePort()
-    ..listen((dynamic data) {
-      if (data is SendPort) {
-        // The helper isolate sent us the port on which we can sent it requests.
-        completer.complete(data);
-        return;
-      }
-      if (data is _SumResponse) {
-        // The helper isolate sent us a response to a request we sent.
-        final Completer<int> completer = _sumRequests[data.id]!;
-        _sumRequests.remove(data.id);
-        completer.complete(data.result);
-        return;
-      }
-      throw UnsupportedError('Unsupported message type: ${data.runtimeType}');
-    });
-
-  // Start the helper isolate.
-  await Isolate.spawn((SendPort sendPort) async {
-    final ReceivePort helperReceivePort = ReceivePort()
-      ..listen((dynamic data) {
-        // On the helper isolate listen to requests and respond to them.
-        if (data is _SumRequest) {
-          final int result = _bindings.sum_long_running(data.a, data.b);
-          final _SumResponse response = _SumResponse(data.id, result);
-          sendPort.send(response);
-          return;
-        }
-        throw UnsupportedError('Unsupported message type: ${data.runtimeType}');
-      });
-
-    // Send the port to the main isolate on which we can receive requests.
-    sendPort.send(helperReceivePort.sendPort);
-  }, receivePort.sendPort);
-
-  // Wait until the helper isolate has sent us back the SendPort on which we
-  // can start sending requests.
-  return completer.future;
-}();
-
-
-*/
