@@ -3,8 +3,13 @@ part of 'all.dart';
 typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-class YDoc with _YObservable {
-  YDoc._(this._doc);
+typedef NativeDocDestroy
+    = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>;
+
+class YDoc with _YObservable implements ffi.Finalizable {
+  YDoc._(this._doc) {
+    _docFinalizer.attach(this, _doc.cast<ffi.Void>());
+  }
 
   factory YDoc({
     int? id,
@@ -40,6 +45,8 @@ class YDoc with _YObservable {
     final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
     return YDoc._(clonedDocPtr);
   }
+
+  static final _docFinalizer = ffi.NativeFinalizer(YFree.yDoc);
 
   final ffi.Pointer<gen.YDoc> _doc;
 
@@ -108,12 +115,7 @@ class YDoc with _YObservable {
       final len = lenPtr.value;
       malloc.free(lenPtr);
 
-      // We could avoid a copy if we had a NativeFinalizer to provide to
-      // asTypedList that performed the equivalent of ybinary_destroy.
-      result = Uint8List.fromList(
-        stateVecBinaryPtr.cast<ffi.Uint8>().asTypedList(len),
-      );
-      _bindings.ybinary_destroy(stateVecBinaryPtr, len);
+      result = stateVecBinaryPtr.asTypedListFinalized(len);
     });
     return result;
   }
@@ -136,12 +138,7 @@ class YDoc with _YObservable {
       final diffLen = lenPtr.value;
       malloc.free(lenPtr);
 
-      // We could avoid a copy if we had a NativeFinalizer to provide to
-      // asTypedList that performed the equivalent of ybinary_destroy.
-      result = Uint8List.fromList(
-        diffPtr.cast<ffi.Uint8>().asTypedList(diffLen),
-      );
-      _bindings.ybinary_destroy(diffPtr, diffLen);
+      result = diffPtr.asTypedListFinalized(diffLen);
     });
     return result;
   }
@@ -216,9 +213,5 @@ class YDoc with _YObservable {
       final txn = YTransaction._fromZone();
       callback(txn._txn);
     });
-  }
-
-  void destroy() {
-    _bindings.ydoc_destroy(_doc);
   }
 }

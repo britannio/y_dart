@@ -2414,6 +2414,31 @@ class YDartBindings {
   late final _ystring_destroy =
       _ystring_destroyPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
 
+  ffi.Pointer<YBinaryDestroyInput> ybinary_destroy_struct() {
+    return _ybinary_destroy_struct();
+  }
+
+  late final _ybinary_destroy_structPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<YBinaryDestroyInput> Function()>>(
+          'ybinary_destroy_struct');
+  late final _ybinary_destroy_struct = _ybinary_destroy_structPtr
+      .asFunction<ffi.Pointer<YBinaryDestroyInput> Function()>();
+
+  void ybinary_destroy_from_struct(
+    ffi.Pointer<YBinaryDestroyInput> input,
+  ) {
+    return _ybinary_destroy_from_struct(
+      input,
+    );
+  }
+
+  late final _ybinary_destroy_from_structPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<YBinaryDestroyInput>)>>(
+      'ybinary_destroy_from_struct');
+  late final _ybinary_destroy_from_struct = _ybinary_destroy_from_structPtr
+      .asFunction<void Function(ffi.Pointer<YBinaryDestroyInput>)>();
+
   /// Frees all memory-allocated resources bound to a given binary returned from Yrs document API.
   /// Unlike strings binaries are not null-terminated and can contain null characters inside,
   /// therefore a size of memory to be released must be explicitly provided.
@@ -8393,6 +8418,14 @@ final class YXmlAttr extends ffi.Struct {
   external ffi.Pointer<ffi.Char> name;
 
   external ffi.Pointer<ffi.Char> value;
+}
+
+/// A structure representing a binary to be destroyed via `ybinary_destroy`.
+final class YBinaryDestroyInput extends ffi.Struct {
+  external ffi.Pointer<ffi.Char> binary_ptr;
+
+  @ffi.Uint32()
+  external int binary_len;
 }
 
 /// Struct representing a state of a document. It contains the last seen clocks for blocks submitted

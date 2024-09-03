@@ -55,7 +55,8 @@ final class YMap {
   //   return result;
   // }
 
-  Iterable<MapEntry<String, YOutput>> get entries sync* {
+  Iterable<MapEntry<String, YOutput>> get entries {
+    final list = <MapEntry<String, YOutput>>[];
     // Note that it's more efficient to create an Iterator: https://github.com/dart-lang/sdk/issues/51806
     late ffi.Pointer<gen.YMapIter> iter;
     _doc._transaction((txn) => iter = _bindings.ymap_iter(_branch, txn));
@@ -64,10 +65,12 @@ final class YMap {
       final entry = outputPtr.ref;
       final key = entry.key.cast<Utf8>().toDartString();
       final value = YOutput.fromFfi(entry.value.ref);
-      yield MapEntry(key, value);
+      list.add(MapEntry(key, value));
     }
-    // Will this always run once we're done or only after iterating all elements?
+    // this isn't called if we don't hit the end of the map
+    // Otherwise we could safely use a sync* iterable w/ yield
     _bindings.ymap_iter_destroy(iter);
+    return list;
   }
 
   void forEach(void Function(String key, YOutput value) action) {

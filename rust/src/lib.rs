@@ -379,6 +379,36 @@ pub unsafe extern "C" fn ystring_destroy(str: *mut c_char) {
     }
 }
 
+/// A structure representing a binary to be destroyed via `ybinary_destroy`.
+#[repr(C)]
+pub struct YBinaryDestroyInput {
+    pub binary_ptr: *mut c_char,
+    pub binary_len: u32,
+}
+
+impl Default for YBinaryDestroyInput {
+    fn default() -> Self {
+        Self {
+            binary_ptr: std::ptr::null_mut(),
+            binary_len: Default::default(),
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn ybinary_destroy_struct() -> *mut YBinaryDestroyInput {
+    Box::into_raw(Box::new(YBinaryDestroyInput::default()))
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn ybinary_destroy_from_struct(input: *mut YBinaryDestroyInput) {
+    if !input.is_null() {
+        let input = Box::from_raw(input);
+        ybinary_destroy(input.binary_ptr, input.binary_len);
+        drop(input);
+    }
+}
+
 /// Frees all memory-allocated resources bound to a given binary returned from Yrs document API.
 /// Unlike strings binaries are not null-terminated and can contain null characters inside,
 /// therefore a size of memory to be released must be explicitly provided.

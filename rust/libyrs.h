@@ -475,6 +475,14 @@ typedef struct YXmlAttr {
 } YXmlAttr;
 
 /**
+ * A structure representing a binary to be destroyed via `ybinary_destroy`.
+ */
+typedef struct YBinaryDestroyInput {
+  char *binary_ptr;
+  uint32_t binary_len;
+} YBinaryDestroyInput;
+
+/**
  * Subscription to any kind of observable events, like `ymap_observe`, `ydoc_observe_updates_v1` etc.
  * This subscription can be destroyed by calling `yunobserve` function, which will cause to unsubscribe
  * correlated callback.
@@ -1117,6 +1125,10 @@ void yxmlattr_destroy(struct YXmlAttr *attr);
  * Yrs document API. Yrs strings don't use libc malloc, so calling `free()` on them will fault.
  */
 void ystring_destroy(char *str);
+
+struct YBinaryDestroyInput *ybinary_destroy_struct(void);
+
+void ybinary_destroy_from_struct(struct YBinaryDestroyInput *input);
 
 /**
  * Frees all memory-allocated resources bound to a given binary returned from Yrs document API.

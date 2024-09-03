@@ -13,11 +13,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late int randomResult;
+  // late int randomResult;
 
   late final _controller = TextEditingController();
-  late final yDoc = YDoc();
-  late final yText = yDoc.getText('name');
+  late YDoc yDoc = YDoc();
+  YText get yText => yDoc.getText('name');
 
   @override
   void initState() {
@@ -51,10 +51,27 @@ class _MyAppState extends State<MyApp> {
                   textAlign: TextAlign.center,
                 ),
                 spacerSmall,
-                Text(
-                  'random() = $randomResult',
-                  style: textStyle,
-                  textAlign: TextAlign.center,
+                ElevatedButton(
+                  child: const Text('New Document'),
+                  onPressed: () {
+                    setState(() {
+                      yDoc = YDoc();
+                    });
+                  },
+                ),
+                // Button to add copious amounts of text under the 'spam' key
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      var text = yDoc.getText('spam');
+                      yDoc.transaction(() {
+                        for (var i = 0; i < 1000; i++) {
+                          text.append(kLipsum);
+                        }
+                      });
+                    });
+                  },
+                  child: const Text("Append"),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -75,3 +92,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+const kLipsum =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";

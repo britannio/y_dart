@@ -1,9 +1,15 @@
 part of 'all.dart';
 
-final class YUndoManager {
-  YUndoManager._(this._undoManager);
-  // TODO use finalizer to run destroy function
+final class YUndoManager implements ffi.Finalizable {
+  YUndoManager._(this._undoManager) {
+    _undoManagerFinalizer.attach(this, _undoManager.cast<ffi.Void>());
+  }
+
+  static final _nativeDestroyFn =
+      _dylib.lookup<NativeFreeFn>('yundo_manager_destroy');
+  static final _undoManagerFinalizer = ffi.NativeFinalizer(_nativeDestroyFn);
   final ffi.Pointer<gen.YUndoManager> _undoManager;
+
   // Constructor with the shared type to manage
   // optionalloy a Set of tracked origins??
   void undo() {
