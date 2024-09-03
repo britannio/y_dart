@@ -27,6 +27,9 @@ final ffi.DynamicLibrary _dylib = () {
 /// The bindings to the native functions in [_dylib].
 final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
 
+typedef NativeObserveCallback = ffi.Void Function(
+    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
+
 class YDoc {
   YDoc._(this._doc);
 
@@ -65,6 +68,10 @@ class YDoc {
     final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
     return YDoc._(clonedDocPtr);
   }
+
+  static int _nextObserveId = 0;
+  static final Map<int, (StreamController<Uint8List> sc, bool paused)>
+      _observeSubscriptions = {};
 
   final ffi.Pointer<gen.YDoc> _doc;
 
@@ -158,6 +165,58 @@ class YDoc {
       );
       malloc.free(updatePtr);
     });
+  }
+
+  static void _observeCallback(
+    ffi.Pointer<ffi.Void> idPtr,
+    int dataLen,
+    ffi.Pointer<ffi.Char> data,
+  ) {
+    final observeId = idPtr.cast<ffi.Uint64>().value;
+    if (!_observeSubscriptions.containsKey(observeId)) return;
+    final (streamController, paused) = _observeSubscriptions[observeId]!;
+    if (paused) return;
+    // don't use _bindings.ybinary_destroy as we don't own the pointer
+    final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
+    final bufferCopy = Uint8List.fromList(buffer);
+    streamController.add(bufferCopy);
+  }
+
+  StreamSubscription<Uint8List> listen(void Function(Uint8List) callback) {
+    final callbackPtr =
+        ffi.Pointer.fromFunction<NativeObserveCallback>(_observeCallback);
+    final observeId = _nextObserveId++;
+    final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+
+    final subscription = _bindings.ydoc_observe_updates_v1(
+      _doc,
+      observeIdPtr.cast<ffi.Void>(),
+      callbackPtr,
+    );
+    final streamController = StreamController<Uint8List>(
+      onListen: () {},
+      onPause: () {
+        _observeSubscriptions[observeId] = (
+          _observeSubscriptions[observeId]!.$1,
+          true,
+        );
+      },
+      onResume: () {
+        _observeSubscriptions[observeId] = (
+          _observeSubscriptions[observeId]!.$1,
+          false,
+        );
+      },
+      onCancel: () {
+        _bindings.yunobserve(subscription);
+        _observeSubscriptions.remove(observeId);
+        malloc.free(observeIdPtr);
+      },
+    );
+
+    _observeSubscriptions[observeId] = (streamController, false);
+
+    return streamController.stream.listen(callback);
   }
 
   // getArray(String name) {
