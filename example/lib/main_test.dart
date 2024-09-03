@@ -27,6 +27,9 @@ void demo1() {
   d2.sync(diff);
 
   log(d2.getText('test').toString());
+
+  // final map = d2.getMap('test');
+  // final res = map[null];
 }
 
 void demo2() async {
