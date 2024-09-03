@@ -182,26 +182,6 @@ class YDoc with _YObservable {
       callback,
       (state) => _bindings.ydoc_observe_updates_v1(_doc, state, callbackPtr),
     );
-
-    // final subscription = _bindings.ydoc_observe_updates_v1(
-    //   _doc,
-    //   observeIdPtr.cast<ffi.Void>(),
-    //   callbackPtr,
-    // );
-    // final streamController = StreamController<Uint8List>(
-    //   onCancel: () {
-    //     _bindings.yunobserve(subscription);
-    //     _observeSubscriptions.remove(observeId);
-    //     malloc.free(observeIdPtr);
-    //   },
-    //   // Should be safe as we only add to the stream in the last line of the
-    //   // callback
-    //   sync: true,
-    // );
-
-    // _observeSubscriptions[observeId] = (streamController, false);
-
-    // return streamController.stream.listen(callback);
   }
 
   void transaction(void Function() callback, {YOrigin? origin}) {
