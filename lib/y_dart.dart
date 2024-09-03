@@ -212,6 +212,9 @@ class YDoc {
         _observeSubscriptions.remove(observeId);
         malloc.free(observeIdPtr);
       },
+      // Should be safe as we only add to the stream in the last line of the
+      // callback
+      sync: true,
     );
 
     _observeSubscriptions[observeId] = (streamController, false);
@@ -399,8 +402,6 @@ class YArray extends DelegatingList<Object> {
 class YMap extends DelegatingMap<Object, Object> {
   YMap() : super({});
 }
-
-
 
 /// A longer lived native function, which occupies the thread calling it.
 ///
