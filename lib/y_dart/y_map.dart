@@ -84,14 +84,12 @@ final class _YMapIterator<T extends Object?>
     });
     // This is safe even if we create new YTypes as freeing the iterator does
     // not drop the rest of the data.
-    _finalizer.attach(this, _iter.cast<ffi.Void>());
+    YFree.mapIterFinalizer.attach(this, _iter.cast<ffi.Void>());
   }
   final YMap<T> _map;
   final YDoc _doc;
   late final ffi.Pointer<gen.YMapIter> _iter;
   YMapEntry<T?>? _current;
-
-  static final _finalizer = ffi.NativeFinalizer(YFree.mapIter);
 
   @override
   YMapEntry<T?> get current {
@@ -103,8 +101,6 @@ final class _YMapIterator<T extends Object?>
 
   @override
   bool moveNext() {
-    // TODO destroy via `ymap_entry_destroy`
-    // Does ymap_entry_destroy drop the value pointer? YES
     final mapEntryPtr = _bindings.ymap_iter_next(_iter);
     if (mapEntryPtr == ffi.nullptr) return false;
     final key = mapEntryPtr.ref.key.cast<Utf8>().toDartString();

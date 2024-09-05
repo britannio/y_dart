@@ -4,7 +4,7 @@ typedef NativeTextObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
 
 final class YText extends YType with _YObservable {
-  YText._(ffi.Pointer<gen.Branch> branch, this._doc) : super._(branch);
+  YText._(super._branch, this._doc) : super._();
   final YDoc _doc;
 
   void append(String text) => insert(index: length, text: text);

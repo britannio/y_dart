@@ -79,24 +79,29 @@ final class YArray<T> extends YType {
     // TODO: implement insert
   }
 
-  // void insertAll(int index, Iterable<T> iterable) {
-  //   _doc._transaction((txn) {
-  //     final inputs = iterable.map((e) => _YInput._(e)).toList();
-  //     final inputsPtr = malloc<gen.YInput>(inputs.length);
-  //     for (var i = 0; i < inputs.length; i++) {
-  //       inputsPtr[i] = inputs[i]._input;
-  //     }
-  //     // I think a GC could occur in this gap
-  //     _bindings.yarray_insert_range(
-  //       _branch,
-  //       txn,
-  //       index,
-  //       inputsPtr,
-  //       inputs.length,
-  //     );
-  //     malloc.free(inputsPtr);
-  //   });
-  // }
+  void insertAll(int index, Iterable<T> iterable) {
+    _doc._transaction((txn) {
+      final inputs = iterable.map((e) => _YInput._(e)).toList();
+      final inputsPtr = malloc<gen.YInput>(inputs.length);
+      for (var i = 0; i < inputs.length; i++) {
+        inputsPtr[i] = inputs[i]._input;
+      }
+      _bindings.yarray_insert_range(
+        _branch,
+        txn,
+        index,
+        inputsPtr,
+        inputs.length,
+      );
+      // Here to prevent the GC from deeming the wrapping input objects to be
+      // dead & thus destroying their native resources before we perform the
+      // native operation
+      for (final input in inputs) {
+        input.dispose();
+      }
+      malloc.free(inputsPtr);
+    });
+  }
 
   bool get isEmpty => length == 0;
 
@@ -144,10 +149,10 @@ final class YArray<T> extends YType {
     }
   }
 
-  Iterable<T> whereType<T>() sync* {
+  Iterable<V> whereType<V>() sync* {
     final iter = iterator;
     while (iter.moveNext()) {
-      if (iter.current is T) yield iter.current as T;
+      if (iter.current is V) yield iter.current as V;
     }
   }
 }

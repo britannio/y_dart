@@ -197,7 +197,6 @@ final class YInputJson extends _YInput {
 
   late final _ptr = jsonEncode(value).toNativeUtf8();
 
-  // TODO will we preemptively free before we're done with _input?
   @override
   late final gen.YInput _input = _bindings.yinput_json(_ptr.cast());
 
