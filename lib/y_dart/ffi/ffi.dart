@@ -44,6 +44,9 @@ abstract final class YFree {
   static final mapIter = _dylib.lookup<NativeFreeFn>('ymap_iter_destroy');
   static final mapIterFinalizer = ffi.NativeFinalizer(mapIter);
 
+  static final arrayIter = _dylib.lookup<NativeFreeFn>('yarray_iter_destroy');
+  static final arrayIterFinalizer = ffi.NativeFinalizer(mapIter);
+
   static final mapEntry = _dylib.lookup<NativeFreeFn>('ymap_entry_destroy');
   static final mapEntryFinalizer = ffi.NativeFinalizer(mapEntry);
 

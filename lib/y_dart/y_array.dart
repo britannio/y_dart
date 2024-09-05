@@ -1,22 +1,5 @@
 part of 'all.dart';
 
-final class YArrayIterator<T> implements Iterator<T> {
-// This doesn't make use of the ffi iterator methods but the performance might
-// be similar anyway
-  YArrayIterator(this._array);
-  final YArray _array;
-  int _index = -1;
-
-  @override
-  T get current => _array[_index];
-
-  @override
-  bool moveNext() {
-    _index++;
-    return _index < _array.length;
-  }
-}
-
 final class YArray<T> extends YType {
   YArray._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
   final YDoc _doc;
@@ -107,7 +90,7 @@ final class YArray<T> extends YType {
 
   bool get isNotEmpty => !isEmpty;
 
-  Iterator<T> get iterator => YArrayIterator<T>(this);
+  Iterator<T> get iterator => YArrayIterator<T>(this, _doc);
 
   void removeAt(int index) {
     _doc._transaction(
@@ -159,5 +142,39 @@ final class YArray<T> extends YType {
   @override
   String toString() {
     return toList().toString();
+  }
+}
+
+final class YArrayIterator<T> implements Iterator<T>, ffi.Finalizable {
+  YArrayIterator(this._array, this._doc) {
+    _doc._transaction((txn) {
+      _iter = _bindings.yarray_iter(_array._branch, txn);
+    });
+    // This is safe even if we create new YTypes as freeing the iterator does
+    // not drop the rest of the data.
+    YFree.arrayIterFinalizer.attach(this, _iter.cast());
+  }
+  final YArray _array;
+  final YDoc _doc;
+  late final ffi.Pointer<gen.YArrayIter> _iter;
+  T? _current;
+
+  @override
+  T get current {
+    if (_current == null) {
+      throw StateError('Iterator has not been moved to the first element');
+    }
+    return _current!;
+  }
+
+  @override
+  bool moveNext() {
+    final outputPtr = _bindings.yarray_iter_next(_iter);
+    if (outputPtr == ffi.nullptr) return false;
+    // toObject takes ownership of outputPtr and destroys it via
+    // youtput_destroy()
+    final value = _YOutput.toObject<T>(outputPtr, _doc);
+    _current = value;
+    return true;
   }
 }
