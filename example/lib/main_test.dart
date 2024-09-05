@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  demo6TextSubscription();
+  arrayIterRepro();
 }
 
 void demo1() {
@@ -111,4 +111,25 @@ void demo6TextSubscription() {
   log(text.toString());
 
   log(text.toDelta().toString());
+}
+
+void demo7ArraySubscription() {
+  final d = YDoc();
+  final arr = d.getArray<String>('my-array');
+  arr.listen((change) {
+    log("listen: $change");
+  });
+
+  arr.add('1');
+  arr.add('2');
+  arr.add('3');
+  arr.add('4');
+  arr.add('5');
+  arr.add('6');
+  arr.add('7');
+  arr.add('8');
+  arr.add('9');
+  arr.add('10');
+
+  log(arr.toString());
 }
