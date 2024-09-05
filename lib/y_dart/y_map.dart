@@ -1,81 +1,48 @@
 part of 'all.dart';
 
-final class YMap {
-  YMap._(this._doc, this._branch);
+final class YMap<T extends Object?> extends YType {
+  YMap._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
 
   final YDoc _doc;
-  final ffi.Pointer<gen.Branch> _branch;
 
-  YOutput? operator [](String key) {
-    late final YOutput? value;
-    _doc._transaction((txn) {
+  T? operator [](String key) {
+    return _doc._transaction((txn) {
       final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
       final outputPtr = _bindings.ymap_get(_branch, txn, keyPtr);
       malloc.free(keyPtr);
-      value = outputPtr == ffi.nullptr ? null : YOutput.fromFfi(outputPtr.ref);
-      // safe for null pointers
-      _bindings.youtput_destroy(outputPtr);
+      if (outputPtr == ffi.nullptr) return null;
+      return _YOutput.toObject<T?>(outputPtr, _doc);
     });
-    return value;
   }
 
-  void operator []=(String key, YInput value) {
+  void operator []=(String key, T? value) {
     _doc._transaction((txn) {
       final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
       final inputPtr = malloc<gen.YInput>();
-      inputPtr.ref = value._input;
+      inputPtr.ref = _YInput._(value)._input;
       _bindings.ymap_insert(_branch, txn, keyPtr, inputPtr);
       malloc.free(keyPtr);
       malloc.free(inputPtr);
     });
   }
 
-  void addAll(Map<String, YValue> other) => addEntries(other.entries);
+  void addAll(Map<String, T> other) => addEntries(other.entries);
 
-  void addEntries(Iterable<MapEntry<String, YValue>> newEntries) {
-    newEntries
-        .where((e) => e.value is YInput)
-        .forEach((e) => this[e.key] = e.value as YInput);
+  void addEntries(Iterable<MapEntry<String, T>> newEntries) {
+    for (final entry in newEntries) {
+      this[entry.key] = entry.value;
+    }
   }
 
   void clear() =>
       _doc._transaction((txn) => _bindings.ymap_remove_all(_branch, txn));
 
-  // @override
-  // bool containsKey(Object? key) {
-  //   if (key is! String) return false;
-  //   final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
-  //   late bool result;
-  //   _doc._transaction((txn) {
-  //     final outputPtr = _bindings.ymap_get(_branch, txn, keyPtr);
-  //     result = outputPtr != ffi.nullptr;
-  //     _bindings.youtput_destroy(outputPtr);
-  //   });
-  //   malloc.free(keyPtr);
-  //   return result;
-  // }
+  Iterator<MapEntry<String, T?>> get iterator => _YMapIterator<T?>(this, _doc);
 
-  Iterable<MapEntry<String, YOutput>> get entries {
-    final list = <MapEntry<String, YOutput>>[];
-    // Note that it's more efficient to create an Iterator: https://github.com/dart-lang/sdk/issues/51806
-    late ffi.Pointer<gen.YMapIter> iter;
-    _doc._transaction((txn) => iter = _bindings.ymap_iter(_branch, txn));
-    late ffi.Pointer<gen.YMapEntry> outputPtr;
-    while ((outputPtr = _bindings.ymap_iter_next(iter)) != ffi.nullptr) {
-      final entry = outputPtr.ref;
-      final key = entry.key.cast<Utf8>().toDartString();
-      final value = YOutput.fromFfi(entry.value.ref);
-      list.add(MapEntry(key, value));
-    }
-    // this isn't called if we don't hit the end of the map
-    // Otherwise we could safely use a sync* iterable w/ yield
-    _bindings.ymap_iter_destroy(iter);
-    return list;
-  }
-
-  void forEach(void Function(String key, YOutput value) action) {
-    for (final entry in entries) {
-      action(entry.key, entry.value);
+  Iterable<MapEntry<String, T?>> get entries sync* {
+    final iterator = this.iterator;
+    while (iterator.moveNext()) {
+      yield iterator.current;
     }
   }
 
@@ -89,27 +56,64 @@ final class YMap {
     }
   }
 
-  Iterable<YOutput> get values sync* {
+  Iterable<T?> get values sync* {
     for (final entry in entries) {
       yield entry.value;
     }
   }
 
-  int get length {
-    late int len;
-    _doc._transaction((txn) => len = _bindings.ymap_len(_branch, txn));
-    return len;
+  int get length =>
+      _doc._transaction((txn) => _bindings.ymap_len(_branch, txn));
+
+  void remove(String key) {
+    final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
+    _doc._transaction((txn) => _bindings.ymap_remove(_branch, txn, keyPtr));
+    malloc.free(keyPtr);
   }
 
-  YOutput? remove(Object? key) {
-    if (key is! String) return null;
-    final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
-    late YOutput? value;
+  // bool containsKey(String key) => this[key] != null;
+}
+
+typedef YMapEntry<T> = MapEntry<String, T>;
+
+final class _YMapIterator<T extends Object?>
+    implements Iterator<YMapEntry<T?>>, ffi.Finalizable {
+  _YMapIterator(this._map, this._doc) {
     _doc._transaction((txn) {
-      value = this[key];
-      _bindings.ymap_remove(_branch, txn, keyPtr);
+      _iter = _bindings.ymap_iter(_map._branch, txn);
     });
-    malloc.free(keyPtr);
-    return value;
+    // This is safe even if we create new YTypes as freeing the iterator does
+    // not drop the rest of the data.
+    _finalizer.attach(this, _iter.cast<ffi.Void>());
+  }
+  final YMap<T> _map;
+  final YDoc _doc;
+  late final ffi.Pointer<gen.YMapIter> _iter;
+  YMapEntry<T?>? _current;
+
+  static final _finalizer = ffi.NativeFinalizer(YFree.mapIter);
+
+  @override
+  YMapEntry<T?> get current {
+    if (_current == null) {
+      throw StateError('Iterator has not been moved to the first element');
+    }
+    return _current!;
+  }
+
+  @override
+  bool moveNext() {
+    // TODO destroy via `ymap_entry_destroy`
+    // Does ymap_entry_destroy drop the value pointer? YES
+    final mapEntryPtr = _bindings.ymap_iter_next(_iter);
+    if (mapEntryPtr == ffi.nullptr) return false;
+    final key = mapEntryPtr.ref.key.cast<Utf8>().toDartString();
+    final value = _YOutput.toObject<T?>(
+      mapEntryPtr.ref.value,
+      _doc,
+      yMapEntryPtr: mapEntryPtr,
+    );
+    _current = MapEntry(key, value);
+    return true;
   }
 }

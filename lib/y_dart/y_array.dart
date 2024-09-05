@@ -1,6 +1,6 @@
 part of 'all.dart';
 
-final class YArrayIterator implements Iterator<YOutput> {
+final class YArrayIterator<T> implements Iterator<T> {
 // This doesn't make use of the ffi iterator methods but the performance might
 // be similar anyway
   YArrayIterator(this._array);
@@ -8,7 +8,7 @@ final class YArrayIterator implements Iterator<YOutput> {
   int _index = 0;
 
   @override
-  YOutput get current => _array[_index];
+  T get current => _array[_index];
 
   @override
   bool moveNext() {
@@ -17,52 +17,52 @@ final class YArrayIterator implements Iterator<YOutput> {
   }
 }
 
-final class YArray extends YType {
+final class YArray<T> extends YType {
   YArray._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
   final YDoc _doc;
 
   int get length => _bindings.yarray_len(_branch);
 
-  List<YOutput> operator +(List<YOutput> other) {
-    // TODO: implement +
-    throw UnimplementedError();
-  }
+  // List<T> operator +(List<T> other) {
+  //   // TODO: implement +
+  //   throw UnimplementedError();
+  // }
 
-  YOutput operator [](int index) {
-    late YOutput result;
+  T operator [](int index) {
+    late T result;
     _doc._transaction((txn) {
       final outputPtr = _bindings.yarray_get(_branch, txn, index);
       if (outputPtr == ffi.nullptr) {
         throw IndexError.withLength(index, length);
       }
-      result = YOutput.fromFfi(outputPtr.ref);
-      _bindings.youtput_destroy(outputPtr);
+      result = _YOutput.toObject(outputPtr, _doc);
     });
     return result;
   }
 
-  void operator []=(int index, YInput value) {
+  void operator []=(int index, T value) {
     _doc._transaction((txn) {
-      final input = value._input;
+      // TODO may need to explicitly dispose
+      final input = _YInput._(value)._input;
       final inputPtr = malloc<gen.YInput>();
       inputPtr.ref = input;
       _bindings.yarray_insert_range(_branch, txn, index, inputPtr, 1);
     });
   }
 
-  void add(YInput value) => insert(length, value);
+  void add(T value) => insert(length, value);
 
-  void addAll(Iterable<YInput> iterable) => insertAll(length, iterable);
+  void addAll(Iterable<T> iterable) => insertAll(length, iterable);
 
-  bool any(bool Function(YOutput element) test) {
+  bool any(bool Function(T element) test) {
     for (var i = 0; i < length; i++) {
       if (test(this[i])) return true;
     }
     return false;
   }
 
-  Map<int, YOutput> asMap() {
-    final result = <int, YOutput>{};
+  Map<int, T> asMap() {
+    final result = <int, T>{};
     for (var i = 0; i < length; i++) {
       result[i] = this[i];
     }
@@ -71,21 +71,28 @@ final class YArray extends YType {
 
   void clear() => removeRange(0, length);
 
-  YOutput elementAt(int index) => this[index];
+  T elementAt(int index) => this[index];
 
-  void insert(int index, YInput element) {
+  void insert(int index, T element) {
     // TODO: implement insert
   }
 
-  void insertAll(int index, Iterable<YInput> iterable) {
+  void insertAll(int index, Iterable<T> iterable) {
     _doc._transaction((txn) {
-      final inputs = iterable.map((e) => e._input).toList();
+      // TODO may need to explicitly dispose
+      final inputs = iterable.map((e) => _YInput._(e)).toList();
       final inputsPtr = malloc<gen.YInput>(inputs.length);
       for (var i = 0; i < inputs.length; i++) {
-        inputsPtr[i] = inputs[i];
+        inputsPtr[i] = inputs[i]._input;
       }
       _bindings.yarray_insert_range(
-          _branch, txn, index, inputsPtr, inputs.length);
+        _branch,
+        txn,
+        index,
+        inputsPtr,
+        inputs.length,
+      );
+      malloc.free(inputsPtr);
     });
   }
 
@@ -93,7 +100,7 @@ final class YArray extends YType {
 
   bool get isNotEmpty => !isEmpty;
 
-  Iterator<YOutput> get iterator => YArrayIterator(this);
+  Iterator<T> get iterator => YArrayIterator<T>(this);
 
   void removeAt(int index) {
     _doc._transaction(
@@ -113,8 +120,8 @@ final class YArray extends YType {
     });
   }
 
-  List<YOutput> toList() {
-    final result = <YOutput>[];
+  List<T> toList() {
+    final result = <T>[];
     final iter = iterator;
     while (iter.moveNext()) {
       result.add(iter.current);
@@ -123,12 +130,12 @@ final class YArray extends YType {
   }
 
   // @override
-  // Set<YOutput> toSet() {
+  // Set<T> toSet() {
   //   // TODO: implement toSet
   //   throw UnimplementedError();
   // }
 
-  Iterable<YOutput> where(bool Function(YOutput element) test) sync* {
+  Iterable<T> where(bool Function(T element) test) sync* {
     final iter = iterator;
     while (iter.moveNext()) {
       if (test(iter.current)) yield iter.current;

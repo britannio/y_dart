@@ -3,13 +3,8 @@ part of 'all.dart';
 typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-typedef NativeDocDestroy
-    = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>;
-
 class YDoc with _YObservable implements ffi.Finalizable {
-  YDoc._(this._doc) {
-    _docFinalizer.attach(this, _doc.cast<ffi.Void>());
-  }
+  YDoc._(this._doc);
 
   factory YDoc({
     int? id,
@@ -38,15 +33,15 @@ class YDoc with _YObservable implements ffi.Finalizable {
     final doc = _bindings.ydoc_new_with_options(options);
     if (guidPtr != null) malloc.free(guidPtr);
     if (collectionIdPtr != null) malloc.free(collectionIdPtr);
-    return YDoc._(doc);
+    final yDoc = YDoc._(doc);
+    YFree.yDocFinalizer.attach(yDoc, doc.cast<ffi.Void>());
+    return yDoc;
   }
 
   factory YDoc.clone(YDoc doc) {
     final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
     return YDoc._(clonedDocPtr);
   }
-
-  static final _docFinalizer = ffi.NativeFinalizer(YFree.yDoc);
 
   final ffi.Pointer<gen.YDoc> _doc;
 
@@ -181,37 +176,40 @@ class YDoc with _YObservable implements ffi.Finalizable {
     );
   }
 
-  void transaction(void Function() callback, {YOrigin? origin}) {
-    void innterTxn() {
+  T transaction<T>(
+    T Function() callback, {
+    YOrigin? origin,
+  }) {
+    T innterTxn() {
       // If we are inside a transaction, we do not need to create a new one.
       if (YTransaction._fromZoneNullable() != null) {
-        // Note that this ignores origin!
-        // Would it be better to store the origin in a zoneValue so we could
-        // nest origins while maintaining the same transaction?
-        callback();
-        return;
+        return callback();
       }
 
       final txn = YTransaction._(this, origin);
-      runZoned(() {
-        callback();
+      return runZoned(() {
+        final result = callback();
         txn._commit();
+        return result;
       }, zoneValues: {YTransaction: txn});
     }
 
     if (origin != null) {
-      runZoned(() => innterTxn(), zoneValues: {#y_crdt_txn_origin: origin});
+      return runZoned(
+        () => innterTxn(),
+        zoneValues: {#y_crdt_txn_origin: origin},
+      );
     } else {
-      innterTxn();
+      return innterTxn();
     }
   }
 
-  void _transaction(
-    void Function(ffi.Pointer<gen.TransactionInner> txn) callback,
+  T _transaction<T>(
+    T Function(ffi.Pointer<gen.TransactionInner> txn) callback,
   ) {
-    transaction(() {
+    return transaction(() {
       final txn = YTransaction._fromZone();
-      callback(txn._txn);
+      return callback(txn._txn);
     });
   }
 }

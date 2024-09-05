@@ -30,11 +30,26 @@ typedef NativeFreeFn
 typedef FreeFn = ffi.Pointer<NativeFreeFn>;
 
 abstract final class YFree {
-  static final FreeFn undoManager =
+  static final mallocFinalizer = ffi.NativeFinalizer(malloc.nativeFree);
+
+  static final undoManager =
       _dylib.lookup<NativeFreeFn>('yundo_manager_destroy');
+  static final undoManagerFinalizer = ffi.NativeFinalizer(undoManager);
+
   static final FreeFn yDoc = _dylib.lookup<NativeFreeFn>('ydoc_destroy');
-  static final FreeFn binary =
-      _dylib.lookup<NativeFreeFn>('ybinary_destroy_struct');
+  static final yDocFinalizer = ffi.NativeFinalizer(yDoc);
+
+  static final binary = _dylib.lookup<NativeFreeFn>('ybinary_destroy_struct');
+  static final binaryFinalizer = ffi.NativeFinalizer(binary);
+
+  static final mapIter = _dylib.lookup<NativeFreeFn>('ymap_iter_destroy');
+  static final mapIterFinalizer = ffi.NativeFinalizer(mapIter);
+
+  static final mapEntry = _dylib.lookup<NativeFreeFn>('ymap_entry_destroy');
+  static final mapEntryFinalizer = ffi.NativeFinalizer(mapEntry);
+
+  static final output = _dylib.lookup<NativeFreeFn>('youtput_destroy');
+  static final outputFinalizer = ffi.NativeFinalizer(output);
 }
 
 extension PointerCharX on ffi.Pointer<ffi.Char> {
