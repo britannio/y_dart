@@ -112,7 +112,8 @@ final class _YOutput extends YValue {
   }
 }
 
-abstract interface class _YInput extends YValue {
+abstract class _YInput extends YValue implements ffi.Finalizable {
+  _YInput._internal();
   factory _YInput._(Object? value) {
     // TODO complete this
     if (value == null) {
@@ -131,64 +132,90 @@ abstract interface class _YInput extends YValue {
     throw Exception('Unsupported value type: ${value.runtimeType}');
   }
   gen.YInput get _input;
+
+  void dispose() {}
 }
 
-final class YInputNull implements _YInput {
+final class YInputNull extends _YInput {
+  YInputNull() : super._internal();
+
   @override
   gen.YInput get _input => _bindings.yinput_null();
 }
 
-final class YInputBool implements _YInput {
-  YInputBool(this.value);
+final class YInputBool extends _YInput {
+  YInputBool(this.value) : super._internal();
   final bool value;
 
   @override
   gen.YInput get _input => _bindings.yinput_bool(value ? 1 : 0);
 }
 
-final class YInputFloat implements _YInput {
-  YInputFloat(this.value);
+final class YInputFloat extends _YInput {
+  YInputFloat(this.value) : super._internal();
   final double value;
 
   @override
   gen.YInput get _input => _bindings.yinput_float(value);
 }
 
-final class YInputLong implements _YInput {
-  YInputLong(this.value);
+final class YInputLong extends _YInput {
+  YInputLong(this.value) : super._internal();
   final int value;
 
   @override
   gen.YInput get _input => _bindings.yinput_long(value);
 }
 
-final class YInputString implements _YInput, ffi.Finalizable {
-  YInputString(this.value) {
-    YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>());
+final class YInputString extends _YInput {
+  YInputString(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>(), detach: this);
   }
   final String value;
 
   late final _ptr = value.toNativeUtf8().cast<ffi.Char>();
   @override
   late final gen.YInput _input = _bindings.yinput_string(_ptr);
+
+  @override
+  void dispose() {
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_ptr);
+  }
 }
 
-final class YInputJson implements _YInput, ffi.Finalizable {
-  YInputJson(this.value) {
-    YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>());
+final class YInputJson extends _YInput {
+  YInputJson(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(
+      this,
+      _ptr.cast(),
+      externalSize: _ptr.length + 1,
+      detach: this,
+    );
   }
   final Object value;
 
-  late final _ptr = jsonEncode(value).toNativeUtf8().cast<ffi.Char>();
+  late final _ptr = jsonEncode(value).toNativeUtf8();
 
   // TODO will we preemptively free before we're done with _input?
   @override
-  late final gen.YInput _input = _bindings.yinput_json(_ptr);
+  late final gen.YInput _input = _bindings.yinput_json(_ptr.cast());
+
+  @override
+  void dispose() {
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_ptr);
+  }
 }
 
-final class YInputBinary implements _YInput, ffi.Finalizable {
-  YInputBinary(this.value) {
-    YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>());
+final class YInputBinary extends _YInput {
+  YInputBinary(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(
+      this,
+      _ptr.cast<ffi.Void>(),
+      externalSize: value.length,
+      detach: this,
+    );
   }
   final Uint8List value;
 
@@ -199,10 +226,16 @@ final class YInputBinary implements _YInput, ffi.Finalizable {
     _ptr.asTypedList(value.length).setAll(0, value);
     return _bindings.yinput_binary(_ptr.cast<ffi.Char>(), value.length);
   }();
+
+  @override
+  void dispose() {
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_ptr);
+  }
 }
 
-final class YInputJsonArray implements _YInput {
-  YInputJsonArray(this.value);
+final class YInputJsonArray extends _YInput {
+  YInputJsonArray(this.value) : super._internal();
   final List<YInputJson> value;
 
   @override
@@ -218,17 +251,20 @@ final class YInputJsonArray implements _YInput {
   }();
 }
 
-final class YInputJsonMap implements _YInput, ffi.Finalizable {
-  YInputJsonMap(this.value);
-  final Map<String, YInputJson> value;
+final class YInputJsonMap extends _YInput {
+  YInputJsonMap(this.value) : super._internal();
+  final Map<String, Object?> value;
 
   @override
   late final gen.YInput _input = () {
     final inputs = value.entries.map((e) {
-      final keyPtr = e.key.toNativeUtf8().cast<ffi.Char>();
+      final k = e.key;
+      final v = e.value;
+      final keyPtr = k.toNativeUtf8().cast<ffi.Char>();
       YFree.mallocFinalizer.attach(this, keyPtr.cast<ffi.Void>());
-      final value = e.value._input;
-      return (keyPtr: keyPtr, value: value);
+      // Be considerate about keeping these YInput objects alive!
+      final valueYInput = _YInput._(v);
+      return (keyPtr: keyPtr, value: valueYInput);
     }).toList();
 
     final keysPtr = malloc<ffi.Pointer<ffi.Char>>(inputs.length);
@@ -237,10 +273,15 @@ final class YInputJsonMap implements _YInput, ffi.Finalizable {
     YFree.mallocFinalizer.attach(this, valuesPtr.cast<ffi.Void>());
     inputs.forEachIndexed((i, pv) {
       keysPtr[i] = pv.keyPtr;
-      valuesPtr[i] = pv.value;
+      valuesPtr[i] = pv.value._input;
     });
 
     final input = _bindings.yinput_json_map(keysPtr, valuesPtr, inputs.length);
+    // Manual disposal here prevents `inputs` from being GCd before we call
+    // yinput_json_map.
+    for (final input in inputs) {
+      input.value.dispose();
+    }
     return input;
   }();
 }

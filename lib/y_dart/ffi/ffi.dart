@@ -24,10 +24,9 @@ final ffi.DynamicLibrary _dylib = () {
 final gen.YDartBindings _bindings = gen.YDartBindings(_dylib);
 
 /// A native function with a single pointer argument.
-typedef NativeFreeFn
-    = ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>;
+typedef NativeFreeFn = ffi.NativeFinalizerFunction;
 
-typedef FreeFn = ffi.Pointer<NativeFreeFn>;
+typedef FreeFn = ffi.Pointer<ffi.NativeFinalizerFunction>;
 
 abstract final class YFree {
   static final mallocFinalizer = ffi.NativeFinalizer(malloc.nativeFree);

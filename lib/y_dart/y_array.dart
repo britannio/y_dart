@@ -42,17 +42,19 @@ final class YArray<T> extends YType {
 
   void operator []=(int index, T value) {
     _doc._transaction((txn) {
-      // TODO may need to explicitly dispose
-      final input = _YInput._(value)._input;
+      /// This is forced to stay alive because it implements [ffi.Finalizable]
+      final yInput = _YInput._(value);
+      final input = yInput._input;
       final inputPtr = malloc<gen.YInput>();
       inputPtr.ref = input;
       _bindings.yarray_insert_range(_branch, txn, index, inputPtr, 1);
+      malloc.free(inputPtr);
     });
   }
 
   void add(T value) => insert(length, value);
 
-  void addAll(Iterable<T> iterable) => insertAll(length, iterable);
+  // void addAll(Iterable<T> iterable) => insertAll(length, iterable);
 
   bool any(bool Function(T element) test) {
     for (var i = 0; i < length; i++) {
@@ -77,24 +79,24 @@ final class YArray<T> extends YType {
     // TODO: implement insert
   }
 
-  void insertAll(int index, Iterable<T> iterable) {
-    _doc._transaction((txn) {
-      // TODO may need to explicitly dispose
-      final inputs = iterable.map((e) => _YInput._(e)).toList();
-      final inputsPtr = malloc<gen.YInput>(inputs.length);
-      for (var i = 0; i < inputs.length; i++) {
-        inputsPtr[i] = inputs[i]._input;
-      }
-      _bindings.yarray_insert_range(
-        _branch,
-        txn,
-        index,
-        inputsPtr,
-        inputs.length,
-      );
-      malloc.free(inputsPtr);
-    });
-  }
+  // void insertAll(int index, Iterable<T> iterable) {
+  //   _doc._transaction((txn) {
+  //     final inputs = iterable.map((e) => _YInput._(e)).toList();
+  //     final inputsPtr = malloc<gen.YInput>(inputs.length);
+  //     for (var i = 0; i < inputs.length; i++) {
+  //       inputsPtr[i] = inputs[i]._input;
+  //     }
+  //     // I think a GC could occur in this gap
+  //     _bindings.yarray_insert_range(
+  //       _branch,
+  //       txn,
+  //       index,
+  //       inputsPtr,
+  //       inputs.length,
+  //     );
+  //     malloc.free(inputsPtr);
+  //   });
+  // }
 
   bool get isEmpty => length == 0;
 
