@@ -26,9 +26,10 @@ mixin _YObservable {
     NativeSubscription subscribe,
   ) {
     final observeId = _nextObserveId++;
-    final observeIdPtr = malloc<ffi.Uint64>()..value = observeId;
+    final ffi.Pointer<ffi.Uint64> observeIdPtr = malloc<ffi.Uint64>();
+    observeIdPtr.value = observeId;
 
-    final ySubscription = subscribe(observeIdPtr.cast<ffi.Void>());
+    final ySubscription = subscribe(observeIdPtr.cast());
     final streamController = StreamController<T>(
       onCancel: () {
         _bindings.yunobserve(ySubscription);

@@ -70,14 +70,14 @@ class YDoc with _YObservable implements ffi.Finalizable {
     return YText._(branchPtr, this);
   }
 
-  YArray getArray(String name) {
+  YArray<T> getArray<T>(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
     final branchPtr = _bindings.yarray(_doc, namePtr);
     malloc.free(namePtr);
     return YArray._(this, branchPtr);
   }
 
-  YMap getMap(String name) {
+  YMap<T> getMap<T>(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
     final branchPtr = _bindings.ymap(_doc, namePtr);
     malloc.free(namePtr);

@@ -5,7 +5,7 @@ final class YArrayIterator<T> implements Iterator<T> {
 // be similar anyway
   YArrayIterator(this._array);
   final YArray _array;
-  int _index = 0;
+  int _index = -1;
 
   @override
   T get current => _array[_index];
@@ -154,5 +154,10 @@ final class YArray<T> extends YType {
     while (iter.moveNext()) {
       if (iter.current is V) yield iter.current as V;
     }
+  }
+
+  @override
+  String toString() {
+    return toList().toString();
   }
 }

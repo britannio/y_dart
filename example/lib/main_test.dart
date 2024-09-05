@@ -2,8 +2,7 @@ import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  // demo1();
-  demo3UndoManager();
+  demo6TextSubscription();
 }
 
 void demo1() {
@@ -64,4 +63,49 @@ void demo3UndoManager() {
   undoManager.undo();
   undoManager.undo(); // Redundant.
   log(t.toString());
+}
+
+void demo4Array() {
+  final d = YDoc();
+  final ls = d.getArray<String>('my-array');
+
+  for (int i = 0; i < 5; i++) {
+    ls[i] = '$i';
+  }
+  log(ls.toString());
+  log('len: ${ls.length}');
+}
+
+void demo5Array() {
+  final d = YDoc();
+  final ls = d.getArray<YDoc>('my-array');
+
+  for (int i = 0; i < 5; i++) {
+    ls[i] = YDoc();
+  }
+  log(ls.toString());
+  log('len: ${ls.length}');
+}
+
+void demo6TextSubscription() {
+  final d = YDoc();
+  final text = d.getText('main');
+  text.listen((change) {
+    log("listen: $change");
+  });
+
+  log('subscribe');
+
+  // d.transaction(() {
+  text.append('the');
+  text.append(' quick');
+  text.append(' brown');
+  text.append(' fox');
+  text.append(' fumps');
+  text.removeRange(start: 20, length: 1);
+  text.insert(index: 20, text: 'j');
+  text.append(' over');
+  // });
+
+  log(text.toString());
 }

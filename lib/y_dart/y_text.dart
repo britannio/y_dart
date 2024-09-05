@@ -19,12 +19,8 @@ final class YText extends YType with _YObservable {
   }
 
   int get length {
-    late int len;
     // Technically only need a read transaction here.
-    _doc._transaction((txn) {
-      len = _bindings.ytext_len(_branch, txn);
-    });
-    return len;
+    return _doc._transaction((txn) => _bindings.ytext_len(_branch, txn));
   }
 
   void removeRange({required int start, required int length}) {
@@ -33,18 +29,24 @@ final class YText extends YType with _YObservable {
     });
   }
 
-  static YTextChange _convertDeltaOut(ffi.Pointer<gen.YDeltaOut> delta) {
-    // TODO implement this
-    final ref = delta.ref;
-    switch (ref.tag) {
+  static YTextChange _convertDeltaOut(gen.YDeltaOut delta) {
+    final len = delta.len;
+    // TODO handle text attributes
+    switch (delta.tag) {
       case gen.Y_EVENT_CHANGE_ADD:
-      // return YTextInserted(ref.insert.toDartString(), ref.attributes);
+        final str = StringBuffer();
+        for (int i = 0; i < len; i++) {
+          final yOut = delta.insert[i];
+          assert(yOut.tag == gen.Y_JSON_STR);
+          str.write(yOut.value.str.cast<Utf8>().toDartString());
+        }
+        return YTextInserted(str.toString(), {});
       case gen.Y_EVENT_CHANGE_DELETE:
-      // return YTextDeleted(ref.len);
+        return YTextDeleted(delta.len);
       case gen.Y_EVENT_CHANGE_RETAIN:
-      // return YTextRetained(ref.len, ref.attributes);
+        return YTextRetained(delta.len, {});
       default:
-        throw Exception('Unknown YDeltaOutTag: $ref.tag');
+        throw Exception('Unknown YDeltaOutTag: $delta.tag');
     }
   }
 
@@ -58,18 +60,22 @@ final class YText extends YType with _YObservable {
     final delta = _bindings.ytext_event_delta(event, deltaLenPtr);
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
-    final textChange = _convertDeltaOut(delta);
+
+    final changes = List.generate(deltaLen, (i) => _convertDeltaOut(delta[i]));
+
     _bindings.ytext_delta_destroy(delta, deltaLen);
 
-    final streamController = _YObservable._controller<YTextChange>(idPtr);
-    streamController.add(textChange);
+    final streamController = _YObservable._controller<List<YTextChange>>(idPtr);
+    streamController.add(changes);
   }
 
-  StreamSubscription<YTextChange> listen(void Function(YTextChange) callback) {
+  StreamSubscription<List<YTextChange>> listen(
+    void Function(List<YTextChange>) callback,
+  ) {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
 
-    return _listen<YTextChange>(
+    return _listen<List<YTextChange>>(
       callback,
       (state) => _bindings.ytext_observe(_branch, state, callbackPtr),
     );

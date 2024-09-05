@@ -7,13 +7,20 @@ final class _YOutput extends YValue {
   static T toObject<T extends Object?>(
     /// Takes ownership of this pointer.
     ffi.Pointer<gen.YOutput> yOutPtr,
-    YDoc doc, {
+    YDoc? doc, {
     /// Used to prevent double free of nested types.
     bool disableFree = false,
     ffi.Pointer<gen.YMapEntry>? yMapEntryPtr,
   }) {
     late Object? result;
     final yOut = yOutPtr.ref;
+
+    assert(
+      yOut.tag <= 0 || doc != null,
+      'must provide doc when parsing YTypes',
+    );
+
+    log('toObject tag: ${yOut.tag}');
 
     switch (yOut.tag) {
       case gen.Y_JSON_BOOL:
@@ -60,19 +67,19 @@ final class _YOutput extends YValue {
         result = null;
         break;
       case gen.Y_TEXT:
-        result = YText._(yOut.value.y_type, doc);
+        result = YText._(yOut.value.y_type, doc!);
         break;
       case gen.Y_ARRAY:
-        result = YArray._(doc, yOut.value.y_type);
+        result = YArray._(doc!, yOut.value.y_type);
         break;
       case gen.Y_MAP:
-        result = YMap._(doc, yOut.value.y_type);
+        result = YMap._(doc!, yOut.value.y_type);
         break;
       case gen.Y_XML_ELEM:
-        result = YXmlElement._(doc, yOut.value.y_type);
+        result = YXmlElement._(doc!, yOut.value.y_type);
         break;
       case gen.Y_XML_TEXT:
-        result = YXmlText._(doc, yOut.value.y_type);
+        result = YXmlText._(doc!, yOut.value.y_type);
         break;
       case gen.Y_DOC:
         result = YDoc._(yOut.value.y_doc);

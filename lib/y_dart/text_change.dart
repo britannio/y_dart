@@ -6,6 +6,11 @@ class YTextDeleted extends YTextChange {
   final int length;
 
   YTextDeleted(this.length);
+
+  @override
+  String toString() {
+    return '{ delete: $length }';
+  }
 }
 
 class YTextInserted extends YTextChange {
@@ -13,6 +18,12 @@ class YTextInserted extends YTextChange {
   final Map<String, Object> attributes;
 
   YTextInserted(this.value, this.attributes);
+
+  @override
+  String toString() {
+    final attrsStr = attributes.isEmpty ? "" : ", attributes: $attributes";
+    return "{ insert: '$value'$attrsStr }";
+  }
 }
 
 class YTextRetained extends YTextChange {
@@ -20,4 +31,9 @@ class YTextRetained extends YTextChange {
   final Map<String, Object> attributes;
 
   YTextRetained(this.length, this.attributes);
+
+  @override
+  String toString() {
+    return '{ retain: $length }';
+  }
 }
