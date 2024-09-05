@@ -19,7 +19,10 @@ final class YMap<T extends Object?> extends YType {
     _doc._transaction((txn) {
       final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
       final inputPtr = malloc<gen.YInput>();
-      inputPtr.ref = _YInput._(value)._input;
+      // yInput needs to be a variable with type ffi.Finalizable to delay it's
+      // destruction until the end of this block scope.
+      final yInput = _YInput._(value);
+      inputPtr.ref = yInput._input;
       _bindings.ymap_insert(_branch, txn, keyPtr, inputPtr);
       malloc.free(keyPtr);
       malloc.free(inputPtr);

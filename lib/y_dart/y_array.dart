@@ -42,7 +42,7 @@ final class YArray<T> extends YType {
 
   void operator []=(int index, T value) {
     _doc._transaction((txn) {
-      /// This is forced to stay alive because it implements [ffi.Finalizable]
+      /// yInput is forced to stay alive because it implements [ffi.Finalizable]
       final yInput = _YInput._(value);
       final input = yInput._input;
       final inputPtr = malloc<gen.YInput>();
