@@ -34,6 +34,7 @@ class YTextRetained extends YTextChange {
 
   @override
   String toString() {
-    return '{ retain: $length }';
+    final attrsStr = attributes.isEmpty ? "" : ", attributes: $attributes";
+    return "{ retain: $length$attrsStr }";
   }
 }

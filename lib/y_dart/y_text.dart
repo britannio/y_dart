@@ -7,14 +7,30 @@ final class YText extends YType with _YObservable {
   YText._(super._branch, this._doc) : super._();
   final YDoc _doc;
 
-  void append(String text) => insert(index: length, text: text);
+  void append(
+    String text, {
+    Map<String, Object> attributes = const {},
+  }) =>
+      insert(
+        index: length,
+        text: text,
+        attributes: attributes,
+      );
 
-  void insert({required int index, required String text}) {
-    // TODO support text attributes
+  void insert({
+    required int index,
+    required String text,
+    Map<String, Object> attributes = const {},
+  }) {
     _doc._transaction((txn) {
       final textPtr = text.toNativeUtf8().cast<ffi.Char>();
-      _bindings.ytext_insert(_branch, txn, index, textPtr, ffi.nullptr);
+      final attrs = YInputJsonMap(attributes);
+      final attrsPtr = malloc<gen.YInput>();
+      attrsPtr.ref = attrs._input;
+      _bindings.ytext_insert(_branch, txn, index, textPtr, attrsPtr);
+      malloc.free(attrsPtr);
       malloc.free(textPtr);
+      attrs.dispose();
     });
   }
 
@@ -29,9 +45,34 @@ final class YText extends YType with _YObservable {
     });
   }
 
+  void format(
+    int index,
+    int length, {
+    required Map<String, Object> attributes,
+  }) {
+    final input = YInputJsonMap(attributes);
+    final attrsPtr = malloc<gen.YInput>()..ref = input._input;
+    _doc._transaction((txn) {
+      _bindings.ytext_format(_branch, txn, index, length, attrsPtr);
+    });
+    input.dispose();
+    malloc.free(attrsPtr);
+  }
+
   static YTextChange _convertDeltaOut(gen.YDeltaOut delta) {
     final len = delta.len;
-    // TODO handle text attributes
+
+    final Map<String, Object> attributes = {};
+    if (delta.attributes != ffi.nullptr && delta.attributes_len > 0) {
+      for (int i = 0; i < delta.attributes_len; i++) {
+        final attr = delta.attributes[i];
+        final key = attr.key.cast<Utf8>().toDartString();
+        final value = _YOutput.toObjectInner(attr.value);
+        if (value == null) continue;
+        attributes[key] = value;
+      }
+    }
+
     switch (delta.tag) {
       case gen.Y_EVENT_CHANGE_ADD:
         final str = StringBuffer();
@@ -40,11 +81,11 @@ final class YText extends YType with _YObservable {
           assert(yOut.tag == gen.Y_JSON_STR);
           str.write(yOut.value.str.cast<Utf8>().toDartString());
         }
-        return YTextInserted(str.toString(), {});
+        return YTextInserted(str.toString(), attributes);
       case gen.Y_EVENT_CHANGE_DELETE:
         return YTextDeleted(delta.len);
       case gen.Y_EVENT_CHANGE_RETAIN:
-        return YTextRetained(delta.len, {});
+        return YTextRetained(delta.len, attributes);
       default:
         throw Exception('Unknown YDeltaOutTag: $delta.tag');
     }
@@ -92,5 +133,32 @@ final class YText extends YType with _YObservable {
     final result = ptr.cast<Utf8>().toDartString();
     _bindings.ystring_destroy(ptr);
     return result;
+  }
+
+  List<YTextInserted> toDelta() {
+    return _doc._transaction((txn) {
+      final chunksLenPtr = malloc<ffi.Uint32>();
+      final chunksPtr = _bindings.ytext_chunks(_branch, txn, chunksLenPtr);
+      final chunksLen = chunksLenPtr.value;
+      malloc.free(chunksLenPtr);
+
+      final deltas = <YTextInserted>[];
+      for (int i = 0; i < chunksLen; i++) {
+        final chunk = chunksPtr[i];
+        // Assuming that the chunk content is a string but this may not be true??
+        final content = _YOutput.toObjectInner(chunk.data);
+        final attrs = <String, Object>{};
+        for (int j = 0; j < chunk.fmt_len; j++) {
+          final attr = chunk.fmt[j];
+          final key = attr.key.cast<Utf8>().toDartString();
+          final value = _YOutput.toObjectInner(attr.value.ref);
+          if (value == null) continue;
+          attrs[key] = value;
+        }
+        deltas.add(YTextInserted(content as String, attrs));
+      }
+      _bindings.ychunks_destroy(chunksPtr, chunksLen);
+      return deltas;
+    });
   }
 }

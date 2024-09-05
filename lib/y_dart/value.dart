@@ -3,24 +3,12 @@ part of 'all.dart';
 sealed class YValue {}
 
 final class _YOutput extends YValue {
-  /// Invoked from [YArray], [YMap]
-  static T toObject<T extends Object?>(
-    /// Takes ownership of this pointer.
-    ffi.Pointer<gen.YOutput> yOutPtr,
-    YDoc? doc, {
-    /// Used to prevent double free of nested types.
-    bool disableFree = false,
-    ffi.Pointer<gen.YMapEntry>? yMapEntryPtr,
-  }) {
+  static Object? toObjectInner(gen.YOutput yOut, [YDoc? doc]) {
     late Object? result;
-    final yOut = yOutPtr.ref;
-
     assert(
       yOut.tag <= 0 || doc != null,
       'must provide doc when parsing YTypes',
     );
-
-    log('toObject tag: ${yOut.tag}');
 
     switch (yOut.tag) {
       case gen.Y_JSON_BOOL:
@@ -87,6 +75,19 @@ final class _YOutput extends YValue {
       default:
         throw Exception('Unsupported value type: ${yOut.tag}');
     }
+    return result;
+  }
+
+  /// Invoked from [YArray], [YMap]
+  static T toObject<T extends Object?>(
+    /// Takes ownership of this pointer.
+    ffi.Pointer<gen.YOutput> yOutPtr,
+    YDoc? doc, {
+    /// Used to prevent double free of nested types.
+    bool disableFree = false,
+    ffi.Pointer<gen.YMapEntry>? yMapEntryPtr,
+  }) {
+    final result = toObjectInner(yOutPtr.ref, doc);
 
     if ((result is YType || result is YDoc)) {
       if (result is! ffi.Finalizable) {

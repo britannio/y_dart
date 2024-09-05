@@ -99,13 +99,16 @@ void demo6TextSubscription() {
   // d.transaction(() {
   text.append('the');
   text.append(' quick');
-  text.append(' brown');
+  text.append(' brown', attributes: {'bold': true});
   text.append(' fox');
   text.append(' fumps');
   text.removeRange(start: 20, length: 1);
   text.insert(index: 20, text: 'j');
   text.append(' over');
+  text.format(0, 3, attributes: {'italic': 'true'});
   // });
 
   log(text.toString());
+
+  log(text.toDelta().toString());
 }
