@@ -84,11 +84,11 @@ class YDoc with _YObservable implements ffi.Finalizable {
     return YMap._(this, branchPtr);
   }
 
-  YXml getXml(String name) {
+  YXmlFragment getXmlFragment(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
     final branchPtr = _bindings.yxmlfragment(_doc, namePtr);
     malloc.free(namePtr);
-    return YXml._(this, branchPtr);
+    return YXmlFragment._(this, branchPtr);
   }
 
   YUndoManager getUndoManager({int captureTimeoutMillis = 0}) {

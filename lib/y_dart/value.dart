@@ -69,11 +69,10 @@ final class _YOutput extends YValue {
         result = YMap._(doc, yOut.value.y_type);
         break;
       case gen.Y_XML_ELEM:
-        result = YXml._(doc, yOut.value.y_type);
+        result = YXmlElement._(doc, yOut.value.y_type);
         break;
       case gen.Y_XML_TEXT:
-        // TODO implement this
-        // result = YXmlText._(_doc, _yOutput.value.y_type);
+        result = YXmlText._(doc, yOut.value.y_type);
         break;
       case gen.Y_DOC:
         result = YDoc._(yOut.value.y_doc);
@@ -141,6 +140,12 @@ abstract class _YInput extends YValue implements ffi.Finalizable {
       return YInputYMap(value);
     } else if (value is YDoc) {
       return YInputYDoc(value);
+    } else if (value is YText) {
+      return YInputYText(value);
+    } else if (value is YXmlElement) {
+      return YInputYXmlElem(value);
+    } else if (value is YXmlText) {
+      return YInputYXmlText(value);
     } else {
       throw Exception('Unsupported value type: ${value.runtimeType}');
     }
@@ -423,4 +428,58 @@ final class YInputYDoc extends _YInput {
 
   @override
   late final gen.YInput _input = _bindings.yinput_ydoc(value._doc);
+}
+
+final class YInputYXmlElem extends _YInput {
+  YInputYXmlElem(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(this, _tagPtr.cast(), detach: this);
+  }
+  final YXmlElement value;
+
+  late final _tagPtr = value.tag.toNativeUtf8();
+
+  @override
+  gen.YInput get _input => _bindings.yinput_yxmlelem(_tagPtr.cast());
+
+  @override
+  void dispose() {
+    super.dispose();
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_tagPtr);
+  }
+}
+
+final class YInputYXmlText extends _YInput {
+  YInputYXmlText(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
+  }
+  final YXmlText value;
+  late final _ptr = value.toString().toNativeUtf8();
+
+  @override
+  gen.YInput get _input => _bindings.yinput_yxmltext(_ptr.cast());
+
+  @override
+  void dispose() {
+    super.dispose();
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_ptr);
+  }
+}
+
+final class YInputYText extends _YInput {
+  YInputYText(this.value) : super._internal() {
+    YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
+  }
+  final YText value;
+  late final _ptr = value.toString().toNativeUtf8();
+  @override
+  gen.YInput get _input => _bindings.yinput_ytext(_ptr.cast());
+
+  @override
+  void dispose() {
+    super.dispose();
+    YFree.mallocFinalizer.detach(this);
+    malloc.free(_ptr);
+  }
 }

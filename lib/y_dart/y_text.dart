@@ -80,15 +80,11 @@ final class YText extends YType with _YObservable {
 
   @override
   String toString() {
-    late final String result;
-    _doc._transaction((txn) {
-      final ptr = _bindings.ytext_string(_branch, txn);
-      try {
-        result = ptr.cast<Utf8>().toDartString();
-      } finally {
-        _bindings.ystring_destroy(ptr);
-      }
-    });
+    final ptr = _doc._transaction(
+      (txn) => _bindings.ytext_string(_branch, txn),
+    );
+    final result = ptr.cast<Utf8>().toDartString();
+    _bindings.ystring_destroy(ptr);
     return result;
   }
 }
