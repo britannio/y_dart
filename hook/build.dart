@@ -14,7 +14,8 @@ void main(List<String> args) async {
       await builder.run(output: output);
     });
   } catch (e) {
-    stdout.writeln(e);
+    print(e);
+    // stdout.writeln(e);
     exit(1);
   }
 }

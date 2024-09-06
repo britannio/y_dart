@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 part of '../all.dart';
 
 /// A native function with a single pointer argument.
