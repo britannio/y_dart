@@ -23,3 +23,6 @@ comments:
 compiler-opts:
   - '-Wno-nullability-completeness'
   - '-Wno-nullability-inferred-on-nested-type'
+
+ffi-native:
+  assetId: 'package:y_dart/y_dart'

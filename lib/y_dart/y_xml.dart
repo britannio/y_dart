@@ -14,9 +14,9 @@ final class YXmlElement extends YType implements YXmlType {
   final YDoc _doc;
 
   String get tag {
-    final tagPtr = _bindings.yxmlelem_tag(_branch);
+    final tagPtr = gen.yxmlelem_tag(_branch);
     final result = tagPtr.cast<Utf8>().toDartString();
-    _bindings.ystring_destroy(tagPtr);
+    gen.ystring_destroy(tagPtr);
     return result;
   }
 }
@@ -37,10 +37,10 @@ final class YXmlText extends YType implements YXmlType {
   @override
   String toString() {
     final ptr = _doc._transaction(
-      (txn) => _bindings.yxmltext_string(_branch, txn),
+      (txn) => gen.yxmltext_string(_branch, txn),
     );
     final result = ptr.cast<Utf8>().toDartString();
-    _bindings.ystring_destroy(ptr);
+    gen.ystring_destroy(ptr);
     return result;
   }
 }

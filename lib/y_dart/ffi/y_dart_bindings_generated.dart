@@ -10,6864 +10,3643 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
-/// Bindings for `rust/libyrs.h`.
+/// For historical reasons; programs expect signal's return value to be
+/// defined by <sys/signal.h>.
+@ffi.Native<
+        ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> Function(
+            ffi.Int,
+            ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>)>(
+    symbol: 'signal', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> signal(
+  int arg0,
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, id_t)>(
+    symbol: 'getpriority', assetId: 'package:y_dart/y_dart')
+external int getpriority(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(
+    symbol: 'getiopolicy_np', assetId: 'package:y_dart/y_dart')
+external int getiopolicy_np(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<rlimit>)>(
+    symbol: 'getrlimit', assetId: 'package:y_dart/y_dart')
+external int getrlimit(
+  int arg0,
+  ffi.Pointer<rlimit> arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<rusage>)>(
+    symbol: 'getrusage', assetId: 'package:y_dart/y_dart')
+external int getrusage(
+  int arg0,
+  ffi.Pointer<rusage> arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, id_t, ffi.Int)>(
+    symbol: 'setpriority', assetId: 'package:y_dart/y_dart')
+external int setpriority(
+  int arg0,
+  int arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int, ffi.Int)>(
+    symbol: 'setiopolicy_np', assetId: 'package:y_dart/y_dart')
+external int setiopolicy_np(
+  int arg0,
+  int arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<rlimit>)>(
+    symbol: 'setrlimit', assetId: 'package:y_dart/y_dart')
+external int setrlimit(
+  int arg0,
+  ffi.Pointer<rlimit> arg1,
+);
+
+@ffi.Native<pid_t Function(ffi.Pointer<ffi.Int>)>(
+    symbol: 'wait', assetId: 'package:y_dart/y_dart')
+external int wait1(
+  ffi.Pointer<ffi.Int> arg0,
+);
+
+@ffi.Native<pid_t Function(pid_t, ffi.Pointer<ffi.Int>, ffi.Int)>(
+    symbol: 'waitpid', assetId: 'package:y_dart/y_dart')
+external int waitpid(
+  int arg0,
+  ffi.Pointer<ffi.Int> arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int32, id_t, ffi.Pointer<siginfo_t>, ffi.Int)>(
+    symbol: 'waitid', assetId: 'package:y_dart/y_dart')
+external int waitid(
+  int arg0,
+  int arg1,
+  ffi.Pointer<siginfo_t> arg2,
+  int arg3,
+);
+
+@ffi.Native<pid_t Function(ffi.Pointer<ffi.Int>, ffi.Int, ffi.Pointer<rusage>)>(
+    symbol: 'wait3', assetId: 'package:y_dart/y_dart')
+external int wait3(
+  ffi.Pointer<ffi.Int> arg0,
+  int arg1,
+  ffi.Pointer<rusage> arg2,
+);
+
+@ffi.Native<
+    pid_t Function(pid_t, ffi.Pointer<ffi.Int>, ffi.Int,
+        ffi.Pointer<rusage>)>(symbol: 'wait4', assetId: 'package:y_dart/y_dart')
+external int wait4(
+  int arg0,
+  ffi.Pointer<ffi.Int> arg1,
+  int arg2,
+  ffi.Pointer<rusage> arg3,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size)>(
+    symbol: 'alloca', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> alloca(
+  int arg0,
+);
+
+/// <malloc/_malloc.h>
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_malloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_malloc(
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_calloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_calloc(
+  int count,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>, malloc_type_id_t)>(
+    symbol: 'malloc_type_free', assetId: 'package:y_dart/y_dart')
+external void malloc_type_free(
+  ffi.Pointer<ffi.Void> ptr,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<ffi.Void>, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_realloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_realloc(
+  ffi.Pointer<ffi.Void> ptr,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_valloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_valloc(
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_aligned_alloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_aligned_alloc(
+  int alignment,
+  int size,
+  int type_id,
+);
+
+/// rdar://75598414 (Support __counted_by_or_null)
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Size, ffi.Size,
+            malloc_type_id_t)>(
+    symbol: 'malloc_type_posix_memalign', assetId: 'package:y_dart/y_dart')
+external int malloc_type_posix_memalign(
+  ffi.Pointer<ffi.Pointer<ffi.Void>> memptr,
+  int alignment,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<malloc_zone_t>, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_malloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_zone_malloc(
+  ffi.Pointer<malloc_zone_t> zone,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<malloc_zone_t>, ffi.Size, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_calloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_zone_calloc(
+  ffi.Pointer<malloc_zone_t> zone,
+  int count,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<malloc_zone_t>, ffi.Pointer<ffi.Void>,
+            malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_free', assetId: 'package:y_dart/y_dart')
+external void malloc_type_zone_free(
+  ffi.Pointer<malloc_zone_t> zone,
+  ffi.Pointer<ffi.Void> ptr,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>,
+            ffi.Pointer<ffi.Void>, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_realloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_zone_realloc(
+  ffi.Pointer<malloc_zone_t> zone,
+  ffi.Pointer<ffi.Void> ptr,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<malloc_zone_t>, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_valloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_zone_valloc(
+  ffi.Pointer<malloc_zone_t> zone,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<malloc_zone_t>, ffi.Size, ffi.Size, malloc_type_id_t)>(
+    symbol: 'malloc_type_zone_memalign', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc_type_zone_memalign(
+  ffi.Pointer<malloc_zone_t> zone,
+  int alignment,
+  int size,
+  int type_id,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size)>(
+    symbol: 'malloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> malloc(
+  int __size,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>(
+    symbol: 'calloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> calloc(
+  int __count,
+  int __size,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>(
+    symbol: 'free', assetId: 'package:y_dart/y_dart')
+external void free(
+  ffi.Pointer<ffi.Void> arg0,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Size)>(
+    symbol: 'realloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> realloc(
+  ffi.Pointer<ffi.Void> __ptr,
+  int __size,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Size)>(
+    symbol: 'reallocf', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> reallocf(
+  ffi.Pointer<ffi.Void> __ptr,
+  int __size,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size)>(
+    symbol: 'valloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> valloc(
+  int arg0,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>(
+    symbol: 'aligned_alloc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> aligned_alloc(
+  int __alignment,
+  int __size,
+);
+
+/// rdar://75598414 (Support __counted_by_or_null)
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Size,
+        ffi.Size)>(symbol: 'posix_memalign', assetId: 'package:y_dart/y_dart')
+external int posix_memalign(
+  ffi.Pointer<ffi.Pointer<ffi.Void>> __memptr,
+  int __alignment,
+  int __size,
+);
+
+@ffi.Native<ffi.Void Function()>(
+    symbol: 'abort', assetId: 'package:y_dart/y_dart')
+external void abort();
+
+@ffi.Native<ffi.Int Function(ffi.Int)>(
+    symbol: 'abs', assetId: 'package:y_dart/y_dart')
+external int abs(
+  int arg0,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>(
+    symbol: 'atexit', assetId: 'package:y_dart/y_dart')
+external int atexit(
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> arg0,
+);
+
+@ffi.Native<ffi.Double Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'atof', assetId: 'package:y_dart/y_dart')
+external double atof(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'atoi', assetId: 'package:y_dart/y_dart')
+external int atoi(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Long Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'atol', assetId: 'package:y_dart/y_dart')
+external int atol(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.LongLong Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'atoll', assetId: 'package:y_dart/y_dart')
+external int atoll(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Void> Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'bsearch', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Void> bsearch(
+  ffi.Pointer<ffi.Void> __key,
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+/// calloc is now declared in _malloc.h
+@ffi.Native<div_t Function(ffi.Int, ffi.Int)>(
+    symbol: 'div', assetId: 'package:y_dart/y_dart')
+external div_t div(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Int)>(
+    symbol: 'exit', assetId: 'package:y_dart/y_dart')
+external void exit(
+  int arg0,
+);
+
+/// free is now declared in _malloc.h
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'getenv', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> getenv(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Long Function(ffi.Long)>(
+    symbol: 'labs', assetId: 'package:y_dart/y_dart')
+external int labs(
+  int arg0,
+);
+
+@ffi.Native<ldiv_t Function(ffi.Long, ffi.Long)>(
+    symbol: 'ldiv', assetId: 'package:y_dart/y_dart')
+external ldiv_t ldiv(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.LongLong Function(ffi.LongLong)>(
+    symbol: 'llabs', assetId: 'package:y_dart/y_dart')
+external int llabs(
+  int arg0,
+);
+
+@ffi.Native<lldiv_t Function(ffi.LongLong, ffi.LongLong)>(
+    symbol: 'lldiv', assetId: 'package:y_dart/y_dart')
+external lldiv_t lldiv(
+  int arg0,
+  int arg1,
+);
+
+/// malloc is now declared in _malloc.h
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Size)>(
+    symbol: 'mblen', assetId: 'package:y_dart/y_dart')
+external int mblen(
+  ffi.Pointer<ffi.Char> __s,
+  int __n,
+);
+
+@ffi.Native<
+    ffi.Size Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>,
+        ffi.Size)>(symbol: 'mbstowcs', assetId: 'package:y_dart/y_dart')
+external int mbstowcs(
+  ffi.Pointer<ffi.WChar> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  int arg2,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>,
+        ffi.Size)>(symbol: 'mbtowc', assetId: 'package:y_dart/y_dart')
+external int mbtowc(
+  ffi.Pointer<ffi.WChar> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  int arg2,
+);
+
+/// posix_memalign is now declared in _malloc.h
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'qsort', assetId: 'package:y_dart/y_dart')
+external void qsort(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<ffi.Int Function()>(
+    symbol: 'rand', assetId: 'package:y_dart/y_dart')
+external int rand();
+
+/// realloc is now declared in _malloc.h
+@ffi.Native<ffi.Void Function(ffi.UnsignedInt)>(
+    symbol: 'srand', assetId: 'package:y_dart/y_dart')
+external void srand(
+  int arg0,
+);
+
+@ffi.Native<
+        ffi.Double Function(
+            ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'strtod', assetId: 'package:y_dart/y_dart')
+external double strtod(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+);
+
+@ffi.Native<
+        ffi.Float Function(
+            ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'strtof', assetId: 'package:y_dart/y_dart')
+external double strtof(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+);
+
+@ffi.Native<
+    ffi.Long Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtol', assetId: 'package:y_dart/y_dart')
+external int strtol(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+@ffi.Native<
+    ffi.LongLong Function(
+        ffi.Pointer<ffi.Char>,
+        ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtoll', assetId: 'package:y_dart/y_dart')
+external int strtoll(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+@ffi.Native<
+    ffi.UnsignedLong Function(
+        ffi.Pointer<ffi.Char>,
+        ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtoul', assetId: 'package:y_dart/y_dart')
+external int strtoul(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+@ffi.Native<
+    ffi.UnsignedLongLong Function(
+        ffi.Pointer<ffi.Char>,
+        ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtoull', assetId: 'package:y_dart/y_dart')
+external int strtoull(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'system', assetId: 'package:y_dart/y_dart')
+external int system(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<
+    ffi.Size Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.WChar>,
+        ffi.Size)>(symbol: 'wcstombs', assetId: 'package:y_dart/y_dart')
+external int wcstombs(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.WChar> arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.WChar)>(
+    symbol: 'wctomb', assetId: 'package:y_dart/y_dart')
+external int wctomb(
+  ffi.Pointer<ffi.Char> arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Int)>(
+    symbol: '_Exit', assetId: 'package:y_dart/y_dart')
+external void _Exit(
+  int arg0,
+);
+
+@ffi.Native<ffi.Long Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'a64l', assetId: 'package:y_dart/y_dart')
+external int a64l(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Double Function()>(
+    symbol: 'drand48', assetId: 'package:y_dart/y_dart')
+external double drand48();
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(ffi.Double, ffi.Int, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>)>(symbol: 'ecvt', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ecvt(
+  double arg0,
+  int arg1,
+  ffi.Pointer<ffi.Int> arg2,
+  ffi.Pointer<ffi.Int> arg3,
+);
+
+@ffi.Native<ffi.Double Function(ffi.Pointer<ffi.UnsignedShort>)>(
+    symbol: 'erand48', assetId: 'package:y_dart/y_dart')
+external double erand48(
+  ffi.Pointer<ffi.UnsignedShort> arg0,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(ffi.Double, ffi.Int, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>)>(symbol: 'fcvt', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> fcvt(
+  double arg0,
+  int arg1,
+  ffi.Pointer<ffi.Int> arg2,
+  ffi.Pointer<ffi.Int> arg3,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Double, ffi.Int, ffi.Pointer<ffi.Char>)>(
+    symbol: 'gcvt', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> gcvt(
+  double arg0,
+  int arg1,
+  ffi.Pointer<ffi.Char> arg2,
+);
+
+@ffi.Native<
+        ffi.Int Function(
+            ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'getsubopt', assetId: 'package:y_dart/y_dart')
+external int getsubopt(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int)>(
+    symbol: 'grantpt', assetId: 'package:y_dart/y_dart')
+external int grantpt(
+  int arg0,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(ffi.UnsignedInt, ffi.Pointer<ffi.Char>,
+        ffi.Size)>(symbol: 'initstate', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> initstate(
+  int arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Long Function(ffi.Pointer<ffi.UnsignedShort>)>(
+    symbol: 'jrand48', assetId: 'package:y_dart/y_dart')
+external int jrand48(
+  ffi.Pointer<ffi.UnsignedShort> arg0,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Long)>(
+    symbol: 'l64a', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> l64a(
+  int arg0,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.UnsignedShort>)>(
+    symbol: 'lcong48', assetId: 'package:y_dart/y_dart')
+external void lcong48(
+  ffi.Pointer<ffi.UnsignedShort> arg0,
+);
+
+@ffi.Native<ffi.Long Function()>(
+    symbol: 'lrand48', assetId: 'package:y_dart/y_dart')
+external int lrand48();
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'mktemp', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> mktemp(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'mkstemp', assetId: 'package:y_dart/y_dart')
+external int mkstemp(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Long Function()>(
+    symbol: 'mrand48', assetId: 'package:y_dart/y_dart')
+external int mrand48();
+
+@ffi.Native<ffi.Long Function(ffi.Pointer<ffi.UnsignedShort>)>(
+    symbol: 'nrand48', assetId: 'package:y_dart/y_dart')
+external int nrand48(
+  ffi.Pointer<ffi.UnsignedShort> arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int)>(
+    symbol: 'posix_openpt', assetId: 'package:y_dart/y_dart')
+external int posix_openpt(
+  int arg0,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Int)>(
+    symbol: 'ptsname', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ptsname(
+  int arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Pointer<ffi.Char>, ffi.Size)>(
+    symbol: 'ptsname_r', assetId: 'package:y_dart/y_dart')
+external int ptsname_r(
+  int fildes,
+  ffi.Pointer<ffi.Char> buffer,
+  int buflen,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'putenv', assetId: 'package:y_dart/y_dart')
+external int putenv(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Long Function()>(
+    symbol: 'random', assetId: 'package:y_dart/y_dart')
+external int random();
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.UnsignedInt>)>(
+    symbol: 'rand_r', assetId: 'package:y_dart/y_dart')
+external int rand_r(
+  ffi.Pointer<ffi.UnsignedInt> arg0,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'realpath', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> realpath(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.UnsignedShort> Function(
+            ffi.Pointer<ffi.UnsignedShort>)>(
+    symbol: 'seed48', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.UnsignedShort> seed48(
+  ffi.Pointer<ffi.UnsignedShort> arg0,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+        ffi.Int)>(symbol: 'setenv', assetId: 'package:y_dart/y_dart')
+external int setenv(
+  ffi.Pointer<ffi.Char> __name,
+  ffi.Pointer<ffi.Char> __value,
+  int __overwrite,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'setkey', assetId: 'package:y_dart/y_dart')
+external void setkey(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'setstate', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> setstate(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Long)>(
+    symbol: 'srand48', assetId: 'package:y_dart/y_dart')
+external void srand48(
+  int arg0,
+);
+
+@ffi.Native<ffi.Void Function(ffi.UnsignedInt)>(
+    symbol: 'srandom', assetId: 'package:y_dart/y_dart')
+external void srandom(
+  int arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int)>(
+    symbol: 'unlockpt', assetId: 'package:y_dart/y_dart')
+external int unlockpt(
+  int arg0,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'unsetenv', assetId: 'package:y_dart/y_dart')
+external int unsetenv(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<ffi.Uint32 Function()>(
+    symbol: 'arc4random', assetId: 'package:y_dart/y_dart')
+external int arc4random();
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.UnsignedChar>, ffi.Int)>(
+    symbol: 'arc4random_addrandom', assetId: 'package:y_dart/y_dart')
+external void arc4random_addrandom(
+  ffi.Pointer<ffi.UnsignedChar> arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>(
+    symbol: 'arc4random_buf', assetId: 'package:y_dart/y_dart')
+external void arc4random_buf(
+  ffi.Pointer<ffi.Void> __buf,
+  int __nbytes,
+);
+
+@ffi.Native<ffi.Void Function()>(
+    symbol: 'arc4random_stir', assetId: 'package:y_dart/y_dart')
+external void arc4random_stir();
+
+@ffi.Native<ffi.Uint32 Function(ffi.Uint32)>(
+    symbol: 'arc4random_uniform', assetId: 'package:y_dart/y_dart')
+external int arc4random_uniform(
+  int __upper_bound,
+);
+
+/// getcap(3) functions
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+        ffi.Int)>(symbol: 'cgetcap', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> cgetcap(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  int arg2,
+);
+
+@ffi.Native<ffi.Int Function()>(
+    symbol: 'cgetclose', assetId: 'package:y_dart/y_dart')
+external int cgetclose();
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'cgetent', assetId: 'package:y_dart/y_dart')
+external int cgetent(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+  ffi.Pointer<ffi.Char> arg2,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'cgetfirst', assetId: 'package:y_dart/y_dart')
+external int cgetfirst(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'cgetmatch', assetId: 'package:y_dart/y_dart')
+external int cgetmatch(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'cgetnext', assetId: 'package:y_dart/y_dart')
+external int cgetnext(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+            ffi.Pointer<ffi.Long>)>(
+    symbol: 'cgetnum', assetId: 'package:y_dart/y_dart')
+external int cgetnum(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  ffi.Pointer<ffi.Long> arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'cgetset', assetId: 'package:y_dart/y_dart')
+external int cgetset(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'cgetstr', assetId: 'package:y_dart/y_dart')
+external int cgetstr(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'cgetustr', assetId: 'package:y_dart/y_dart')
+external int cgetustr(
+  ffi.Pointer<ffi.Char> arg0,
+  ffi.Pointer<ffi.Char> arg1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(
+    symbol: 'daemon', assetId: 'package:y_dart/y_dart')
+external int daemon(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(dev_t, mode_t)>(
+    symbol: 'devname', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> devname(
+  int arg0,
+  int arg1,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(dev_t, mode_t, ffi.Pointer<ffi.Char>,
+        ffi.Int)>(symbol: 'devname_r', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> devname_r(
+  int arg0,
+  int arg1,
+  ffi.Pointer<ffi.Char> buf,
+  int len,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Long>)>(
+    symbol: 'getbsize', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> getbsize(
+  ffi.Pointer<ffi.Int> arg0,
+  ffi.Pointer<ffi.Long> arg1,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Double>, ffi.Int)>(
+    symbol: 'getloadavg', assetId: 'package:y_dart/y_dart')
+external int getloadavg(
+  ffi.Pointer<ffi.Double> arg0,
+  int arg1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function()>(
+    symbol: 'getprogname', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> getprogname();
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'setprogname', assetId: 'package:y_dart/y_dart')
+external void setprogname(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<
+        ffi.Int Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'heapsort', assetId: 'package:y_dart/y_dart')
+external int heapsort(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<
+        ffi.Int Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'mergesort', assetId: 'package:y_dart/y_dart')
+external int mergesort(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'psort', assetId: 'package:y_dart/y_dart')
+external void psort(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(ffi.Pointer<ffi.Void>,
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'psort_r', assetId: 'package:y_dart/y_dart')
+external void psort_r(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
+                  ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+            ffi.Size,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Int Function(ffi.Pointer<ffi.Void>,
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>(
+    symbol: 'qsort_r', assetId: 'package:y_dart/y_dart')
+external void qsort_r(
+  ffi.Pointer<ffi.Void> __base,
+  int __nel,
+  int __width,
+  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
+                  ffi.Pointer<ffi.Void>)>>
+      __compar,
+);
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>,
+        ffi.Int,
+        ffi.Pointer<ffi.UnsignedChar>,
+        ffi.UnsignedInt)>(symbol: 'radixsort', assetId: 'package:y_dart/y_dart')
+external int radixsort(
+  ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>> __base,
+  int __nel,
+  ffi.Pointer<ffi.UnsignedChar> __table,
+  int __endbyte,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'rpmatch', assetId: 'package:y_dart/y_dart')
+external int rpmatch(
+  ffi.Pointer<ffi.Char> arg0,
+);
+
+@ffi.Native<
+        ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>, ffi.Int,
+            ffi.Pointer<ffi.UnsignedChar>, ffi.UnsignedInt)>(
+    symbol: 'sradixsort', assetId: 'package:y_dart/y_dart')
+external int sradixsort(
+  ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>> __base,
+  int __nel,
+  ffi.Pointer<ffi.UnsignedChar> __table,
+  int __endbyte,
+);
+
+@ffi.Native<ffi.Void Function()>(
+    symbol: 'sranddev', assetId: 'package:y_dart/y_dart')
+external void sranddev();
+
+@ffi.Native<ffi.Void Function()>(
+    symbol: 'srandomdev', assetId: 'package:y_dart/y_dart')
+external void srandomdev();
+
+/// reallocf is now declared in _malloc.h
+@ffi.Native<
+        ffi.LongLong Function(ffi.Pointer<ffi.Char>, ffi.LongLong, ffi.LongLong,
+            ffi.Pointer<ffi.Pointer<ffi.Char>>)>(
+    symbol: 'strtonum', assetId: 'package:y_dart/y_dart')
+external int strtonum(
+  ffi.Pointer<ffi.Char> __numstr,
+  int __minval,
+  int __maxval,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __errstrp,
+);
+
+@ffi.Native<
+    ffi.LongLong Function(
+        ffi.Pointer<ffi.Char>,
+        ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtoq', assetId: 'package:y_dart/y_dart')
+external int strtoq(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+@ffi.Native<
+    ffi.UnsignedLongLong Function(
+        ffi.Pointer<ffi.Char>,
+        ffi.Pointer<ffi.Pointer<ffi.Char>>,
+        ffi.Int)>(symbol: 'strtouq', assetId: 'package:y_dart/y_dart')
+external int strtouq(
+  ffi.Pointer<ffi.Char> __str,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
+  int __base,
+);
+
+/// Returns default ceonfiguration for `YOptions`.
+@ffi.Native<YOptions Function()>(
+    symbol: 'yoptions', assetId: 'package:y_dart/y_dart')
+external YOptions yoptions();
+
+/// Releases all memory-allocated resources bound to given document.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_destroy', assetId: 'package:y_dart/y_dart')
+external void ydoc_destroy(
+  ffi.Pointer<YDoc> value,
+);
+
+/// Frees all memory-allocated resources bound to a given [YMapEntry].
+@ffi.Native<ffi.Void Function(ffi.Pointer<YMapEntry>)>(
+    symbol: 'ymap_entry_destroy', assetId: 'package:y_dart/y_dart')
+external void ymap_entry_destroy(
+  ffi.Pointer<YMapEntry> value,
+);
+
+/// Frees all memory-allocated resources bound to a given [YXmlAttr].
+@ffi.Native<ffi.Void Function(ffi.Pointer<YXmlAttr>)>(
+    symbol: 'yxmlattr_destroy', assetId: 'package:y_dart/y_dart')
+external void yxmlattr_destroy(
+  ffi.Pointer<YXmlAttr> attr,
+);
+
+/// Frees all memory-allocated resources bound to a given UTF-8 null-terminated string returned from
+/// Yrs document API. Yrs strings don't use libc malloc, so calling `free()` on them will fault.
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'ystring_destroy', assetId: 'package:y_dart/y_dart')
+external void ystring_destroy(
+  ffi.Pointer<ffi.Char> str,
+);
+
+@ffi.Native<ffi.Pointer<YBinaryDestroyInput> Function()>(
+    symbol: 'ybinary_destroy_struct', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YBinaryDestroyInput> ybinary_destroy_struct();
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<YBinaryDestroyInput>)>(
+    symbol: 'ybinary_destroy_from_struct', assetId: 'package:y_dart/y_dart')
+external void ybinary_destroy_from_struct(
+  ffi.Pointer<YBinaryDestroyInput> input,
+);
+
+/// Frees all memory-allocated resources bound to a given binary returned from Yrs document API.
+/// Unlike strings binaries are not null-terminated and can contain null characters inside,
+/// therefore a size of memory to be released must be explicitly provided.
+/// Yrs binaries don't use libc malloc, so calling `free()` on them will fault.
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'ybinary_destroy', assetId: 'package:y_dart/y_dart')
+external void ybinary_destroy(
+  ffi.Pointer<ffi.Char> ptr,
+  int len,
+);
+
+/// Creates a new [Doc] instance with a randomized unique client identifier.
 ///
-/// Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
+/// Use [ydoc_destroy] in order to release created [Doc] resources.
+@ffi.Native<ffi.Pointer<YDoc> Function()>(
+    symbol: 'ydoc_new', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDoc> ydoc_new();
+
+/// Creates a shallow clone of a provided `doc` - it's realized by increasing the ref-count
+/// value of the document. In result both input and output documents point to the same instance.
 ///
-class YDartBindings {
-  /// Holds the symbol lookup function.
-  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
-
-  /// The symbols are looked up in [dynamicLibrary].
-  YDartBindings(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
-
-  /// The symbols are looked up with [lookup].
-  YDartBindings.fromLookup(
-      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-          lookup)
-      : _lookup = lookup;
-
-  /// For historical reasons; programs expect signal's return value to be
-  /// defined by <sys/signal.h>.
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> signal(
-    int arg0,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> arg1,
-  ) {
-    return _signal(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _signalPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> Function(
-              ffi.Int,
-              ffi.Pointer<
-                  ffi.NativeFunction<ffi.Void Function(ffi.Int)>>)>>('signal');
-  late final _signal = _signalPtr.asFunction<
-      ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>> Function(
-          int, ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>)>();
-
-  int getpriority(
-    int arg0,
-    int arg1,
-  ) {
-    return _getpriority(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getpriorityPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, id_t)>>(
-          'getpriority');
-  late final _getpriority =
-      _getpriorityPtr.asFunction<int Function(int, int)>();
-
-  int getiopolicy_np(
-    int arg0,
-    int arg1,
-  ) {
-    return _getiopolicy_np(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getiopolicy_npPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
-          'getiopolicy_np');
-  late final _getiopolicy_np =
-      _getiopolicy_npPtr.asFunction<int Function(int, int)>();
-
-  int getrlimit(
-    int arg0,
-    ffi.Pointer<rlimit> arg1,
-  ) {
-    return _getrlimit(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getrlimitPtr = _lookup<
-          ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Pointer<rlimit>)>>(
-      'getrlimit');
-  late final _getrlimit =
-      _getrlimitPtr.asFunction<int Function(int, ffi.Pointer<rlimit>)>();
-
-  int getrusage(
-    int arg0,
-    ffi.Pointer<rusage> arg1,
-  ) {
-    return _getrusage(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getrusagePtr = _lookup<
-          ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Pointer<rusage>)>>(
-      'getrusage');
-  late final _getrusage =
-      _getrusagePtr.asFunction<int Function(int, ffi.Pointer<rusage>)>();
-
-  int setpriority(
-    int arg0,
-    int arg1,
-    int arg2,
-  ) {
-    return _setpriority(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _setpriorityPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, id_t, ffi.Int)>>(
-          'setpriority');
-  late final _setpriority =
-      _setpriorityPtr.asFunction<int Function(int, int, int)>();
-
-  int setiopolicy_np(
-    int arg0,
-    int arg1,
-    int arg2,
-  ) {
-    return _setiopolicy_np(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _setiopolicy_npPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int, ffi.Int)>>(
-          'setiopolicy_np');
-  late final _setiopolicy_np =
-      _setiopolicy_npPtr.asFunction<int Function(int, int, int)>();
-
-  int setrlimit(
-    int arg0,
-    ffi.Pointer<rlimit> arg1,
-  ) {
-    return _setrlimit(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _setrlimitPtr = _lookup<
-          ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Pointer<rlimit>)>>(
-      'setrlimit');
-  late final _setrlimit =
-      _setrlimitPtr.asFunction<int Function(int, ffi.Pointer<rlimit>)>();
-
-  int wait1(
-    ffi.Pointer<ffi.Int> arg0,
-  ) {
-    return _wait1(
-      arg0,
-    );
-  }
-
-  late final _wait1Ptr =
-      _lookup<ffi.NativeFunction<pid_t Function(ffi.Pointer<ffi.Int>)>>('wait');
-  late final _wait1 =
-      _wait1Ptr.asFunction<int Function(ffi.Pointer<ffi.Int>)>();
-
-  int waitpid(
-    int arg0,
-    ffi.Pointer<ffi.Int> arg1,
-    int arg2,
-  ) {
-    return _waitpid(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _waitpidPtr = _lookup<
-      ffi.NativeFunction<
-          pid_t Function(pid_t, ffi.Pointer<ffi.Int>, ffi.Int)>>('waitpid');
-  late final _waitpid =
-      _waitpidPtr.asFunction<int Function(int, ffi.Pointer<ffi.Int>, int)>();
-
-  int waitid(
-    int arg0,
-    int arg1,
-    ffi.Pointer<siginfo_t> arg2,
-    int arg3,
-  ) {
-    return _waitid(
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-    );
-  }
-
-  late final _waitidPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Int32, id_t, ffi.Pointer<siginfo_t>, ffi.Int)>>('waitid');
-  late final _waitid = _waitidPtr
-      .asFunction<int Function(int, int, ffi.Pointer<siginfo_t>, int)>();
-
-  int wait3(
-    ffi.Pointer<ffi.Int> arg0,
-    int arg1,
-    ffi.Pointer<rusage> arg2,
-  ) {
-    return _wait3(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _wait3Ptr = _lookup<
-      ffi.NativeFunction<
-          pid_t Function(
-              ffi.Pointer<ffi.Int>, ffi.Int, ffi.Pointer<rusage>)>>('wait3');
-  late final _wait3 = _wait3Ptr.asFunction<
-      int Function(ffi.Pointer<ffi.Int>, int, ffi.Pointer<rusage>)>();
-
-  int wait4(
-    int arg0,
-    ffi.Pointer<ffi.Int> arg1,
-    int arg2,
-    ffi.Pointer<rusage> arg3,
-  ) {
-    return _wait4(
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-    );
-  }
-
-  late final _wait4Ptr = _lookup<
-      ffi.NativeFunction<
-          pid_t Function(pid_t, ffi.Pointer<ffi.Int>, ffi.Int,
-              ffi.Pointer<rusage>)>>('wait4');
-  late final _wait4 = _wait4Ptr.asFunction<
-      int Function(int, ffi.Pointer<ffi.Int>, int, ffi.Pointer<rusage>)>();
-
-  ffi.Pointer<ffi.Void> alloca(
-    int arg0,
-  ) {
-    return _alloca(
-      arg0,
-    );
-  }
-
-  late final _allocaPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>(
-          'alloca');
-  late final _alloca =
-      _allocaPtr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
-
-  late final ffi.Pointer<ffi.Int> ___mb_cur_max =
-      _lookup<ffi.Int>('__mb_cur_max');
-
-  int get __mb_cur_max => ___mb_cur_max.value;
-
-  set __mb_cur_max(int value) => ___mb_cur_max.value = value;
-
-  /// <malloc/_malloc.h>
-  ffi.Pointer<ffi.Void> malloc_type_malloc(
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_malloc(
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_mallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Size, malloc_type_id_t)>>('malloc_type_malloc');
-  late final _malloc_type_malloc = _malloc_type_mallocPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_calloc(
-    int count,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_calloc(
-      count,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_callocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Size, ffi.Size, malloc_type_id_t)>>('malloc_type_calloc');
-  late final _malloc_type_calloc = _malloc_type_callocPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(int, int, int)>();
-
-  void malloc_type_free(
-    ffi.Pointer<ffi.Void> ptr,
-    int type_id,
-  ) {
-    return _malloc_type_free(
-      ptr,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_freePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void>, malloc_type_id_t)>>('malloc_type_free');
-  late final _malloc_type_free = _malloc_type_freePtr
-      .asFunction<void Function(ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_realloc(
-    ffi.Pointer<ffi.Void> ptr,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_realloc(
-      ptr,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_reallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Size,
-              malloc_type_id_t)>>('malloc_type_realloc');
-  late final _malloc_type_realloc = _malloc_type_reallocPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_valloc(
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_valloc(
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_vallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Size, malloc_type_id_t)>>('malloc_type_valloc');
-  late final _malloc_type_valloc = _malloc_type_vallocPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_aligned_alloc(
-    int alignment,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_aligned_alloc(
-      alignment,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_aligned_allocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size,
-              malloc_type_id_t)>>('malloc_type_aligned_alloc');
-  late final _malloc_type_aligned_alloc = _malloc_type_aligned_allocPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(int, int, int)>();
-
-  /// rdar://75598414 (Support __counted_by_or_null)
-  int malloc_type_posix_memalign(
-    ffi.Pointer<ffi.Pointer<ffi.Void>> memptr,
-    int alignment,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_posix_memalign(
-      memptr,
-      alignment,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_posix_memalignPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Size,
-              ffi.Size, malloc_type_id_t)>>('malloc_type_posix_memalign');
-  late final _malloc_type_posix_memalign =
-      _malloc_type_posix_memalignPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, int, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_zone_malloc(
-    ffi.Pointer<malloc_zone_t> zone,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_zone_malloc(
-      zone,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_mallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, ffi.Size,
-              malloc_type_id_t)>>('malloc_type_zone_malloc');
-  late final _malloc_type_zone_malloc = _malloc_type_zone_mallocPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_zone_calloc(
-    ffi.Pointer<malloc_zone_t> zone,
-    int count,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_zone_calloc(
-      zone,
-      count,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_callocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, ffi.Size,
-              ffi.Size, malloc_type_id_t)>>('malloc_type_zone_calloc');
-  late final _malloc_type_zone_calloc = _malloc_type_zone_callocPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(
-          ffi.Pointer<malloc_zone_t>, int, int, int)>();
-
-  void malloc_type_zone_free(
-    ffi.Pointer<malloc_zone_t> zone,
-    ffi.Pointer<ffi.Void> ptr,
-    int type_id,
-  ) {
-    return _malloc_type_zone_free(
-      zone,
-      ptr,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_freePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<malloc_zone_t>, ffi.Pointer<ffi.Void>,
-              malloc_type_id_t)>>('malloc_type_zone_free');
-  late final _malloc_type_zone_free = _malloc_type_zone_freePtr.asFunction<
-      void Function(ffi.Pointer<malloc_zone_t>, ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_zone_realloc(
-    ffi.Pointer<malloc_zone_t> zone,
-    ffi.Pointer<ffi.Void> ptr,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_zone_realloc(
-      zone,
-      ptr,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_reallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<malloc_zone_t>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              malloc_type_id_t)>>('malloc_type_zone_realloc');
-  late final _malloc_type_zone_realloc =
-      _malloc_type_zone_reallocPtr.asFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<malloc_zone_t>, ffi.Pointer<ffi.Void>, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_zone_valloc(
-    ffi.Pointer<malloc_zone_t> zone,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_zone_valloc(
-      zone,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_vallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, ffi.Size,
-              malloc_type_id_t)>>('malloc_type_zone_valloc');
-  late final _malloc_type_zone_valloc = _malloc_type_zone_vallocPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc_type_zone_memalign(
-    ffi.Pointer<malloc_zone_t> zone,
-    int alignment,
-    int size,
-    int type_id,
-  ) {
-    return _malloc_type_zone_memalign(
-      zone,
-      alignment,
-      size,
-      type_id,
-    );
-  }
-
-  late final _malloc_type_zone_memalignPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<malloc_zone_t>, ffi.Size,
-              ffi.Size, malloc_type_id_t)>>('malloc_type_zone_memalign');
-  late final _malloc_type_zone_memalign =
-      _malloc_type_zone_memalignPtr.asFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<malloc_zone_t>, int, int, int)>();
-
-  ffi.Pointer<ffi.Void> malloc(
-    int __size,
-  ) {
-    return _malloc(
-      __size,
-    );
-  }
-
-  late final _mallocPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>(
-          'malloc');
-  late final _malloc =
-      _mallocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
-
-  ffi.Pointer<ffi.Void> calloc(
-    int __count,
-    int __size,
-  ) {
-    return _calloc(
-      __count,
-      __size,
-    );
-  }
-
-  late final _callocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>>('calloc');
-  late final _calloc =
-      _callocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int, int)>();
-
-  void free(
-    ffi.Pointer<ffi.Void> arg0,
-  ) {
-    return _free(
-      arg0,
-    );
-  }
-
-  late final _freePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'free');
-  late final _free =
-      _freePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Void> realloc(
-    ffi.Pointer<ffi.Void> __ptr,
-    int __size,
-  ) {
-    return _realloc(
-      __ptr,
-      __size,
-    );
-  }
-
-  late final _reallocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>, ffi.Size)>>('realloc');
-  late final _realloc = _reallocPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Void> reallocf(
-    ffi.Pointer<ffi.Void> __ptr,
-    int __size,
-  ) {
-    return _reallocf(
-      __ptr,
-      __size,
-    );
-  }
-
-  late final _reallocfPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>, ffi.Size)>>('reallocf');
-  late final _reallocf = _reallocfPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, int)>();
-
-  ffi.Pointer<ffi.Void> valloc(
-    int arg0,
-  ) {
-    return _valloc(
-      arg0,
-    );
-  }
-
-  late final _vallocPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>(
-          'valloc');
-  late final _valloc =
-      _vallocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
-
-  ffi.Pointer<ffi.Void> aligned_alloc(
-    int __alignment,
-    int __size,
-  ) {
-    return _aligned_alloc(
-      __alignment,
-      __size,
-    );
-  }
-
-  late final _aligned_allocPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>>('aligned_alloc');
-  late final _aligned_alloc =
-      _aligned_allocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int, int)>();
-
-  /// rdar://75598414 (Support __counted_by_or_null)
-  int posix_memalign(
-    ffi.Pointer<ffi.Pointer<ffi.Void>> __memptr,
-    int __alignment,
-    int __size,
-  ) {
-    return _posix_memalign(
-      __memptr,
-      __alignment,
-      __size,
-    );
-  }
-
-  late final _posix_memalignPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Size,
-              ffi.Size)>>('posix_memalign');
-  late final _posix_memalign = _posix_memalignPtr
-      .asFunction<int Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, int, int)>();
-
-  void abort() {
-    return _abort();
-  }
-
-  late final _abortPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('abort');
-  late final _abort = _abortPtr.asFunction<void Function()>();
-
-  int abs(
-    int arg0,
-  ) {
-    return _abs(
-      arg0,
-    );
-  }
-
-  late final _absPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>('abs');
-  late final _abs = _absPtr.asFunction<int Function(int)>();
-
-  int atexit(
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> arg0,
-  ) {
-    return _atexit(
-      arg0,
-    );
-  }
-
-  late final _atexitPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>>('atexit');
-  late final _atexit = _atexitPtr.asFunction<
-      int Function(ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>();
-
-  double atof(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _atof(
-      arg0,
-    );
-  }
-
-  late final _atofPtr =
-      _lookup<ffi.NativeFunction<ffi.Double Function(ffi.Pointer<ffi.Char>)>>(
-          'atof');
-  late final _atof =
-      _atofPtr.asFunction<double Function(ffi.Pointer<ffi.Char>)>();
-
-  int atoi(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _atoi(
-      arg0,
-    );
-  }
-
-  late final _atoiPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'atoi');
-  late final _atoi = _atoiPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int atol(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _atol(
-      arg0,
-    );
-  }
-
-  late final _atolPtr =
-      _lookup<ffi.NativeFunction<ffi.Long Function(ffi.Pointer<ffi.Char>)>>(
-          'atol');
-  late final _atol = _atolPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int atoll(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _atoll(
-      arg0,
-    );
-  }
-
-  late final _atollPtr =
-      _lookup<ffi.NativeFunction<ffi.LongLong Function(ffi.Pointer<ffi.Char>)>>(
-          'atoll');
-  late final _atoll =
-      _atollPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  ffi.Pointer<ffi.Void> bsearch(
-    ffi.Pointer<ffi.Void> __key,
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _bsearch(
-      __key,
-      __base,
-      __nel,
-      __width,
-      __compar,
-    );
-  }
-
-  late final _bsearchPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('bsearch');
-  late final _bsearch = _bsearchPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>();
-
-  /// calloc is now declared in _malloc.h
-  div_t div(
-    int arg0,
-    int arg1,
-  ) {
-    return _div(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _divPtr =
-      _lookup<ffi.NativeFunction<div_t Function(ffi.Int, ffi.Int)>>('div');
-  late final _div = _divPtr.asFunction<div_t Function(int, int)>();
-
-  void exit(
-    int arg0,
-  ) {
-    return _exit(
-      arg0,
-    );
-  }
-
-  late final _exitPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>('exit');
-  late final _exit = _exitPtr.asFunction<void Function(int)>();
-
-  /// free is now declared in _malloc.h
-  ffi.Pointer<ffi.Char> getenv(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _getenv(
-      arg0,
-    );
-  }
-
-  late final _getenvPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>>('getenv');
-  late final _getenv = _getenvPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
-
-  int labs(
-    int arg0,
-  ) {
-    return _labs(
-      arg0,
-    );
-  }
-
-  late final _labsPtr =
-      _lookup<ffi.NativeFunction<ffi.Long Function(ffi.Long)>>('labs');
-  late final _labs = _labsPtr.asFunction<int Function(int)>();
-
-  ldiv_t ldiv(
-    int arg0,
-    int arg1,
-  ) {
-    return _ldiv(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _ldivPtr =
-      _lookup<ffi.NativeFunction<ldiv_t Function(ffi.Long, ffi.Long)>>('ldiv');
-  late final _ldiv = _ldivPtr.asFunction<ldiv_t Function(int, int)>();
-
-  int llabs(
-    int arg0,
-  ) {
-    return _llabs(
-      arg0,
-    );
-  }
-
-  late final _llabsPtr =
-      _lookup<ffi.NativeFunction<ffi.LongLong Function(ffi.LongLong)>>('llabs');
-  late final _llabs = _llabsPtr.asFunction<int Function(int)>();
-
-  lldiv_t lldiv(
-    int arg0,
-    int arg1,
-  ) {
-    return _lldiv(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _lldivPtr =
-      _lookup<ffi.NativeFunction<lldiv_t Function(ffi.LongLong, ffi.LongLong)>>(
-          'lldiv');
-  late final _lldiv = _lldivPtr.asFunction<lldiv_t Function(int, int)>();
-
-  /// malloc is now declared in _malloc.h
-  int mblen(
-    ffi.Pointer<ffi.Char> __s,
-    int __n,
-  ) {
-    return _mblen(
-      __s,
-      __n,
-    );
-  }
-
-  late final _mblenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Size)>>('mblen');
-  late final _mblen =
-      _mblenPtr.asFunction<int Function(ffi.Pointer<ffi.Char>, int)>();
-
-  int mbstowcs(
-    ffi.Pointer<ffi.WChar> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    int arg2,
-  ) {
-    return _mbstowcs(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _mbstowcsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Size Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>,
-              ffi.Size)>>('mbstowcs');
-  late final _mbstowcs = _mbstowcsPtr.asFunction<
-      int Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>, int)>();
-
-  int mbtowc(
-    ffi.Pointer<ffi.WChar> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    int arg2,
-  ) {
-    return _mbtowc(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _mbtowcPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>,
-              ffi.Size)>>('mbtowc');
-  late final _mbtowc = _mbtowcPtr.asFunction<
-      int Function(ffi.Pointer<ffi.WChar>, ffi.Pointer<ffi.Char>, int)>();
-
-  /// posix_memalign is now declared in _malloc.h
-  void qsort(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _qsort(
-      __base,
-      __nel,
-      __width,
-      __compar,
-    );
-  }
-
-  late final _qsortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('qsort');
-  late final _qsort = _qsortPtr.asFunction<
-      void Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>();
-
-  int rand() {
-    return _rand();
-  }
-
-  late final _randPtr = _lookup<ffi.NativeFunction<ffi.Int Function()>>('rand');
-  late final _rand = _randPtr.asFunction<int Function()>();
-
-  /// realloc is now declared in _malloc.h
-  void srand(
-    int arg0,
-  ) {
-    return _srand(
-      arg0,
-    );
-  }
-
-  late final _srandPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.UnsignedInt)>>('srand');
-  late final _srand = _srandPtr.asFunction<void Function(int)>();
-
-  double strtod(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-  ) {
-    return _strtod(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _strtodPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Double Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('strtod');
-  late final _strtod = _strtodPtr.asFunction<
-      double Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  double strtof(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-  ) {
-    return _strtof(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _strtofPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Float Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('strtof');
-  late final _strtof = _strtofPtr.asFunction<
-      double Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int strtol(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtol(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtolPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Long Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtol');
-  late final _strtol = _strtolPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  int strtoll(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtoll(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtollPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.LongLong Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtoll');
-  late final _strtoll = _strtollPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  int strtoul(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtoul(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtoulPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedLong Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtoul');
-  late final _strtoul = _strtoulPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  int strtoull(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtoull(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtoullPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedLongLong Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtoull');
-  late final _strtoull = _strtoullPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  int system(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _system(
-      arg0,
-    );
-  }
-
-  late final _systemPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'system');
-  late final _system =
-      _systemPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int wcstombs(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.WChar> arg1,
-    int arg2,
-  ) {
-    return _wcstombs(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _wcstombsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Size Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.WChar>,
-              ffi.Size)>>('wcstombs');
-  late final _wcstombs = _wcstombsPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.WChar>, int)>();
-
-  int wctomb(
-    ffi.Pointer<ffi.Char> arg0,
-    int arg1,
-  ) {
-    return _wctomb(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _wctombPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.WChar)>>('wctomb');
-  late final _wctomb =
-      _wctombPtr.asFunction<int Function(ffi.Pointer<ffi.Char>, int)>();
-
-  void _Exit(
-    int arg0,
-  ) {
-    return __Exit(
-      arg0,
-    );
-  }
-
-  late final __ExitPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>('_Exit');
-  late final __Exit = __ExitPtr.asFunction<void Function(int)>();
-
-  int a64l(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _a64l(
-      arg0,
-    );
-  }
-
-  late final _a64lPtr =
-      _lookup<ffi.NativeFunction<ffi.Long Function(ffi.Pointer<ffi.Char>)>>(
-          'a64l');
-  late final _a64l = _a64lPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  double drand48() {
-    return _drand48();
-  }
-
-  late final _drand48Ptr =
-      _lookup<ffi.NativeFunction<ffi.Double Function()>>('drand48');
-  late final _drand48 = _drand48Ptr.asFunction<double Function()>();
-
-  ffi.Pointer<ffi.Char> ecvt(
-    double arg0,
-    int arg1,
-    ffi.Pointer<ffi.Int> arg2,
-    ffi.Pointer<ffi.Int> arg3,
-  ) {
-    return _ecvt(
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-    );
-  }
-
-  late final _ecvtPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Double, ffi.Int,
-              ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>>('ecvt');
-  late final _ecvt = _ecvtPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          double, int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>();
-
-  double erand48(
-    ffi.Pointer<ffi.UnsignedShort> arg0,
-  ) {
-    return _erand48(
-      arg0,
-    );
-  }
-
-  late final _erand48Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Double Function(ffi.Pointer<ffi.UnsignedShort>)>>('erand48');
-  late final _erand48 =
-      _erand48Ptr.asFunction<double Function(ffi.Pointer<ffi.UnsignedShort>)>();
-
-  ffi.Pointer<ffi.Char> fcvt(
-    double arg0,
-    int arg1,
-    ffi.Pointer<ffi.Int> arg2,
-    ffi.Pointer<ffi.Int> arg3,
-  ) {
-    return _fcvt(
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-    );
-  }
-
-  late final _fcvtPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Double, ffi.Int,
-              ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>>('fcvt');
-  late final _fcvt = _fcvtPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          double, int, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>();
-
-  ffi.Pointer<ffi.Char> gcvt(
-    double arg0,
-    int arg1,
-    ffi.Pointer<ffi.Char> arg2,
-  ) {
-    return _gcvt(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _gcvtPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Double, ffi.Int, ffi.Pointer<ffi.Char>)>>('gcvt');
-  late final _gcvt = _gcvtPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(double, int, ffi.Pointer<ffi.Char>)>();
-
-  int getsubopt(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
-  ) {
-    return _getsubopt(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _getsuboptPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('getsubopt');
-  late final _getsubopt = _getsuboptPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Pointer<ffi.Char>>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int grantpt(
-    int arg0,
-  ) {
-    return _grantpt(
-      arg0,
-    );
-  }
-
-  late final _grantptPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>('grantpt');
-  late final _grantpt = _grantptPtr.asFunction<int Function(int)>();
-
-  ffi.Pointer<ffi.Char> initstate(
-    int arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    int arg2,
-  ) {
-    return _initstate(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _initstatePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.UnsignedInt, ffi.Pointer<ffi.Char>, ffi.Size)>>('initstate');
-  late final _initstate = _initstatePtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(int, ffi.Pointer<ffi.Char>, int)>();
-
-  int jrand48(
-    ffi.Pointer<ffi.UnsignedShort> arg0,
-  ) {
-    return _jrand48(
-      arg0,
-    );
-  }
-
-  late final _jrand48Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Long Function(ffi.Pointer<ffi.UnsignedShort>)>>('jrand48');
-  late final _jrand48 =
-      _jrand48Ptr.asFunction<int Function(ffi.Pointer<ffi.UnsignedShort>)>();
-
-  ffi.Pointer<ffi.Char> l64a(
-    int arg0,
-  ) {
-    return _l64a(
-      arg0,
-    );
-  }
-
-  late final _l64aPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Long)>>(
-          'l64a');
-  late final _l64a = _l64aPtr.asFunction<ffi.Pointer<ffi.Char> Function(int)>();
-
-  void lcong48(
-    ffi.Pointer<ffi.UnsignedShort> arg0,
-  ) {
-    return _lcong48(
-      arg0,
-    );
-  }
-
-  late final _lcong48Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.UnsignedShort>)>>('lcong48');
-  late final _lcong48 =
-      _lcong48Ptr.asFunction<void Function(ffi.Pointer<ffi.UnsignedShort>)>();
-
-  int lrand48() {
-    return _lrand48();
-  }
-
-  late final _lrand48Ptr =
-      _lookup<ffi.NativeFunction<ffi.Long Function()>>('lrand48');
-  late final _lrand48 = _lrand48Ptr.asFunction<int Function()>();
-
-  ffi.Pointer<ffi.Char> mktemp(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _mktemp(
-      arg0,
-    );
-  }
-
-  late final _mktempPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>>('mktemp');
-  late final _mktemp = _mktempPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
-
-  int mkstemp(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _mkstemp(
-      arg0,
-    );
-  }
-
-  late final _mkstempPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'mkstemp');
-  late final _mkstemp =
-      _mkstempPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int mrand48() {
-    return _mrand48();
-  }
-
-  late final _mrand48Ptr =
-      _lookup<ffi.NativeFunction<ffi.Long Function()>>('mrand48');
-  late final _mrand48 = _mrand48Ptr.asFunction<int Function()>();
-
-  int nrand48(
-    ffi.Pointer<ffi.UnsignedShort> arg0,
-  ) {
-    return _nrand48(
-      arg0,
-    );
-  }
-
-  late final _nrand48Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Long Function(ffi.Pointer<ffi.UnsignedShort>)>>('nrand48');
-  late final _nrand48 =
-      _nrand48Ptr.asFunction<int Function(ffi.Pointer<ffi.UnsignedShort>)>();
-
-  int posix_openpt(
-    int arg0,
-  ) {
-    return _posix_openpt(
-      arg0,
-    );
-  }
-
-  late final _posix_openptPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>('posix_openpt');
-  late final _posix_openpt = _posix_openptPtr.asFunction<int Function(int)>();
-
-  ffi.Pointer<ffi.Char> ptsname(
-    int arg0,
-  ) {
-    return _ptsname(
-      arg0,
-    );
-  }
-
-  late final _ptsnamePtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Int)>>(
-          'ptsname');
-  late final _ptsname =
-      _ptsnamePtr.asFunction<ffi.Pointer<ffi.Char> Function(int)>();
-
-  int ptsname_r(
-    int fildes,
-    ffi.Pointer<ffi.Char> buffer,
-    int buflen,
-  ) {
-    return _ptsname_r(
-      fildes,
-      buffer,
-      buflen,
-    );
-  }
-
-  late final _ptsname_rPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Int, ffi.Pointer<ffi.Char>, ffi.Size)>>('ptsname_r');
-  late final _ptsname_r =
-      _ptsname_rPtr.asFunction<int Function(int, ffi.Pointer<ffi.Char>, int)>();
-
-  int putenv(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _putenv(
-      arg0,
-    );
-  }
-
-  late final _putenvPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'putenv');
-  late final _putenv =
-      _putenvPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int random() {
-    return _random();
-  }
-
-  late final _randomPtr =
-      _lookup<ffi.NativeFunction<ffi.Long Function()>>('random');
-  late final _random = _randomPtr.asFunction<int Function()>();
-
-  int rand_r(
-    ffi.Pointer<ffi.UnsignedInt> arg0,
-  ) {
-    return _rand_r(
-      arg0,
-    );
-  }
-
-  late final _rand_rPtr = _lookup<
-          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.UnsignedInt>)>>(
-      'rand_r');
-  late final _rand_r =
-      _rand_rPtr.asFunction<int Function(ffi.Pointer<ffi.UnsignedInt>)>();
-
-  ffi.Pointer<ffi.Char> realpath(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-  ) {
-    return _realpath(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _realpathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('realpath');
-  late final _realpath = _realpathPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
-
-  ffi.Pointer<ffi.UnsignedShort> seed48(
-    ffi.Pointer<ffi.UnsignedShort> arg0,
-  ) {
-    return _seed48(
-      arg0,
-    );
-  }
-
-  late final _seed48Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.UnsignedShort> Function(
-              ffi.Pointer<ffi.UnsignedShort>)>>('seed48');
-  late final _seed48 = _seed48Ptr.asFunction<
-      ffi.Pointer<ffi.UnsignedShort> Function(
-          ffi.Pointer<ffi.UnsignedShort>)>();
-
-  int setenv(
-    ffi.Pointer<ffi.Char> __name,
-    ffi.Pointer<ffi.Char> __value,
-    int __overwrite,
-  ) {
-    return _setenv(
-      __name,
-      __value,
-      __overwrite,
-    );
-  }
-
-  late final _setenvPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Int)>>('setenv');
-  late final _setenv = _setenvPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int)>();
-
-  void setkey(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _setkey(
-      arg0,
-    );
-  }
-
-  late final _setkeyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>>(
-          'setkey');
-  late final _setkey =
-      _setkeyPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
-
-  ffi.Pointer<ffi.Char> setstate(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _setstate(
-      arg0,
-    );
-  }
-
-  late final _setstatePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>>('setstate');
-  late final _setstate = _setstatePtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
-
-  void srand48(
-    int arg0,
-  ) {
-    return _srand48(
-      arg0,
-    );
-  }
-
-  late final _srand48Ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Long)>>('srand48');
-  late final _srand48 = _srand48Ptr.asFunction<void Function(int)>();
-
-  void srandom(
-    int arg0,
-  ) {
-    return _srandom(
-      arg0,
-    );
-  }
-
-  late final _srandomPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.UnsignedInt)>>(
-          'srandom');
-  late final _srandom = _srandomPtr.asFunction<void Function(int)>();
-
-  int unlockpt(
-    int arg0,
-  ) {
-    return _unlockpt(
-      arg0,
-    );
-  }
-
-  late final _unlockptPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>('unlockpt');
-  late final _unlockpt = _unlockptPtr.asFunction<int Function(int)>();
-
-  int unsetenv(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _unsetenv(
-      arg0,
-    );
-  }
-
-  late final _unsetenvPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'unsetenv');
-  late final _unsetenv =
-      _unsetenvPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int arc4random() {
-    return _arc4random();
-  }
-
-  late final _arc4randomPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>('arc4random');
-  late final _arc4random = _arc4randomPtr.asFunction<int Function()>();
-
-  void arc4random_addrandom(
-    ffi.Pointer<ffi.UnsignedChar> arg0,
-    int arg1,
-  ) {
-    return _arc4random_addrandom(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _arc4random_addrandomPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.UnsignedChar>, ffi.Int)>>('arc4random_addrandom');
-  late final _arc4random_addrandom = _arc4random_addrandomPtr
-      .asFunction<void Function(ffi.Pointer<ffi.UnsignedChar>, int)>();
-
-  void arc4random_buf(
-    ffi.Pointer<ffi.Void> __buf,
-    int __nbytes,
-  ) {
-    return _arc4random_buf(
-      __buf,
-      __nbytes,
-    );
-  }
-
-  late final _arc4random_bufPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>>(
-      'arc4random_buf');
-  late final _arc4random_buf = _arc4random_bufPtr
-      .asFunction<void Function(ffi.Pointer<ffi.Void>, int)>();
-
-  void arc4random_stir() {
-    return _arc4random_stir();
-  }
-
-  late final _arc4random_stirPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('arc4random_stir');
-  late final _arc4random_stir =
-      _arc4random_stirPtr.asFunction<void Function()>();
-
-  int arc4random_uniform(
-    int __upper_bound,
-  ) {
-    return _arc4random_uniform(
-      __upper_bound,
-    );
-  }
-
-  late final _arc4random_uniformPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Uint32)>>(
-          'arc4random_uniform');
-  late final _arc4random_uniform =
-      _arc4random_uniformPtr.asFunction<int Function(int)>();
-
-  /// getcap(3) functions
-  ffi.Pointer<ffi.Char> cgetcap(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    int arg2,
-  ) {
-    return _cgetcap(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _cgetcapPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>, ffi.Int)>>('cgetcap');
-  late final _cgetcap = _cgetcapPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, int)>();
-
-  int cgetclose() {
-    return _cgetclose();
-  }
-
-  late final _cgetclosePtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function()>>('cgetclose');
-  late final _cgetclose = _cgetclosePtr.asFunction<int Function()>();
-
-  int cgetent(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-    ffi.Pointer<ffi.Char> arg2,
-  ) {
-    return _cgetent(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _cgetentPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Char>)>>('cgetent');
-  late final _cgetent = _cgetentPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<ffi.Char>)>();
-
-  int cgetfirst(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-  ) {
-    return _cgetfirst(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _cgetfirstPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('cgetfirst');
-  late final _cgetfirst = _cgetfirstPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int cgetmatch(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-  ) {
-    return _cgetmatch(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _cgetmatchPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>>('cgetmatch');
-  late final _cgetmatch = _cgetmatchPtr
-      .asFunction<int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
-
-  int cgetnext(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg0,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg1,
-  ) {
-    return _cgetnext(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _cgetnextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('cgetnext');
-  late final _cgetnext = _cgetnextPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int cgetnum(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    ffi.Pointer<ffi.Long> arg2,
-  ) {
-    return _cgetnum(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _cgetnumPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Long>)>>('cgetnum');
-  late final _cgetnum = _cgetnumPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Long>)>();
-
-  int cgetset(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _cgetset(
-      arg0,
-    );
-  }
-
-  late final _cgetsetPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'cgetset');
-  late final _cgetset =
-      _cgetsetPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int cgetstr(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
-  ) {
-    return _cgetstr(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _cgetstrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('cgetstr');
-  late final _cgetstr = _cgetstrPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int cgetustr(
-    ffi.Pointer<ffi.Char> arg0,
-    ffi.Pointer<ffi.Char> arg1,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> arg2,
-  ) {
-    return _cgetustr(
-      arg0,
-      arg1,
-      arg2,
-    );
-  }
-
-  late final _cgetustrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('cgetustr');
-  late final _cgetustr = _cgetustrPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int daemon(
-    int arg0,
-    int arg1,
-  ) {
-    return _daemon(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _daemonPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('daemon');
-  late final _daemon = _daemonPtr.asFunction<int Function(int, int)>();
-
-  ffi.Pointer<ffi.Char> devname(
-    int arg0,
-    int arg1,
-  ) {
-    return _devname(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _devnamePtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(dev_t, mode_t)>>(
-      'devname');
-  late final _devname =
-      _devnamePtr.asFunction<ffi.Pointer<ffi.Char> Function(int, int)>();
-
-  ffi.Pointer<ffi.Char> devname_r(
-    int arg0,
-    int arg1,
-    ffi.Pointer<ffi.Char> buf,
-    int len,
-  ) {
-    return _devname_r(
-      arg0,
-      arg1,
-      buf,
-      len,
-    );
-  }
-
-  late final _devname_rPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              dev_t, mode_t, ffi.Pointer<ffi.Char>, ffi.Int)>>('devname_r');
-  late final _devname_r = _devname_rPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(int, int, ffi.Pointer<ffi.Char>, int)>();
-
-  ffi.Pointer<ffi.Char> getbsize(
-    ffi.Pointer<ffi.Int> arg0,
-    ffi.Pointer<ffi.Long> arg1,
-  ) {
-    return _getbsize(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getbsizePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Long>)>>('getbsize');
-  late final _getbsize = _getbsizePtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Long>)>();
-
-  int getloadavg(
-    ffi.Pointer<ffi.Double> arg0,
-    int arg1,
-  ) {
-    return _getloadavg(
-      arg0,
-      arg1,
-    );
-  }
-
-  late final _getloadavgPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Double>, ffi.Int)>>('getloadavg');
-  late final _getloadavg =
-      _getloadavgPtr.asFunction<int Function(ffi.Pointer<ffi.Double>, int)>();
-
-  ffi.Pointer<ffi.Char> getprogname() {
-    return _getprogname();
-  }
-
-  late final _getprognamePtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-          'getprogname');
-  late final _getprogname =
-      _getprognamePtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
-
-  void setprogname(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _setprogname(
-      arg0,
-    );
-  }
-
-  late final _setprognamePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>>(
-          'setprogname');
-  late final _setprogname =
-      _setprognamePtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
-
-  int heapsort(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _heapsort(
-      __base,
-      __nel,
-      __width,
-      __compar,
-    );
-  }
-
-  late final _heapsortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('heapsort');
-  late final _heapsort = _heapsortPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>();
-
-  int mergesort(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _mergesort(
-      __base,
-      __nel,
-      __width,
-      __compar,
-    );
-  }
-
-  late final _mergesortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('mergesort');
-  late final _mergesort = _mergesortPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>();
-
-  void psort(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _psort(
-      __base,
-      __nel,
-      __width,
-      __compar,
-    );
-  }
-
-  late final _psortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('psort');
-  late final _psort = _psortPtr.asFunction<
-      void Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)>>)>();
-
-  void psort_r(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<ffi.Void> arg3,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
-                    ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _psort_r(
-      __base,
-      __nel,
-      __width,
-      arg3,
-      __compar,
-    );
-  }
-
-  late final _psort_rPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(
-                          ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('psort_r');
-  late final _psort_r = _psort_rPtr.asFunction<
-      void Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
-                      ffi.Pointer<ffi.Void>)>>)>();
-
-  void qsort_r(
-    ffi.Pointer<ffi.Void> __base,
-    int __nel,
-    int __width,
-    ffi.Pointer<ffi.Void> arg3,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
-                    ffi.Pointer<ffi.Void>)>>
-        __compar,
-  ) {
-    return _qsort_r(
-      __base,
-      __nel,
-      __width,
-      arg3,
-      __compar,
-    );
-  }
-
-  late final _qsort_rPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void>,
-              ffi.Size,
-              ffi.Size,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Int Function(
-                          ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<ffi.Void>)>>)>>('qsort_r');
-  late final _qsort_r = _qsort_rPtr.asFunction<
-      void Function(
-          ffi.Pointer<ffi.Void>,
-          int,
-          int,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
-                      ffi.Pointer<ffi.Void>)>>)>();
-
-  int radixsort(
-    ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>> __base,
-    int __nel,
-    ffi.Pointer<ffi.UnsignedChar> __table,
-    int __endbyte,
-  ) {
-    return _radixsort(
-      __base,
-      __nel,
-      __table,
-      __endbyte,
-    );
-  }
-
-  late final _radixsortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>, ffi.Int,
-              ffi.Pointer<ffi.UnsignedChar>, ffi.UnsignedInt)>>('radixsort');
-  late final _radixsort = _radixsortPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>, int,
-          ffi.Pointer<ffi.UnsignedChar>, int)>();
-
-  int rpmatch(
-    ffi.Pointer<ffi.Char> arg0,
-  ) {
-    return _rpmatch(
-      arg0,
-    );
-  }
-
-  late final _rpmatchPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'rpmatch');
-  late final _rpmatch =
-      _rpmatchPtr.asFunction<int Function(ffi.Pointer<ffi.Char>)>();
-
-  int sradixsort(
-    ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>> __base,
-    int __nel,
-    ffi.Pointer<ffi.UnsignedChar> __table,
-    int __endbyte,
-  ) {
-    return _sradixsort(
-      __base,
-      __nel,
-      __table,
-      __endbyte,
-    );
-  }
-
-  late final _sradixsortPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>, ffi.Int,
-              ffi.Pointer<ffi.UnsignedChar>, ffi.UnsignedInt)>>('sradixsort');
-  late final _sradixsort = _sradixsortPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Pointer<ffi.UnsignedChar>>, int,
-          ffi.Pointer<ffi.UnsignedChar>, int)>();
-
-  void sranddev() {
-    return _sranddev();
-  }
-
-  late final _sranddevPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('sranddev');
-  late final _sranddev = _sranddevPtr.asFunction<void Function()>();
-
-  void srandomdev() {
-    return _srandomdev();
-  }
-
-  late final _srandomdevPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('srandomdev');
-  late final _srandomdev = _srandomdevPtr.asFunction<void Function()>();
-
-  /// reallocf is now declared in _malloc.h
-  int strtonum(
-    ffi.Pointer<ffi.Char> __numstr,
-    int __minval,
-    int __maxval,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __errstrp,
-  ) {
-    return _strtonum(
-      __numstr,
-      __minval,
-      __maxval,
-      __errstrp,
-    );
-  }
-
-  late final _strtonumPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.LongLong Function(ffi.Pointer<ffi.Char>, ffi.LongLong,
-              ffi.LongLong, ffi.Pointer<ffi.Pointer<ffi.Char>>)>>('strtonum');
-  late final _strtonum = _strtonumPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, int, int,
-          ffi.Pointer<ffi.Pointer<ffi.Char>>)>();
-
-  int strtoq(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtoq(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtoqPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.LongLong Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtoq');
-  late final _strtoq = _strtoqPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  int strtouq(
-    ffi.Pointer<ffi.Char> __str,
-    ffi.Pointer<ffi.Pointer<ffi.Char>> __endptr,
-    int __base,
-  ) {
-    return _strtouq(
-      __str,
-      __endptr,
-      __base,
-    );
-  }
-
-  late final _strtouqPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedLongLong Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Int)>>('strtouq');
-  late final _strtouq = _strtouqPtr.asFunction<
-      int Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
-
-  /// getsubopt(3) external variable
-  late final ffi.Pointer<ffi.Pointer<ffi.Char>> _suboptarg =
-      _lookup<ffi.Pointer<ffi.Char>>('suboptarg');
-
-  ffi.Pointer<ffi.Char> get suboptarg => _suboptarg.value;
-
-  set suboptarg(ffi.Pointer<ffi.Char> value) => _suboptarg.value = value;
-
-  /// Returns default ceonfiguration for `YOptions`.
-  YOptions yoptions() {
-    return _yoptions();
-  }
-
-  late final _yoptionsPtr =
-      _lookup<ffi.NativeFunction<YOptions Function()>>('yoptions');
-  late final _yoptions = _yoptionsPtr.asFunction<YOptions Function()>();
-
-  /// Releases all memory-allocated resources bound to given document.
-  void ydoc_destroy(
-    ffi.Pointer<YDoc> value,
-  ) {
-    return _ydoc_destroy(
-      value,
-    );
-  }
-
-  late final _ydoc_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YDoc>)>>(
-          'ydoc_destroy');
-  late final _ydoc_destroy =
-      _ydoc_destroyPtr.asFunction<void Function(ffi.Pointer<YDoc>)>();
-
-  /// Frees all memory-allocated resources bound to a given [YMapEntry].
-  void ymap_entry_destroy(
-    ffi.Pointer<YMapEntry> value,
-  ) {
-    return _ymap_entry_destroy(
-      value,
-    );
-  }
-
-  late final _ymap_entry_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YMapEntry>)>>(
-          'ymap_entry_destroy');
-  late final _ymap_entry_destroy = _ymap_entry_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YMapEntry>)>();
-
-  /// Frees all memory-allocated resources bound to a given [YXmlAttr].
-  void yxmlattr_destroy(
-    ffi.Pointer<YXmlAttr> attr,
-  ) {
-    return _yxmlattr_destroy(
-      attr,
-    );
-  }
-
-  late final _yxmlattr_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YXmlAttr>)>>(
-          'yxmlattr_destroy');
-  late final _yxmlattr_destroy =
-      _yxmlattr_destroyPtr.asFunction<void Function(ffi.Pointer<YXmlAttr>)>();
-
-  /// Frees all memory-allocated resources bound to a given UTF-8 null-terminated string returned from
-  /// Yrs document API. Yrs strings don't use libc malloc, so calling `free()` on them will fault.
-  void ystring_destroy(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _ystring_destroy(
-      str,
-    );
-  }
-
-  late final _ystring_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>>(
-          'ystring_destroy');
-  late final _ystring_destroy =
-      _ystring_destroyPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
-
-  ffi.Pointer<YBinaryDestroyInput> ybinary_destroy_struct() {
-    return _ybinary_destroy_struct();
-  }
-
-  late final _ybinary_destroy_structPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<YBinaryDestroyInput> Function()>>(
-          'ybinary_destroy_struct');
-  late final _ybinary_destroy_struct = _ybinary_destroy_structPtr
-      .asFunction<ffi.Pointer<YBinaryDestroyInput> Function()>();
-
-  void ybinary_destroy_from_struct(
-    ffi.Pointer<YBinaryDestroyInput> input,
-  ) {
-    return _ybinary_destroy_from_struct(
-      input,
-    );
-  }
-
-  late final _ybinary_destroy_from_structPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<YBinaryDestroyInput>)>>(
-      'ybinary_destroy_from_struct');
-  late final _ybinary_destroy_from_struct = _ybinary_destroy_from_structPtr
-      .asFunction<void Function(ffi.Pointer<YBinaryDestroyInput>)>();
-
-  /// Frees all memory-allocated resources bound to a given binary returned from Yrs document API.
-  /// Unlike strings binaries are not null-terminated and can contain null characters inside,
-  /// therefore a size of memory to be released must be explicitly provided.
-  /// Yrs binaries don't use libc malloc, so calling `free()` on them will fault.
-  void ybinary_destroy(
-    ffi.Pointer<ffi.Char> ptr,
-    int len,
-  ) {
-    return _ybinary_destroy(
-      ptr,
-      len,
-    );
-  }
-
-  late final _ybinary_destroyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Char>, ffi.Uint32)>>('ybinary_destroy');
-  late final _ybinary_destroy = _ybinary_destroyPtr
-      .asFunction<void Function(ffi.Pointer<ffi.Char>, int)>();
-
-  /// Creates a new [Doc] instance with a randomized unique client identifier.
-  ///
-  /// Use [ydoc_destroy] in order to release created [Doc] resources.
-  ffi.Pointer<YDoc> ydoc_new() {
-    return _ydoc_new();
-  }
-
-  late final _ydoc_newPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<YDoc> Function()>>('ydoc_new');
-  late final _ydoc_new =
-      _ydoc_newPtr.asFunction<ffi.Pointer<YDoc> Function()>();
-
-  /// Creates a shallow clone of a provided `doc` - it's realized by increasing the ref-count
-  /// value of the document. In result both input and output documents point to the same instance.
-  ///
-  /// Documents created this way can be destroyed via [ydoc_destroy] - keep in mind, that the memory
-  /// will still be persisted until all strong references are dropped.
-  ffi.Pointer<YDoc> ydoc_clone(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_clone(
-      doc,
-    );
-  }
-
-  late final _ydoc_clonePtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<YDoc> Function(ffi.Pointer<YDoc>)>>(
-      'ydoc_clone');
-  late final _ydoc_clone = _ydoc_clonePtr
-      .asFunction<ffi.Pointer<YDoc> Function(ffi.Pointer<YDoc>)>();
-
-  /// Creates a new [Doc] instance with a specified `options`.
-  ///
-  /// Use [ydoc_destroy] in order to release created [Doc] resources.
-  ffi.Pointer<YDoc> ydoc_new_with_options(
-    YOptions options,
-  ) {
-    return _ydoc_new_with_options(
-      options,
-    );
-  }
-
-  late final _ydoc_new_with_optionsPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<YDoc> Function(YOptions)>>(
-          'ydoc_new_with_options');
-  late final _ydoc_new_with_options = _ydoc_new_with_optionsPtr
-      .asFunction<ffi.Pointer<YDoc> Function(YOptions)>();
-
-  /// Returns a unique client identifier of this [Doc] instance.
-  int ydoc_id(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_id(
-      doc,
-    );
-  }
-
-  late final _ydoc_idPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint64 Function(ffi.Pointer<YDoc>)>>(
-          'ydoc_id');
-  late final _ydoc_id =
-      _ydoc_idPtr.asFunction<int Function(ffi.Pointer<YDoc>)>();
-
-  /// Returns a unique document identifier of this [Doc] instance.
-  ///
-  /// Generated string resources should be released using [ystring_destroy] function.
-  ffi.Pointer<ffi.Char> ydoc_guid(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_guid(
-      doc,
-    );
-  }
-
-  late final _ydoc_guidPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>>('ydoc_guid');
-  late final _ydoc_guid = _ydoc_guidPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>();
-
-  /// Returns a collection identifier of this [Doc] instance.
-  /// If none was defined, a `NULL` will be returned.
-  ///
-  /// Generated string resources should be released using [ystring_destroy] function.
-  ffi.Pointer<ffi.Char> ydoc_collection_id(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_collection_id(
-      doc,
-    );
-  }
-
-  late final _ydoc_collection_idPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>>(
-      'ydoc_collection_id');
-  late final _ydoc_collection_id = _ydoc_collection_idPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>();
-
-  /// Returns status of should_load flag of this [Doc] instance, informing parent [Doc] if this
-  /// document instance requested a data load.
-  int ydoc_should_load(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_should_load(
-      doc,
-    );
-  }
-
-  late final _ydoc_should_loadPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<YDoc>)>>(
-          'ydoc_should_load');
-  late final _ydoc_should_load =
-      _ydoc_should_loadPtr.asFunction<int Function(ffi.Pointer<YDoc>)>();
-
-  /// Returns status of auto_load flag of this [Doc] instance. Auto loaded sub-documents automatically
-  /// send a load request to their parent documents.
-  int ydoc_auto_load(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_auto_load(
-      doc,
-    );
-  }
-
-  late final _ydoc_auto_loadPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<YDoc>)>>(
-          'ydoc_auto_load');
-  late final _ydoc_auto_load =
-      _ydoc_auto_loadPtr.asFunction<int Function(ffi.Pointer<YDoc>)>();
-
-  ffi.Pointer<YSubscription> ydoc_observe_updates_v1(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
-        cb,
-  ) {
-    return _ydoc_observe_updates_v1(
-      doc,
-      state,
-      cb,
-    );
-  }
-
-  late final _ydoc_observe_updates_v1Ptr = _lookup<
+/// Documents created this way can be destroyed via [ydoc_destroy] - keep in mind, that the memory
+/// will still be persisted until all strong references are dropped.
+@ffi.Native<ffi.Pointer<YDoc> Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_clone', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDoc> ydoc_clone(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Creates a new [Doc] instance with a specified `options`.
+///
+/// Use [ydoc_destroy] in order to release created [Doc] resources.
+@ffi.Native<ffi.Pointer<YDoc> Function(YOptions)>(
+    symbol: 'ydoc_new_with_options', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDoc> ydoc_new_with_options(
+  YOptions options,
+);
+
+/// Returns a unique client identifier of this [Doc] instance.
+@ffi.Native<ffi.Uint64 Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_id', assetId: 'package:y_dart/y_dart')
+external int ydoc_id(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Returns a unique document identifier of this [Doc] instance.
+///
+/// Generated string resources should be released using [ystring_destroy] function.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_guid', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ydoc_guid(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Returns a collection identifier of this [Doc] instance.
+/// If none was defined, a `NULL` will be returned.
+///
+/// Generated string resources should be released using [ystring_destroy] function.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_collection_id', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ydoc_collection_id(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Returns status of should_load flag of this [Doc] instance, informing parent [Doc] if this
+/// document instance requested a data load.
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_should_load', assetId: 'package:y_dart/y_dart')
+external int ydoc_should_load(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Returns status of auto_load flag of this [Doc] instance. Auto loaded sub-documents automatically
+/// send a load request to their parent documents.
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_auto_load', assetId: 'package:y_dart/y_dart')
+external int ydoc_auto_load(
+  ffi.Pointer<YDoc> doc,
+);
+
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YDoc>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                        ffi.Pointer<ffi.Char>)>>)>(
+    symbol: 'ydoc_observe_updates_v1', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ydoc_observe_updates_v1(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YDoc>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                              ffi.Pointer<ffi.Char>)>>)>>(
-      'ydoc_observe_updates_v1');
-  late final _ydoc_observe_updates_v1 = _ydoc_observe_updates_v1Ptr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<YDoc>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                      ffi.Pointer<ffi.Char>)>>)>();
-
-  ffi.Pointer<YSubscription> ydoc_observe_updates_v2(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
-        cb,
-  ) {
-    return _ydoc_observe_updates_v2(
-      doc,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
       cb,
-    );
-  }
+);
 
-  late final _ydoc_observe_updates_v2Ptr = _lookup<
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YDoc>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                        ffi.Pointer<ffi.Char>)>>)>(
+    symbol: 'ydoc_observe_updates_v2', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ydoc_observe_updates_v2(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YDoc>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                              ffi.Pointer<ffi.Char>)>>)>>(
-      'ydoc_observe_updates_v2');
-  late final _ydoc_observe_updates_v2 = _ydoc_observe_updates_v2Ptr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<YDoc>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                      ffi.Pointer<ffi.Char>)>>)>();
-
-  ffi.Pointer<YSubscription> ydoc_observe_after_transaction(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(ffi.Pointer<ffi.Void>,
-                    ffi.Pointer<YAfterTransactionEvent>)>>
-        cb,
-  ) {
-    return _ydoc_observe_after_transaction(
-      doc,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
       cb,
-    );
-  }
+);
 
-  late final _ydoc_observe_after_transactionPtr = _lookup<
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YDoc>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(ffi.Pointer<ffi.Void>,
+                        ffi.Pointer<YAfterTransactionEvent>)>>)>(
+    symbol: 'ydoc_observe_after_transaction', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ydoc_observe_after_transaction(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YDoc>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>,
-                              ffi.Pointer<YAfterTransactionEvent>)>>)>>(
-      'ydoc_observe_after_transaction');
-  late final _ydoc_observe_after_transaction =
-      _ydoc_observe_after_transactionPtr.asFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<YDoc>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YAfterTransactionEvent>)>>)>();
-
-  ffi.Pointer<YSubscription> ydoc_observe_subdocs(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YSubdocsEvent>)>>
-        cb,
-  ) {
-    return _ydoc_observe_subdocs(
-      doc,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YAfterTransactionEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _ydoc_observe_subdocsPtr = _lookup<
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YDoc>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YSubdocsEvent>)>>)>(
+    symbol: 'ydoc_observe_subdocs', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ydoc_observe_subdocs(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YDoc>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>,
-                              ffi.Pointer<YSubdocsEvent>)>>)>>(
-      'ydoc_observe_subdocs');
-  late final _ydoc_observe_subdocs = _ydoc_observe_subdocsPtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<YDoc>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YSubdocsEvent>)>>)>();
-
-  ffi.Pointer<YSubscription> ydoc_observe_clear(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YDoc>)>>
-        cb,
-  ) {
-    return _ydoc_observe_clear(
-      doc,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YSubdocsEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _ydoc_observe_clearPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<YDoc>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YDoc>)>>)>>('ydoc_observe_clear');
-  late final _ydoc_observe_clear = _ydoc_observe_clearPtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<YDoc>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YDoc>)>>)>();
-
-  /// Manually send a load request to a parent document of this subdoc.
-  void ydoc_load(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<YTransaction> parent_txn,
-  ) {
-    return _ydoc_load(
-      doc,
-      parent_txn,
-    );
-  }
-
-  late final _ydoc_loadPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>>('ydoc_load');
-  late final _ydoc_load = _ydoc_loadPtr.asFunction<
-      void Function(ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>();
-
-  /// Destroys current document, sending a 'destroy' event and clearing up all the event callbacks
-  /// registered.
-  void ydoc_clear(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<YTransaction> parent_txn,
-  ) {
-    return _ydoc_clear(
-      doc,
-      parent_txn,
-    );
-  }
-
-  late final _ydoc_clearPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>>('ydoc_clear');
-  late final _ydoc_clear = _ydoc_clearPtr.asFunction<
-      void Function(ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>();
-
-  /// Starts a new read-only transaction on a given document. All other operations happen in context
-  /// of a transaction. Yrs transactions do not follow ACID rules. Once a set of operations is
-  /// complete, a transaction can be finished using `ytransaction_commit` function.
-  ///
-  /// Returns `NULL` if read-only transaction couldn't be created, i.e. when another read-write
-  /// transaction is already opened.
-  ffi.Pointer<YTransaction> ydoc_read_transaction(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _ydoc_read_transaction(
-      doc,
-    );
-  }
-
-  late final _ydoc_read_transactionPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YTransaction> Function(
-              ffi.Pointer<YDoc>)>>('ydoc_read_transaction');
-  late final _ydoc_read_transaction = _ydoc_read_transactionPtr
-      .asFunction<ffi.Pointer<YTransaction> Function(ffi.Pointer<YDoc>)>();
-
-  /// Starts a new read-write transaction on a given document. All other operations happen in context
-  /// of a transaction. Yrs transactions do not follow ACID rules. Once a set of operations is
-  /// complete, a transaction can be finished using `ytransaction_commit` function.
-  ///
-  /// `origin_len` and `origin` are optional parameters to specify a byte sequence used to mark
-  /// the origin of this transaction (eg. you may decide to give different origins for transaction
-  /// applying remote updates). These can be used by event handlers or `YUndoManager` to perform
-  /// specific actions. If origin should not be set, call `ydoc_write_transaction(doc, 0, NULL)`.
-  ///
-  /// Returns `NULL` if read-write transaction couldn't be created, i.e. when another transaction is
-  /// already opened.
-  ffi.Pointer<YTransaction> ydoc_write_transaction(
-    ffi.Pointer<YDoc> doc,
-    int origin_len,
-    ffi.Pointer<ffi.Char> origin,
-  ) {
-    return _ydoc_write_transaction(
-      doc,
-      origin_len,
-      origin,
-    );
-  }
-
-  late final _ydoc_write_transactionPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YTransaction> Function(ffi.Pointer<YDoc>, ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('ydoc_write_transaction');
-  late final _ydoc_write_transaction = _ydoc_write_transactionPtr.asFunction<
-      ffi.Pointer<YTransaction> Function(
-          ffi.Pointer<YDoc>, int, ffi.Pointer<ffi.Char>)>();
-
-  /// Returns a list of subdocs existing within current document.
-  ffi.Pointer<ffi.Pointer<YDoc>> ytransaction_subdocs(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_subdocs(
-      txn,
-      len,
-    );
-  }
-
-  late final _ytransaction_subdocsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Pointer<YDoc>> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Uint32>)>>('ytransaction_subdocs');
-  late final _ytransaction_subdocs = _ytransaction_subdocsPtr.asFunction<
-      ffi.Pointer<ffi.Pointer<YDoc>> Function(
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Commit and dispose provided read-write transaction. This operation releases allocated resources,
-  /// triggers update events and performs a storage compression over all operations executed in scope
-  /// of a current transaction.
-  void ytransaction_commit(
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytransaction_commit(
-      txn,
-    );
-  }
-
-  late final _ytransaction_commitPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YTransaction>)>>(
-          'ytransaction_commit');
-  late final _ytransaction_commit = _ytransaction_commitPtr
-      .asFunction<void Function(ffi.Pointer<YTransaction>)>();
-
-  /// Returns `1` if current transaction is of read-write type.
-  /// Returns `0` if transaction is read-only.
-  int ytransaction_writeable(
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytransaction_writeable(
-      txn,
-    );
-  }
-
-  late final _ytransaction_writeablePtr = _lookup<
-          ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<YTransaction>)>>(
-      'ytransaction_writeable');
-  late final _ytransaction_writeable = _ytransaction_writeablePtr
-      .asFunction<int Function(ffi.Pointer<YTransaction>)>();
-
-  /// Gets a reference to shared data type instance at the document root-level,
-  /// identified by its `name`, which must be a null-terminated UTF-8 compatible string.
-  ///
-  /// Returns `NULL` if no such structure was defined in the document before.
-  ffi.Pointer<Branch> ytype_get(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _ytype_get(
-      txn,
-      name,
-    );
-  }
-
-  late final _ytype_getPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>>('ytype_get');
-  late final _ytype_get = _ytype_getPtr.asFunction<
-      ffi.Pointer<Branch> Function(
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>();
-
-  /// Gets or creates a new shared `YText` data type instance as a root-level type of a given document.
-  /// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
-  /// compatible string.
-  ffi.Pointer<Branch> ytext(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _ytext(
-      doc,
-      name,
-    );
-  }
-
-  late final _ytextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>>('ytext');
-  late final _ytext = _ytextPtr.asFunction<
-      ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>();
-
-  /// Gets or creates a new shared `YArray` data type instance as a root-level type of a given document.
-  /// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
-  /// compatible string.
-  ///
-  /// Use [yarray_destroy] in order to release pointer returned that way - keep in mind that this will
-  /// not remove `YArray` instance from the document itself (once created it'll last for the entire
-  /// lifecycle of a document).
-  ffi.Pointer<Branch> yarray(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _yarray(
-      doc,
-      name,
-    );
-  }
-
-  late final _yarrayPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>>('yarray');
-  late final _yarray = _yarrayPtr.asFunction<
-      ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>();
-
-  /// Gets or creates a new shared `YMap` data type instance as a root-level type of a given document.
-  /// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
-  /// compatible string.
-  ///
-  /// Use [ymap_destroy] in order to release pointer returned that way - keep in mind that this will
-  /// not remove `YMap` instance from the document itself (once created it'll last for the entire
-  /// lifecycle of a document).
-  ffi.Pointer<Branch> ymap(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _ymap(
-      doc,
-      name,
-    );
-  }
-
-  late final _ymapPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>>('ymap');
-  late final _ymap = _ymapPtr.asFunction<
-      ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>();
-
-  /// Gets or creates a new shared `YXmlElement` data type instance as a root-level type of a given
-  /// document. This structure can later be accessed using its `name`, which must be a null-terminated
-  /// UTF-8 compatible string.
-  ffi.Pointer<Branch> yxmlfragment(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _yxmlfragment(
-      doc,
-      name,
-    );
-  }
-
-  late final _yxmlfragmentPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>>('yxmlfragment');
-  late final _yxmlfragment = _yxmlfragmentPtr.asFunction<
-      ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>();
-
-  /// Returns a state vector of a current transaction's document, serialized using lib0 version 1
-  /// encoding. Payload created by this function can then be send over the network to a remote peer,
-  /// where it can be used as a parameter of [ytransaction_state_diff_v1] in order to produce a delta
-  /// update payload, that can be send back and applied locally in order to efficiently propagate
-  /// updates from one peer to another.
-  ///
-  /// The length of a generated binary will be passed within a `len` out parameter.
-  ///
-  /// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
-  ffi.Pointer<ffi.Char> ytransaction_state_vector_v1(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_state_vector_v1(
-      txn,
-      len,
-    );
-  }
-
-  late final _ytransaction_state_vector_v1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Uint32>)>>('ytransaction_state_vector_v1');
-  late final _ytransaction_state_vector_v1 =
-      _ytransaction_state_vector_v1Ptr.asFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a delta difference between current state of a transaction's document and a state vector
-  /// `sv` encoded as a binary payload using lib0 version 1 encoding (which could be generated using
-  /// [ytransaction_state_vector_v1]). Such delta can be send back to the state vector's sender in
-  /// order to propagate and apply (using [ytransaction_apply]) all updates known to a current
-  /// document, which remote peer was not aware of.
-  ///
-  /// If passed `sv` pointer is null, the generated diff will be a snapshot containing entire state of
-  /// the document.
-  ///
-  /// A length of an encoded state vector payload must be passed as `sv_len` parameter.
-  ///
-  /// A length of generated delta diff binary will be passed within a `len` out parameter.
-  ///
-  /// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
-  ffi.Pointer<ffi.Char> ytransaction_state_diff_v1(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> sv,
-    int sv_len,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_state_diff_v1(
-      txn,
-      sv,
-      sv_len,
-      len,
-    );
-  }
-
-  late final _ytransaction_state_diff_v1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Uint32>)>>('ytransaction_state_diff_v1');
-  late final _ytransaction_state_diff_v1 =
-      _ytransaction_state_diff_v1Ptr.asFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a delta difference between current state of a transaction's document and a state vector
-  /// `sv` encoded as a binary payload using lib0 version 1 encoding (which could be generated using
-  /// [ytransaction_state_vector_v1]). Such delta can be send back to the state vector's sender in
-  /// order to propagate and apply (using [ytransaction_apply_v2]) all updates known to a current
-  /// document, which remote peer was not aware of.
-  ///
-  /// If passed `sv` pointer is null, the generated diff will be a snapshot containing entire state of
-  /// the document.
-  ///
-  /// A length of an encoded state vector payload must be passed as `sv_len` parameter.
-  ///
-  /// A length of generated delta diff binary will be passed within a `len` out parameter.
-  ///
-  /// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
-  ffi.Pointer<ffi.Char> ytransaction_state_diff_v2(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> sv,
-    int sv_len,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_state_diff_v2(
-      txn,
-      sv,
-      sv_len,
-      len,
-    );
-  }
-
-  late final _ytransaction_state_diff_v2Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Uint32>)>>('ytransaction_state_diff_v2');
-  late final _ytransaction_state_diff_v2 =
-      _ytransaction_state_diff_v2Ptr.asFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a snapshot descriptor of a current state of the document. This snapshot information
-  /// can be then used to encode document data at a particular point in time
-  /// (see: `ytransaction_encode_state_from_snapshot`).
-  ffi.Pointer<ffi.Char> ytransaction_snapshot(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_snapshot(
-      txn,
-      len,
-    );
-  }
-
-  late final _ytransaction_snapshotPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Uint32>)>>('ytransaction_snapshot');
-  late final _ytransaction_snapshot = _ytransaction_snapshotPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Encodes a state of the document at a point in time specified by the provided `snapshot`
-  /// (generated by: `ytransaction_snapshot`). This is useful to generate a past view of the document.
-  ///
-  /// The returned update is binary compatible with Yrs update lib0 v1 encoding, and can be processed
-  /// with functions dedicated to work on it, like `ytransaction_apply`.
-  ///
-  /// This function requires document with a GC option flag turned off (otherwise "time travel" would
-  /// not be a safe operation). If this is not a case, the NULL pointer will be returned.
-  ffi.Pointer<ffi.Char> ytransaction_encode_state_from_snapshot_v1(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> snapshot,
-    int snapshot_len,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_encode_state_from_snapshot_v1(
-      txn,
-      snapshot,
-      snapshot_len,
-      len,
-    );
-  }
-
-  late final _ytransaction_encode_state_from_snapshot_v1Ptr = _lookup<
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YDoc>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YDoc>)>>)>(
+    symbol: 'ydoc_observe_clear', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ydoc_observe_clear(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-                  ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>>(
-      'ytransaction_encode_state_from_snapshot_v1');
-  late final _ytransaction_encode_state_from_snapshot_v1 =
-      _ytransaction_encode_state_from_snapshot_v1Ptr.asFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Uint32>)>();
+              ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YDoc>)>>
+      cb,
+);
 
-  /// Encodes a state of the document at a point in time specified by the provided `snapshot`
-  /// (generated by: `ytransaction_snapshot`). This is useful to generate a past view of the document.
-  ///
-  /// The returned update is binary compatible with Yrs update lib0 v2 encoding, and can be processed
-  /// with functions dedicated to work on it, like `ytransaction_apply_v2`.
-  ///
-  /// This function requires document with a GC option flag turned off (otherwise "time travel" would
-  /// not be a safe operation). If this is not a case, the NULL pointer will be returned.
-  ffi.Pointer<ffi.Char> ytransaction_encode_state_from_snapshot_v2(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> snapshot,
-    int snapshot_len,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytransaction_encode_state_from_snapshot_v2(
-      txn,
-      snapshot,
-      snapshot_len,
-      len,
-    );
-  }
+/// Manually send a load request to a parent document of this subdoc.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ydoc_load', assetId: 'package:y_dart/y_dart')
+external void ydoc_load(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<YTransaction> parent_txn,
+);
 
-  late final _ytransaction_encode_state_from_snapshot_v2Ptr = _lookup<
+/// Destroys current document, sending a 'destroy' event and clearing up all the event callbacks
+/// registered.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YDoc>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ydoc_clear', assetId: 'package:y_dart/y_dart')
+external void ydoc_clear(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<YTransaction> parent_txn,
+);
+
+/// Starts a new read-only transaction on a given document. All other operations happen in context
+/// of a transaction. Yrs transactions do not follow ACID rules. Once a set of operations is
+/// complete, a transaction can be finished using `ytransaction_commit` function.
+///
+/// Returns `NULL` if read-only transaction couldn't be created, i.e. when another read-write
+/// transaction is already opened.
+@ffi.Native<ffi.Pointer<YTransaction> Function(ffi.Pointer<YDoc>)>(
+    symbol: 'ydoc_read_transaction', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YTransaction> ydoc_read_transaction(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Starts a new read-write transaction on a given document. All other operations happen in context
+/// of a transaction. Yrs transactions do not follow ACID rules. Once a set of operations is
+/// complete, a transaction can be finished using `ytransaction_commit` function.
+///
+/// `origin_len` and `origin` are optional parameters to specify a byte sequence used to mark
+/// the origin of this transaction (eg. you may decide to give different origins for transaction
+/// applying remote updates). These can be used by event handlers or `YUndoManager` to perform
+/// specific actions. If origin should not be set, call `ydoc_write_transaction(doc, 0, NULL)`.
+///
+/// Returns `NULL` if read-write transaction couldn't be created, i.e. when another transaction is
+/// already opened.
+@ffi.Native<
+        ffi.Pointer<YTransaction> Function(
+            ffi.Pointer<YDoc>, ffi.Uint32, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ydoc_write_transaction', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YTransaction> ydoc_write_transaction(
+  ffi.Pointer<YDoc> doc,
+  int origin_len,
+  ffi.Pointer<ffi.Char> origin,
+);
+
+/// Returns a list of subdocs existing within current document.
+@ffi.Native<
+        ffi.Pointer<ffi.Pointer<YDoc>> Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_subdocs', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Pointer<YDoc>> ytransaction_subdocs(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Commit and dispose provided read-write transaction. This operation releases allocated resources,
+/// triggers update events and performs a storage compression over all operations executed in scope
+/// of a current transaction.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YTransaction>)>(
+    symbol: 'ytransaction_commit', assetId: 'package:y_dart/y_dart')
+external void ytransaction_commit(
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns `1` if current transaction is of read-write type.
+/// Returns `0` if transaction is read-only.
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<YTransaction>)>(
+    symbol: 'ytransaction_writeable', assetId: 'package:y_dart/y_dart')
+external int ytransaction_writeable(
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Gets a reference to shared data type instance at the document root-level,
+/// identified by its `name`, which must be a null-terminated UTF-8 compatible string.
+///
+/// Returns `NULL` if no such structure was defined in the document before.
+@ffi.Native<
+        ffi.Pointer<Branch> Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ytype_get', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ytype_get(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Gets or creates a new shared `YText` data type instance as a root-level type of a given document.
+/// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
+/// compatible string.
+@ffi.Native<
+        ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ytext', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ytext(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Gets or creates a new shared `YArray` data type instance as a root-level type of a given document.
+/// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
+/// compatible string.
+///
+/// Use [yarray_destroy] in order to release pointer returned that way - keep in mind that this will
+/// not remove `YArray` instance from the document itself (once created it'll last for the entire
+/// lifecycle of a document).
+@ffi.Native<
+        ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yarray', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yarray(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Gets or creates a new shared `YMap` data type instance as a root-level type of a given document.
+/// This structure can later be accessed using its `name`, which must be a null-terminated UTF-8
+/// compatible string.
+///
+/// Use [ymap_destroy] in order to release pointer returned that way - keep in mind that this will
+/// not remove `YMap` instance from the document itself (once created it'll last for the entire
+/// lifecycle of a document).
+@ffi.Native<
+        ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ymap', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ymap(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Gets or creates a new shared `YXmlElement` data type instance as a root-level type of a given
+/// document. This structure can later be accessed using its `name`, which must be a null-terminated
+/// UTF-8 compatible string.
+@ffi.Native<
+        ffi.Pointer<Branch> Function(ffi.Pointer<YDoc>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmlfragment', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmlfragment(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Returns a state vector of a current transaction's document, serialized using lib0 version 1
+/// encoding. Payload created by this function can then be send over the network to a remote peer,
+/// where it can be used as a parameter of [ytransaction_state_diff_v1] in order to produce a delta
+/// update payload, that can be send back and applied locally in order to efficiently propagate
+/// updates from one peer to another.
+///
+/// The length of a generated binary will be passed within a `len` out parameter.
+///
+/// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_state_vector_v1', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_state_vector_v1(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a delta difference between current state of a transaction's document and a state vector
+/// `sv` encoded as a binary payload using lib0 version 1 encoding (which could be generated using
+/// [ytransaction_state_vector_v1]). Such delta can be send back to the state vector's sender in
+/// order to propagate and apply (using [ytransaction_apply]) all updates known to a current
+/// document, which remote peer was not aware of.
+///
+/// If passed `sv` pointer is null, the generated diff will be a snapshot containing entire state of
+/// the document.
+///
+/// A length of an encoded state vector payload must be passed as `sv_len` parameter.
+///
+/// A length of generated delta diff binary will be passed within a `len` out parameter.
+///
+/// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_state_diff_v1', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_state_diff_v1(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> sv,
+  int sv_len,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a delta difference between current state of a transaction's document and a state vector
+/// `sv` encoded as a binary payload using lib0 version 1 encoding (which could be generated using
+/// [ytransaction_state_vector_v1]). Such delta can be send back to the state vector's sender in
+/// order to propagate and apply (using [ytransaction_apply_v2]) all updates known to a current
+/// document, which remote peer was not aware of.
+///
+/// If passed `sv` pointer is null, the generated diff will be a snapshot containing entire state of
+/// the document.
+///
+/// A length of an encoded state vector payload must be passed as `sv_len` parameter.
+///
+/// A length of generated delta diff binary will be passed within a `len` out parameter.
+///
+/// Once no longer needed, a returned binary can be disposed using [ybinary_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_state_diff_v2', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_state_diff_v2(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> sv,
+  int sv_len,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a snapshot descriptor of a current state of the document. This snapshot information
+/// can be then used to encode document data at a particular point in time
+/// (see: `ytransaction_encode_state_from_snapshot`).
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_snapshot', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_snapshot(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Encodes a state of the document at a point in time specified by the provided `snapshot`
+/// (generated by: `ytransaction_snapshot`). This is useful to generate a past view of the document.
+///
+/// The returned update is binary compatible with Yrs update lib0 v1 encoding, and can be processed
+/// with functions dedicated to work on it, like `ytransaction_apply`.
+///
+/// This function requires document with a GC option flag turned off (otherwise "time travel" would
+/// not be a safe operation). If this is not a case, the NULL pointer will be returned.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_encode_state_from_snapshot_v1',
+    assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_encode_state_from_snapshot_v1(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> snapshot,
+  int snapshot_len,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Encodes a state of the document at a point in time specified by the provided `snapshot`
+/// (generated by: `ytransaction_snapshot`). This is useful to generate a past view of the document.
+///
+/// The returned update is binary compatible with Yrs update lib0 v2 encoding, and can be processed
+/// with functions dedicated to work on it, like `ytransaction_apply_v2`.
+///
+/// This function requires document with a GC option flag turned off (otherwise "time travel" would
+/// not be a safe operation). If this is not a case, the NULL pointer will be returned.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytransaction_encode_state_from_snapshot_v2',
+    assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytransaction_encode_state_from_snapshot_v2(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> snapshot,
+  int snapshot_len,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns an unapplied Delete Set for the current document, waiting for missing updates in order
+/// to be integrated into document store.
+///
+/// Return `NULL` if there's no missing delete set and all deletions have been applied.
+/// See also: `ytransaction_pending_update`
+@ffi.Native<ffi.Pointer<YDeleteSet> Function(ffi.Pointer<YTransaction>)>(
+    symbol: 'ytransaction_pending_ds', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDeleteSet> ytransaction_pending_ds(
+  ffi.Pointer<YTransaction> txn,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<YDeleteSet>)>(
+    symbol: 'ydelete_set_destroy', assetId: 'package:y_dart/y_dart')
+external void ydelete_set_destroy(
+  ffi.Pointer<YDeleteSet> ds,
+);
+
+/// Returns a pending update associated with an underlying `YDoc`. Pending update contains update
+/// data waiting for being integrated into main document store. Usually reason for that is that
+/// there were missing updates required for integration. In such cases they need to arrive and be
+/// integrated first.
+///
+/// Returns `NULL` if there is not update pending. Returned value can be released by calling
+/// `ypending_update_destroy`.
+/// See also: `ytransaction_pending_ds`
+@ffi.Native<ffi.Pointer<YPendingUpdate> Function(ffi.Pointer<YTransaction>)>(
+    symbol: 'ytransaction_pending_update', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPendingUpdate> ytransaction_pending_update(
+  ffi.Pointer<YTransaction> txn,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<YPendingUpdate>)>(
+    symbol: 'ypending_update_destroy', assetId: 'package:y_dart/y_dart')
+external void ypending_update_destroy(
+  ffi.Pointer<YPendingUpdate> update,
+);
+
+/// Returns a null-terminated UTF-8 encoded string representation of an `update` binary payload,
+/// encoded using lib0 v1 encoding.
+/// Returns null if update couldn't be parsed into a lib0 v1 formatting.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'yupdate_debug_v1', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yupdate_debug_v1(
+  ffi.Pointer<ffi.Char> update,
+  int update_len,
+);
+
+/// Returns a null-terminated UTF-8 encoded string representation of an `update` binary payload,
+/// encoded using lib0 v2 encoding.
+/// Returns null if update couldn't be parsed into a lib0 v2 formatting.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'yupdate_debug_v2', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yupdate_debug_v2(
+  ffi.Pointer<ffi.Char> update,
+  int update_len,
+);
+
+/// Applies an diff update (generated by `ytransaction_state_diff_v1`) to a local transaction's
+/// document.
+///
+/// A length of generated `diff` binary must be passed within a `diff_len` out parameter.
+///
+/// Returns an error code in case if transaction succeeded failed:
+/// - **0**: success
+/// - `ERR_CODE_IO` (**1**): couldn't read data from input stream.
+/// - `ERR_CODE_VAR_INT` (**2**): decoded variable integer outside of the expected integer size bounds.
+/// - `ERR_CODE_EOS` (**3**): end of stream found when more data was expected.
+/// - `ERR_CODE_UNEXPECTED_VALUE` (**4**): decoded enum tag value was not among known cases.
+/// - `ERR_CODE_INVALID_JSON` (**5**): failure when trying to decode JSON content.
+/// - `ERR_CODE_OTHER` (**6**): other error type than the one specified.
+@ffi.Native<
+        ffi.Uint8 Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'ytransaction_apply', assetId: 'package:y_dart/y_dart')
+external int ytransaction_apply(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> diff,
+  int diff_len,
+);
+
+/// Applies an diff update (generated by [ytransaction_state_diff_v2]) to a local transaction's
+/// document.
+///
+/// A length of generated `diff` binary must be passed within a `diff_len` out parameter.
+///
+/// Returns an error code in case if transaction succeeded failed:
+/// - **0**: success
+/// - `ERR_CODE_IO` (**1**): couldn't read data from input stream.
+/// - `ERR_CODE_VAR_INT` (**2**): decoded variable integer outside of the expected integer size bounds.
+/// - `ERR_CODE_EOS` (**3**): end of stream found when more data was expected.
+/// - `ERR_CODE_UNEXPECTED_VALUE` (**4**): decoded enum tag value was not among known cases.
+/// - `ERR_CODE_INVALID_JSON` (**5**): failure when trying to decode JSON content.
+/// - `ERR_CODE_OTHER` (**6**): other error type than the one specified.
+@ffi.Native<
+        ffi.Uint8 Function(
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'ytransaction_apply_v2', assetId: 'package:y_dart/y_dart')
+external int ytransaction_apply_v2(
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> diff,
+  int diff_len,
+);
+
+/// Returns the length of the `YText` string content in bytes (without the null terminator character)
+@ffi.Native<
+        ffi.Uint32 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ytext_len', assetId: 'package:y_dart/y_dart')
+external int ytext_len(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns a null-terminated UTF-8 encoded string content of a current `YText` shared data type.
+///
+/// Generated string resources should be released using [ystring_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ytext_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ytext_string(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Inserts a null-terminated UTF-8 encoded string a given `index`. `index` value must be between
+/// 0 and a length of a `YText` (inclusive, accordingly to [ytext_len] return value), otherwise this
+/// function will panic.
+///
+/// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
+/// ownership over a passed value - it will be copied and therefore a string parameter must be
+/// released by the caller.
+///
+/// A nullable pointer with defined `attrs` will be used to wrap provided text with
+/// a formatting blocks. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>(
+    symbol: 'ytext_insert', assetId: 'package:y_dart/y_dart')
+external void ytext_insert(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<ffi.Char> value,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Wraps an existing piece of text within a range described by `index`-`len` parameters with
+/// formatting blocks containing provided `attrs` metadata. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32, ffi.Pointer<YInput>)>(
+    symbol: 'ytext_format', assetId: 'package:y_dart/y_dart')
+external void ytext_format(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int len,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Inserts an embed content given `index`. `index` value must be between 0 and a length of a
+/// `YText` (inclusive, accordingly to [ytext_len] return value), otherwise this
+/// function will panic.
+///
+/// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
+/// ownership over a passed value - it will be copied and therefore a string parameter must be
+/// released by the caller.
+///
+/// A nullable pointer with defined `attrs` will be used to wrap provided text with
+/// a formatting blocks. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Pointer<YInput>, ffi.Pointer<YInput>)>(
+    symbol: 'ytext_insert_embed', assetId: 'package:y_dart/y_dart')
+external void ytext_insert_embed(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<YInput> content,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Performs a series of changes over the given `YText` shared ref type, described by the `delta`
+/// parameter:
+///
+/// - Deltas constructed with `ydelta_input_retain` will move cursor position by the given number
+/// of elements. If formatting attributes were defined, all elements skipped over this way will be
+/// wrapped by given formatting attributes.
+/// - Deltas constructed with `ydelta_input_delete` will tell cursor to remove a corresponding
+/// number of elements.
+/// - Deltas constructed with `ydelta_input_insert` will tell cursor to insert given elements into
+/// current cursor position. While these elements can be of any type (used for embedding ie.
+/// shared types or binary payload like images), for the text insertion a `yinput_string`
+/// is expected. If formatting attributes were specified, inserted elements will be wrapped by
+/// given formatting attributes.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<YDeltaIn>, ffi.Uint32)>(
+    symbol: 'ytext_insert_delta', assetId: 'package:y_dart/y_dart')
+external void ytext_insert_delta(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<YDeltaIn> delta,
+  int delta_len,
+);
+
+/// Creates a parameter for `ytext_insert_delta` function. This parameter will move cursor position
+/// by the `len` of elements. If formatting `attrs` were defined, all elements skipped over this
+/// way will be wrapped by given formatting attributes.
+@ffi.Native<YDeltaIn Function(ffi.Uint32, ffi.Pointer<YInput>)>(
+    symbol: 'ydelta_input_retain', assetId: 'package:y_dart/y_dart')
+external YDeltaIn ydelta_input_retain(
+  int len,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Creates a parameter for `ytext_insert_delta` function. This parameter will tell cursor to remove
+/// a corresponding number of elements, starting from current cursor position.
+@ffi.Native<YDeltaIn Function(ffi.Uint32)>(
+    symbol: 'ydelta_input_delete', assetId: 'package:y_dart/y_dart')
+external YDeltaIn ydelta_input_delete(
+  int len,
+);
+
+/// Creates a parameter for `ytext_insert_delta` function. This parameter will tell cursor to insert
+/// given elements into current cursor position. While these elements can be of any type (used for
+/// embedding ie. shared types or binary payload like images), for the text insertion a `yinput_string`
+/// is expected. If formatting attributes were specified, inserted elements will be wrapped by
+/// given formatting attributes.
+@ffi.Native<YDeltaIn Function(ffi.Pointer<YInput>, ffi.Pointer<YInput>)>(
+    symbol: 'ydelta_input_insert', assetId: 'package:y_dart/y_dart')
+external YDeltaIn ydelta_input_insert(
+  ffi.Pointer<YInput> data,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Removes a range of characters, starting a a given `index`. This range must fit within the bounds
+/// of a current `YText`, otherwise this function call will fail.
+///
+/// An `index` value must be between 0 and the length of a `YText` (exclusive, accordingly to
+/// [ytext_len] return value).
+///
+/// A `length` must be lower or equal number of characters (counted as UTF chars depending on the
+/// encoding configured by `YDoc`) from `index` position to the end of of the string.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32)>(
+    symbol: 'ytext_remove_range', assetId: 'package:y_dart/y_dart')
+external void ytext_remove_range(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int length,
+);
+
+/// Returns a number of elements stored within current instance of `YArray`.
+@ffi.Native<ffi.Uint32 Function(ffi.Pointer<Branch>)>(
+    symbol: 'yarray_len', assetId: 'package:y_dart/y_dart')
+external int yarray_len(
+  ffi.Pointer<Branch> array,
+);
+
+/// Returns a pointer to a `YOutput` value stored at a given `index` of a current `YArray`.
+/// If `index` is outside the bounds of an array, a null pointer will be returned.
+///
+/// A value returned should be eventually released using [youtput_destroy] function.
+@ffi.Native<
+    ffi.Pointer<YOutput> Function(
+        ffi.Pointer<Branch>,
+        ffi.Pointer<YTransaction>,
+        ffi.Uint32)>(symbol: 'yarray_get', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yarray_get(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+);
+
+/// Returns a UTF-8 encoded, NULL-terminated JSON string representing a value stored in a current
+/// YArray under a given index.
+///
+/// This method will return `NULL` pointer if value was outside the bound of an array or couldn't be
+/// serialized into JSON string.
+///
+/// This method will also try to serialize complex types that don't have native JSON representation
+/// like YMap, YArray, YText etc. in such cases their contents will be materialized into JSON values.
+///
+/// A string returned should be eventually released using [ystring_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, ffi.Uint32)>(
+    symbol: 'yarray_get_json', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yarray_get_json(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+);
+
+/// Inserts a range of `items` into current `YArray`, starting at given `index`. An `items_len`
+/// parameter is used to determine the size of `items` array - it can also be used to insert
+/// a single element given its pointer.
+///
+/// An `index` value must be between 0 and (inclusive) length of a current array (use [yarray_len]
+/// to determine its length), otherwise it will panic at runtime.
+///
+/// `YArray` doesn't take ownership over the inserted `items` data - their contents are being copied
+/// into array structure - therefore caller is responsible for freeing all memory associated with
+/// input params.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Pointer<YInput>, ffi.Uint32)>(
+    symbol: 'yarray_insert_range', assetId: 'package:y_dart/y_dart')
+external void yarray_insert_range(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<YInput> items,
+  int items_len,
+);
+
+/// Removes a `len` of consecutive range of elements from current `array` instance, starting at
+/// a given `index`. Range determined by `index` and `len` must fit into boundaries of an array,
+/// otherwise it will panic at runtime.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32)>(
+    symbol: 'yarray_remove_range', assetId: 'package:y_dart/y_dart')
+external void yarray_remove_range(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int len,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        ffi.Pointer<Branch>,
+        ffi.Pointer<YTransaction>,
+        ffi.Uint32,
+        ffi.Uint32)>(symbol: 'yarray_move', assetId: 'package:y_dart/y_dart')
+external void yarray_move(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int source,
+  int target,
+);
+
+/// Returns an iterator, which can be used to traverse over all elements of an `array` (`array`'s
+/// length can be determined using [yarray_len] function).
+///
+/// Use [yarray_iter_next] function in order to retrieve a consecutive array elements.
+/// Use [yarray_iter_destroy] function in order to close the iterator and release its resources.
+@ffi.Native<
+        ffi.Pointer<YArrayIter> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yarray_iter', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YArrayIter> yarray_iter(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Releases all of an `YArray` iterator resources created by calling [yarray_iter].
+@ffi.Native<ffi.Void Function(ffi.Pointer<YArrayIter>)>(
+    symbol: 'yarray_iter_destroy', assetId: 'package:y_dart/y_dart')
+external void yarray_iter_destroy(
+  ffi.Pointer<YArrayIter> iter,
+);
+
+/// Moves current `YArray` iterator over to a next element, returning a pointer to it. If an iterator
+/// comes to an end of an array, a null pointer will be returned.
+///
+/// Returned values should be eventually released using [youtput_destroy] function.
+@ffi.Native<ffi.Pointer<YOutput> Function(ffi.Pointer<YArrayIter>)>(
+    symbol: 'yarray_iter_next', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yarray_iter_next(
+  ffi.Pointer<YArrayIter> iterator,
+);
+
+/// Returns an iterator, which can be used to traverse over all key-value pairs of a `map`.
+///
+/// Use [ymap_iter_next] function in order to retrieve a consecutive (**unordered**) map entries.
+/// Use [ymap_iter_destroy] function in order to close the iterator and release its resources.
+@ffi.Native<
+        ffi.Pointer<YMapIter> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ymap_iter', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YMapIter> ymap_iter(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Releases all of an `YMap` iterator resources created by calling [ymap_iter].
+@ffi.Native<ffi.Void Function(ffi.Pointer<YMapIter>)>(
+    symbol: 'ymap_iter_destroy', assetId: 'package:y_dart/y_dart')
+external void ymap_iter_destroy(
+  ffi.Pointer<YMapIter> iter,
+);
+
+/// Moves current `YMap` iterator over to a next entry, returning a pointer to it. If an iterator
+/// comes to an end of a map, a null pointer will be returned. Yrs maps are unordered and so are
+/// their iterators.
+///
+/// Returned values should be eventually released using [ymap_entry_destroy] function.
+@ffi.Native<ffi.Pointer<YMapEntry> Function(ffi.Pointer<YMapIter>)>(
+    symbol: 'ymap_iter_next', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YMapEntry> ymap_iter_next(
+  ffi.Pointer<YMapIter> iter,
+);
+
+/// Returns a number of entries stored within a `map`.
+@ffi.Native<
+        ffi.Uint32 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ymap_len', assetId: 'package:y_dart/y_dart')
+external int ymap_len(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Inserts a new entry (specified as `key`-`value` pair) into a current `map`. If entry under such
+/// given `key` already existed, its corresponding value will be replaced.
+///
+/// A `key` must be a null-terminated UTF-8 encoded string, which contents will be copied into
+/// a `map` (therefore it must be freed by the function caller).
+///
+/// A `value` content is being copied into a `map`, therefore any of its content must be freed by
+/// the function caller.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>(
+    symbol: 'ymap_insert', assetId: 'package:y_dart/y_dart')
+external void ymap_insert(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> key,
+  ffi.Pointer<YInput> value,
+);
+
+/// Removes a `map` entry, given its `key`. Returns `1` if the corresponding entry was successfully
+/// removed or `0` if no entry with a provided `key` has been found inside of a `map`.
+///
+/// A `key` must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Uint8 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>)>(
+    symbol: 'ymap_remove', assetId: 'package:y_dart/y_dart')
+external int ymap_remove(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> key,
+);
+
+/// Returns a value stored under the provided `key`, or a null pointer if no entry with such `key`
+/// has been found in a current `map`. A returned value is allocated by this function and therefore
+/// should be eventually released using [youtput_destroy] function.
+///
+/// A `key` must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ymap_get', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> ymap_get(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> key,
+);
+
+/// Returns a value stored under the provided `key` as UTF-8 encoded, NULL-terminated JSON string.
+/// Once not needed that string should be deallocated using `ystring_destroy`.
+///
+/// This method will return `NULL` pointer if value was not found or value couldn't be serialized
+/// into JSON string.
+///
+/// This method will also try to serialize complex types that don't have native JSON representation
+/// like YMap, YArray, YText etc. in such cases their contents will be materialized into JSON values.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ymap_get_json', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ymap_get_json(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> key,
+);
+
+/// Removes all entries from a current `map`.
+@ffi.Native<ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ymap_remove_all', assetId: 'package:y_dart/y_dart')
+external void ymap_remove_all(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Return a name (or an XML tag) of a current `YXmlElement`. Root-level XML nodes use "UNDEFINED" as
+/// their tag names.
+///
+/// Returned value is a null-terminated UTF-8 string, which must be released using [ystring_destroy]
+/// function.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>)>(
+    symbol: 'yxmlelem_tag', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yxmlelem_tag(
+  ffi.Pointer<Branch> xml,
+);
+
+/// Converts current `YXmlElement` together with its children and attributes into a flat string
+/// representation (no padding) eg. `<UNDEFINED><title key="value">sample text</title></UNDEFINED>`.
+///
+/// Returned value is a null-terminated UTF-8 string, which must be released using [ystring_destroy]
+/// function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmlelem_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yxmlelem_string(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Inserts an XML attribute described using `attr_name` and `attr_value`. If another attribute with
+/// the same name already existed, its value will be replaced with a provided one.
+///
+/// Both `attr_name` and `attr_value` must be a null-terminated UTF-8 encoded strings. Their
+/// contents are being copied, therefore it's up to a function caller to properly release them.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmlelem_insert_attr', assetId: 'package:y_dart/y_dart')
+external void yxmlelem_insert_attr(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+  ffi.Pointer<ffi.Char> attr_value,
+);
+
+/// Removes an attribute from a current `YXmlElement`, given its name.
+///
+/// An `attr_name`must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmlelem_remove_attr', assetId: 'package:y_dart/y_dart')
+external void yxmlelem_remove_attr(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+);
+
+/// Returns the value of a current `YXmlElement`, given its name, or a null pointer if not attribute
+/// with such name has been found. Returned pointer is a null-terminated UTF-8 encoded string, which
+/// should be released using [ystring_destroy] function.
+///
+/// An `attr_name` must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmlelem_get_attr', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yxmlelem_get_attr(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+);
+
+/// Returns an iterator over the `YXmlElement` attributes.
+///
+/// Use [yxmlattr_iter_next] function in order to retrieve a consecutive (**unordered**) attributes.
+/// Use [yxmlattr_iter_destroy] function in order to close the iterator and release its resources.
+@ffi.Native<
+        ffi.Pointer<YXmlAttrIter> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmlelem_attr_iter', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YXmlAttrIter> yxmlelem_attr_iter(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns an iterator over the `YXmlText` attributes.
+///
+/// Use [yxmlattr_iter_next] function in order to retrieve a consecutive (**unordered**) attributes.
+/// Use [yxmlattr_iter_destroy] function in order to close the iterator and release its resources.
+@ffi.Native<
+        ffi.Pointer<YXmlAttrIter> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmltext_attr_iter', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YXmlAttrIter> yxmltext_attr_iter(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Releases all of attributes iterator resources created by calling [yxmlelem_attr_iter]
+/// or [yxmltext_attr_iter].
+@ffi.Native<ffi.Void Function(ffi.Pointer<YXmlAttrIter>)>(
+    symbol: 'yxmlattr_iter_destroy', assetId: 'package:y_dart/y_dart')
+external void yxmlattr_iter_destroy(
+  ffi.Pointer<YXmlAttrIter> iterator,
+);
+
+/// Returns a next XML attribute from an `iterator`. Attributes are returned in an unordered
+/// manner. Once `iterator` reaches the end of attributes collection, a null pointer will be
+/// returned.
+///
+/// Returned value should be eventually released using [yxmlattr_destroy].
+@ffi.Native<ffi.Pointer<YXmlAttr> Function(ffi.Pointer<YXmlAttrIter>)>(
+    symbol: 'yxmlattr_iter_next', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YXmlAttr> yxmlattr_iter_next(
+  ffi.Pointer<YXmlAttrIter> iterator,
+);
+
+/// Returns a next sibling of a current XML node, which can be either another `YXmlElement`
+/// or a `YXmlText`. Together with [yxmlelem_first_child] it may be used to iterate over the direct
+/// children of an XML node (in order to iterate over the nested XML structure use
+/// [yxmlelem_tree_walker]).
+///
+/// If current `YXmlElement` is the last child, this function returns a null pointer.
+/// A returned value should be eventually released using [youtput_destroy] function.
+@ffi.Native<
+        ffi.Pointer<YOutput> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxml_next_sibling', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yxml_next_sibling(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns a previous sibling of a current XML node, which can be either another `YXmlElement`
+/// or a `YXmlText`.
+///
+/// If current `YXmlElement` is the first child, this function returns a null pointer.
+/// A returned value should be eventually released using [youtput_destroy] function.
+@ffi.Native<
+        ffi.Pointer<YOutput> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxml_prev_sibling', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yxml_prev_sibling(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns a parent `YXmlElement` of a current node, or null pointer when current `YXmlElement` is
+/// a root-level shared data type.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<Branch>)>(
+    symbol: 'yxmlelem_parent', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmlelem_parent(
+  ffi.Pointer<Branch> xml,
+);
+
+/// Returns a number of child nodes (both `YXmlElement` and `YXmlText`) living under a current XML
+/// element. This function doesn't count a recursive nodes, only direct children of a current node.
+@ffi.Native<
+        ffi.Uint32 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmlelem_child_len', assetId: 'package:y_dart/y_dart')
+external int yxmlelem_child_len(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns a first child node of a current `YXmlElement`, or null pointer if current XML node is
+/// empty. Returned value could be either another `YXmlElement` or `YXmlText`.
+///
+/// A returned value should be eventually released using [youtput_destroy] function.
+@ffi.Native<ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>)>(
+    symbol: 'yxmlelem_first_child', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yxmlelem_first_child(
+  ffi.Pointer<Branch> xml,
+);
+
+/// Returns an iterator over a nested recursive structure of a current `YXmlElement`, starting from
+/// first of its children. Returned values can be either `YXmlElement` or `YXmlText` nodes.
+///
+/// Use [yxmlelem_tree_walker_next] function in order to iterate over to a next node.
+/// Use [yxmlelem_tree_walker_destroy] function to release resources used by the iterator.
+@ffi.Native<
+        ffi.Pointer<YXmlTreeWalker> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmlelem_tree_walker', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YXmlTreeWalker> yxmlelem_tree_walker(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Releases resources associated with a current XML tree walker iterator.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YXmlTreeWalker>)>(
+    symbol: 'yxmlelem_tree_walker_destroy', assetId: 'package:y_dart/y_dart')
+external void yxmlelem_tree_walker_destroy(
+  ffi.Pointer<YXmlTreeWalker> iter,
+);
+
+/// Moves current `iterator` to a next value (either `YXmlElement` or `YXmlText`), returning its
+/// pointer or a null, if an `iterator` already reached the last successor node.
+///
+/// Values returned by this function should be eventually released using [youtput_destroy].
+@ffi.Native<ffi.Pointer<YOutput> Function(ffi.Pointer<YXmlTreeWalker>)>(
+    symbol: 'yxmlelem_tree_walker_next', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yxmlelem_tree_walker_next(
+  ffi.Pointer<YXmlTreeWalker> iterator,
+);
+
+/// Inserts an `YXmlElement` as a child of a current node at the given `index` and returns its
+/// pointer. Node created this way will have a given `name` as its tag (eg. `p` for `<p></p>` node).
+///
+/// An `index` value must be between 0 and (inclusive) length of a current XML element (use
+/// [yxmlelem_child_len] function to determine its length).
+///
+/// A `name` must be a null-terminated UTF-8 encoded string, which will be copied into current
+/// document. Therefore `name` should be freed by the function caller.
+@ffi.Native<
+        ffi.Pointer<Branch> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Uint32, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmlelem_insert_elem', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmlelem_insert_elem(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Inserts an `YXmlText` as a child of a current node at the given `index` and returns its
+/// pointer.
+///
+/// An `index` value must be between 0 and (inclusive) length of a current XML element (use
+/// [yxmlelem_child_len] function to determine its length).
+@ffi.Native<
+        ffi.Pointer<Branch> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, ffi.Uint32)>(
+    symbol: 'yxmlelem_insert_text', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmlelem_insert_text(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+);
+
+/// Removes a consecutive range of child elements (of specified length) from the current
+/// `YXmlElement`, starting at the given `index`. Specified range must fit into boundaries of current
+/// XML node children, otherwise this function will panic at runtime.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32)>(
+    symbol: 'yxmlelem_remove_range', assetId: 'package:y_dart/y_dart')
+external void yxmlelem_remove_range(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int len,
+);
+
+/// Returns an XML child node (either a `YXmlElement` or `YXmlText`) stored at a given `index` of
+/// a current `YXmlElement`. Returns null pointer if `index` was outside of the bound of current XML
+/// node children.
+///
+/// Returned value should be eventually released using [youtput_destroy].
+@ffi.Native<
+    ffi.Pointer<YOutput> Function(
+        ffi.Pointer<Branch>,
+        ffi.Pointer<YTransaction>,
+        ffi.Uint32)>(symbol: 'yxmlelem_get', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yxmlelem_get(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+);
+
+/// Returns the length of the `YXmlText` string content in bytes (without the null terminator
+/// character)
+@ffi.Native<
+        ffi.Uint32 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmltext_len', assetId: 'package:y_dart/y_dart')
+external int yxmltext_len(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Returns a null-terminated UTF-8 encoded string content of a current `YXmlText` shared data type.
+///
+/// Generated string resources should be released using [ystring_destroy] function.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yxmltext_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yxmltext_string(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Inserts a null-terminated UTF-8 encoded string a a given `index`. `index` value must be between
+/// 0 and a length of a `YXmlText` (inclusive, accordingly to [yxmltext_len] return value), otherwise
+/// this function will panic.
+///
+/// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
+/// ownership over a passed value - it will be copied and therefore a string parameter must be
+/// released by the caller.
+///
+/// A nullable pointer with defined `attrs` will be used to wrap provided text with
+/// a formatting blocks. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>(
+    symbol: 'yxmltext_insert', assetId: 'package:y_dart/y_dart')
+external void yxmltext_insert(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<ffi.Char> str,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Inserts an embed content given `index`. `index` value must be between 0 and a length of a
+/// `YXmlText` (inclusive, accordingly to [ytext_len] return value), otherwise this
+/// function will panic.
+///
+/// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
+/// ownership over a passed value - it will be copied and therefore a string parameter must be
+/// released by the caller.
+///
+/// A nullable pointer with defined `attrs` will be used to wrap provided text with
+/// a formatting blocks. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Pointer<YInput>, ffi.Pointer<YInput>)>(
+    symbol: 'yxmltext_insert_embed', assetId: 'package:y_dart/y_dart')
+external void yxmltext_insert_embed(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  ffi.Pointer<YInput> content,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Wraps an existing piece of text within a range described by `index`-`len` parameters with
+/// formatting blocks containing provided `attrs` metadata. `attrs` must be a map-like type.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32, ffi.Pointer<YInput>)>(
+    symbol: 'yxmltext_format', assetId: 'package:y_dart/y_dart')
+external void yxmltext_format(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int len,
+  ffi.Pointer<YInput> attrs,
+);
+
+/// Removes a range of characters, starting a a given `index`. This range must fit within the bounds
+/// of a current `YXmlText`, otherwise this function call will fail.
+///
+/// An `index` value must be between 0 and the length of a `YXmlText` (exclusive, accordingly to
+/// [yxmltext_len] return value).
+///
+/// A `length` must be lower or equal number of characters (counted as UTF chars depending on the
+/// encoding configured by `YDoc`) from `index` position to the end of of the string.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Uint32, ffi.Uint32)>(
+    symbol: 'yxmltext_remove_range', assetId: 'package:y_dart/y_dart')
+external void yxmltext_remove_range(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  int idx,
+  int len,
+);
+
+/// Inserts an XML attribute described using `attr_name` and `attr_value`. If another attribute with
+/// the same name already existed, its value will be replaced with a provided one.
+///
+/// Both `attr_name` and `attr_value` must be a null-terminated UTF-8 encoded strings. Their
+/// contents are being copied, therefore it's up to a function caller to properly release them.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmltext_insert_attr', assetId: 'package:y_dart/y_dart')
+external void yxmltext_insert_attr(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+  ffi.Pointer<ffi.Char> attr_value,
+);
+
+/// Removes an attribute from a current `YXmlText`, given its name.
+///
+/// An `attr_name`must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmltext_remove_attr', assetId: 'package:y_dart/y_dart')
+external void yxmltext_remove_attr(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+);
+
+/// Returns the value of a current `YXmlText`, given its name, or a null pointer if not attribute
+/// with such name has been found. Returned pointer is a null-terminated UTF-8 encoded string, which
+/// should be released using [ystring_destroy] function.
+///
+/// An `attr_name` must be a null-terminated UTF-8 encoded string.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yxmltext_get_attr', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yxmltext_get_attr(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> attr_name,
+);
+
+/// Returns a collection of chunks representing pieces of `YText` rich text string grouped together
+/// by the same formatting rules and type. `chunks_len` is used to inform about a number of chunks
+/// generated this way.
+///
+/// Returned array needs to be eventually deallocated using `ychunks_destroy`.
+@ffi.Native<
+        ffi.Pointer<YChunk> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytext_chunks', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YChunk> ytext_chunks(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Uint32> chunks_len,
+);
+
+/// Deallocates result of `ytext_chunks` method.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YChunk>, ffi.Uint32)>(
+    symbol: 'ychunks_destroy', assetId: 'package:y_dart/y_dart')
+external void ychunks_destroy(
+  ffi.Pointer<YChunk> chunks,
+  int len,
+);
+
+/// Releases all resources related to a corresponding `YOutput` cell.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_destroy', assetId: 'package:y_dart/y_dart')
+external void youtput_destroy(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Function constructor used to create JSON-like NULL `YInput` cell.
+/// This function doesn't allocate any heap resources.
+@ffi.Native<YInput Function()>(
+    symbol: 'yinput_null', assetId: 'package:y_dart/y_dart')
+external YInput yinput_null();
+
+/// Function constructor used to create JSON-like undefined `YInput` cell.
+/// This function doesn't allocate any heap resources.
+@ffi.Native<YInput Function()>(
+    symbol: 'yinput_undefined', assetId: 'package:y_dart/y_dart')
+external YInput yinput_undefined();
+
+/// Function constructor used to create JSON-like boolean `YInput` cell.
+/// This function doesn't allocate any heap resources.
+@ffi.Native<YInput Function(ffi.Uint8)>(
+    symbol: 'yinput_bool', assetId: 'package:y_dart/y_dart')
+external YInput yinput_bool(
+  int flag,
+);
+
+/// Function constructor used to create JSON-like 64-bit floating point number `YInput` cell.
+/// This function doesn't allocate any heap resources.
+@ffi.Native<YInput Function(ffi.Double)>(
+    symbol: 'yinput_float', assetId: 'package:y_dart/y_dart')
+external YInput yinput_float(
+  double num,
+);
+
+/// Function constructor used to create JSON-like 64-bit signed integer `YInput` cell.
+/// This function doesn't allocate any heap resources.
+@ffi.Native<YInput Function(ffi.Int64)>(
+    symbol: 'yinput_long', assetId: 'package:y_dart/y_dart')
+external YInput yinput_long(
+  int integer,
+);
+
+/// Function constructor used to create a string `YInput` cell. Provided parameter must be
+/// a null-terminated UTF-8 encoded string. This function doesn't allocate any heap resources,
+/// and doesn't release any on its own, therefore its up to a caller to free resources once
+/// a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'yinput_string', assetId: 'package:y_dart/y_dart')
+external YInput yinput_string(
+  ffi.Pointer<ffi.Char> str,
+);
+
+/// Function constructor used to create aa `YInput` cell representing any JSON-like object.
+/// Provided parameter must be a null-terminated UTF-8 encoded JSON string.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'yinput_json', assetId: 'package:y_dart/y_dart')
+external YInput yinput_json(
+  ffi.Pointer<ffi.Char> str,
+);
+
+/// Function constructor used to create a binary `YInput` cell of a specified length.
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'yinput_binary', assetId: 'package:y_dart/y_dart')
+external YInput yinput_binary(
+  ffi.Pointer<ffi.Char> buf,
+  int len,
+);
+
+/// Function constructor used to create a JSON-like array `YInput` cell of other JSON-like values of
+/// a given length. This function doesn't allocate any heap resources and doesn't release any on its
+/// own, therefore its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<YInput>, ffi.Uint32)>(
+    symbol: 'yinput_json_array', assetId: 'package:y_dart/y_dart')
+external YInput yinput_json_array(
+  ffi.Pointer<YInput> values,
+  int len,
+);
+
+/// Function constructor used to create a JSON-like map `YInput` cell of other JSON-like key-value
+/// pairs. These pairs are build from corresponding indexes of `keys` and `values`, which must have
+/// the same specified length.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<
+        YInput Function(ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<YInput>,
+            ffi.Uint32)>(
+    symbol: 'yinput_json_map', assetId: 'package:y_dart/y_dart')
+external YInput yinput_json_map(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> keys,
+  ffi.Pointer<YInput> values,
+  int len,
+);
+
+/// Function constructor used to create a nested `YArray` `YInput` cell prefilled with other
+/// values of a given length. This function doesn't allocate any heap resources and doesn't release
+/// any on its own, therefore its up to a caller to free resources once a structure is no longer
+/// needed.
+@ffi.Native<YInput Function(ffi.Pointer<YInput>, ffi.Uint32)>(
+    symbol: 'yinput_yarray', assetId: 'package:y_dart/y_dart')
+external YInput yinput_yarray(
+  ffi.Pointer<YInput> values,
+  int len,
+);
+
+/// Function constructor used to create a nested `YMap` `YInput` cell prefilled with other key-value
+/// pairs. These pairs are build from corresponding indexes of `keys` and `values`, which must have
+/// the same specified length.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<
+    YInput Function(ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<YInput>,
+        ffi.Uint32)>(symbol: 'yinput_ymap', assetId: 'package:y_dart/y_dart')
+external YInput yinput_ymap(
+  ffi.Pointer<ffi.Pointer<ffi.Char>> keys,
+  ffi.Pointer<YInput> values,
+  int len,
+);
+
+/// Function constructor used to create a nested `YText` `YInput` cell prefilled with a specified
+/// string, which must be a null-terminated UTF-8 character pointer.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'yinput_ytext', assetId: 'package:y_dart/y_dart')
+external YInput yinput_ytext(
+  ffi.Pointer<ffi.Char> str,
+);
+
+/// Function constructor used to create a nested `YXmlElement` `YInput` cell with a specified
+/// tag name, which must be a null-terminated UTF-8 character pointer.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'yinput_yxmlelem', assetId: 'package:y_dart/y_dart')
+external YInput yinput_yxmlelem(
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// Function constructor used to create a nested `YXmlText` `YInput` cell prefilled with a specified
+/// string, which must be a null-terminated UTF-8 character pointer.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<ffi.Char>)>(
+    symbol: 'yinput_yxmltext', assetId: 'package:y_dart/y_dart')
+external YInput yinput_yxmltext(
+  ffi.Pointer<ffi.Char> str,
+);
+
+/// Function constructor used to create a nested `YDoc` `YInput` cell.
+///
+/// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
+/// its up to a caller to free resources once a structure is no longer needed.
+@ffi.Native<YInput Function(ffi.Pointer<YDoc>)>(
+    symbol: 'yinput_ydoc', assetId: 'package:y_dart/y_dart')
+external YInput yinput_ydoc(
+  ffi.Pointer<YDoc> doc,
+);
+
+/// Function constructor used to create a string `YInput` cell with weak reference to another
+/// element(s) living inside of the same document.
+@ffi.Native<YInput Function(ffi.Pointer<Weak>)>(
+    symbol: 'yinput_weak', assetId: 'package:y_dart/y_dart')
+external YInput yinput_weak(
+  ffi.Pointer<Weak> weak,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a `YDocRef` reference to a nested
+/// document.
+@ffi.Native<ffi.Pointer<YDoc> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_ydoc', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDoc> youtput_read_ydoc(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a boolean flag, which can be either
+/// `1` for truthy case and `0` otherwise. Returns a null pointer in case when a value stored under
+/// current `YOutput` cell is not of a boolean type.
+@ffi.Native<ffi.Pointer<ffi.Uint8> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_bool', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Uint8> youtput_read_bool(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a 64-bit floating point number.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a floating point number.
+@ffi.Native<ffi.Pointer<ffi.Double> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_float', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Double> youtput_read_float(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a 64-bit signed integer.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a signed integer.
+@ffi.Native<ffi.Pointer<ffi.Int64> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_long', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Int64> youtput_read_long(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a null-terminated UTF-8 encoded
+/// string.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a string. Underlying string is released automatically as part of [youtput_destroy]
+/// destructor.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> youtput_read_string(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a binary payload (which length is
+/// stored within `len` filed of a cell itself).
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a binary type. Underlying binary is released automatically as part of [youtput_destroy]
+/// destructor.
+@ffi.Native<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_binary', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> youtput_read_binary(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a JSON-like array of `YOutput`
+/// values (which length is stored within `len` filed of a cell itself).
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a JSON-like array. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<YOutput> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_json_array', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> youtput_read_json_array(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as a JSON-like map of key-value entries
+/// (which length is stored within `len` filed of a cell itself).
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not a JSON-like map. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<YMapEntry> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_json_map', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YMapEntry> youtput_read_json_map(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YArray`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YArray`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_yarray', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_yarray(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YXmlElement`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YXmlElement`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_yxmlelem', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_yxmlelem(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YMap`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YMap`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_ymap', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_ymap(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YText`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YText`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_ytext', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_ytext(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YXmlText`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YXmlText`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_yxmltext', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_yxmltext(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Attempts to read the value for a given `YOutput` pointer as an `YWeakRef`.
+///
+/// Returns a null pointer in case when a value stored under current `YOutput` cell
+/// is not an `YWeakRef`. Underlying heap resources are released automatically as part of
+/// [youtput_destroy] destructor.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>(
+    symbol: 'youtput_read_yweak', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> youtput_read_yweak(
+  ffi.Pointer<YOutput> val,
+);
+
+/// Unsubscribe callback from the oberver event it was previously subscribed to.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YSubscription>)>(
+    symbol: 'yunobserve', assetId: 'package:y_dart/y_dart')
+external void yunobserve(
+  ffi.Pointer<YSubscription> subscription,
+);
+
+/// Subscribes a given callback function `cb` to changes made by this `YText` instance. Callbacks
+/// are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YTextEvent>)>>)>(
+    symbol: 'ytext_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ytext_observe(
+  ffi.Pointer<Branch> txt,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-                  ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Uint32>)>>(
-      'ytransaction_encode_state_from_snapshot_v2');
-  late final _ytransaction_encode_state_from_snapshot_v2 =
-      _ytransaction_encode_state_from_snapshot_v2Ptr.asFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>, int, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns an unapplied Delete Set for the current document, waiting for missing updates in order
-  /// to be integrated into document store.
-  ///
-  /// Return `NULL` if there's no missing delete set and all deletions have been applied.
-  /// See also: `ytransaction_pending_update`
-  ffi.Pointer<YDeleteSet> ytransaction_pending_ds(
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytransaction_pending_ds(
-      txn,
-    );
-  }
-
-  late final _ytransaction_pending_dsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YDeleteSet> Function(
-              ffi.Pointer<YTransaction>)>>('ytransaction_pending_ds');
-  late final _ytransaction_pending_ds = _ytransaction_pending_dsPtr.asFunction<
-      ffi.Pointer<YDeleteSet> Function(ffi.Pointer<YTransaction>)>();
-
-  void ydelete_set_destroy(
-    ffi.Pointer<YDeleteSet> ds,
-  ) {
-    return _ydelete_set_destroy(
-      ds,
-    );
-  }
-
-  late final _ydelete_set_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YDeleteSet>)>>(
-          'ydelete_set_destroy');
-  late final _ydelete_set_destroy = _ydelete_set_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YDeleteSet>)>();
-
-  /// Returns a pending update associated with an underlying `YDoc`. Pending update contains update
-  /// data waiting for being integrated into main document store. Usually reason for that is that
-  /// there were missing updates required for integration. In such cases they need to arrive and be
-  /// integrated first.
-  ///
-  /// Returns `NULL` if there is not update pending. Returned value can be released by calling
-  /// `ypending_update_destroy`.
-  /// See also: `ytransaction_pending_ds`
-  ffi.Pointer<YPendingUpdate> ytransaction_pending_update(
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytransaction_pending_update(
-      txn,
-    );
-  }
-
-  late final _ytransaction_pending_updatePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPendingUpdate> Function(
-              ffi.Pointer<YTransaction>)>>('ytransaction_pending_update');
-  late final _ytransaction_pending_update =
-      _ytransaction_pending_updatePtr.asFunction<
-          ffi.Pointer<YPendingUpdate> Function(ffi.Pointer<YTransaction>)>();
-
-  void ypending_update_destroy(
-    ffi.Pointer<YPendingUpdate> update,
-  ) {
-    return _ypending_update_destroy(
-      update,
-    );
-  }
-
-  late final _ypending_update_destroyPtr = _lookup<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YPendingUpdate>)>>(
-      'ypending_update_destroy');
-  late final _ypending_update_destroy = _ypending_update_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YPendingUpdate>)>();
-
-  /// Returns a null-terminated UTF-8 encoded string representation of an `update` binary payload,
-  /// encoded using lib0 v1 encoding.
-  /// Returns null if update couldn't be parsed into a lib0 v1 formatting.
-  ffi.Pointer<ffi.Char> yupdate_debug_v1(
-    ffi.Pointer<ffi.Char> update,
-    int update_len,
-  ) {
-    return _yupdate_debug_v1(
-      update,
-      update_len,
-    );
-  }
-
-  late final _yupdate_debug_v1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>, ffi.Uint32)>>('yupdate_debug_v1');
-  late final _yupdate_debug_v1 = _yupdate_debug_v1Ptr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, int)>();
-
-  /// Returns a null-terminated UTF-8 encoded string representation of an `update` binary payload,
-  /// encoded using lib0 v2 encoding.
-  /// Returns null if update couldn't be parsed into a lib0 v2 formatting.
-  ffi.Pointer<ffi.Char> yupdate_debug_v2(
-    ffi.Pointer<ffi.Char> update,
-    int update_len,
-  ) {
-    return _yupdate_debug_v2(
-      update,
-      update_len,
-    );
-  }
-
-  late final _yupdate_debug_v2Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>, ffi.Uint32)>>('yupdate_debug_v2');
-  late final _yupdate_debug_v2 = _yupdate_debug_v2Ptr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, int)>();
-
-  /// Applies an diff update (generated by `ytransaction_state_diff_v1`) to a local transaction's
-  /// document.
-  ///
-  /// A length of generated `diff` binary must be passed within a `diff_len` out parameter.
-  ///
-  /// Returns an error code in case if transaction succeeded failed:
-  /// - **0**: success
-  /// - `ERR_CODE_IO` (**1**): couldn't read data from input stream.
-  /// - `ERR_CODE_VAR_INT` (**2**): decoded variable integer outside of the expected integer size bounds.
-  /// - `ERR_CODE_EOS` (**3**): end of stream found when more data was expected.
-  /// - `ERR_CODE_UNEXPECTED_VALUE` (**4**): decoded enum tag value was not among known cases.
-  /// - `ERR_CODE_INVALID_JSON` (**5**): failure when trying to decode JSON content.
-  /// - `ERR_CODE_OTHER` (**6**): other error type than the one specified.
-  int ytransaction_apply(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> diff,
-    int diff_len,
-  ) {
-    return _ytransaction_apply(
-      txn,
-      diff,
-      diff_len,
-    );
-  }
-
-  late final _ytransaction_applyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint8 Function(ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>,
-              ffi.Uint32)>>('ytransaction_apply');
-  late final _ytransaction_apply = _ytransaction_applyPtr.asFunction<
-      int Function(ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>, int)>();
-
-  /// Applies an diff update (generated by [ytransaction_state_diff_v2]) to a local transaction's
-  /// document.
-  ///
-  /// A length of generated `diff` binary must be passed within a `diff_len` out parameter.
-  ///
-  /// Returns an error code in case if transaction succeeded failed:
-  /// - **0**: success
-  /// - `ERR_CODE_IO` (**1**): couldn't read data from input stream.
-  /// - `ERR_CODE_VAR_INT` (**2**): decoded variable integer outside of the expected integer size bounds.
-  /// - `ERR_CODE_EOS` (**3**): end of stream found when more data was expected.
-  /// - `ERR_CODE_UNEXPECTED_VALUE` (**4**): decoded enum tag value was not among known cases.
-  /// - `ERR_CODE_INVALID_JSON` (**5**): failure when trying to decode JSON content.
-  /// - `ERR_CODE_OTHER` (**6**): other error type than the one specified.
-  int ytransaction_apply_v2(
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> diff,
-    int diff_len,
-  ) {
-    return _ytransaction_apply_v2(
-      txn,
-      diff,
-      diff_len,
-    );
-  }
-
-  late final _ytransaction_apply_v2Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint8 Function(ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>,
-              ffi.Uint32)>>('ytransaction_apply_v2');
-  late final _ytransaction_apply_v2 = _ytransaction_apply_v2Ptr.asFunction<
-      int Function(ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>, int)>();
-
-  /// Returns the length of the `YText` string content in bytes (without the null terminator character)
-  int ytext_len(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytext_len(
-      txt,
-      txn,
-    );
-  }
-
-  late final _ytext_lenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint32 Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('ytext_len');
-  late final _ytext_len = _ytext_lenPtr.asFunction<
-      int Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns a null-terminated UTF-8 encoded string content of a current `YText` shared data type.
-  ///
-  /// Generated string resources should be released using [ystring_destroy] function.
-  ffi.Pointer<ffi.Char> ytext_string(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ytext_string(
-      txt,
-      txn,
-    );
-  }
-
-  late final _ytext_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('ytext_string');
-  late final _ytext_string = _ytext_stringPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Inserts a null-terminated UTF-8 encoded string a given `index`. `index` value must be between
-  /// 0 and a length of a `YText` (inclusive, accordingly to [ytext_len] return value), otherwise this
-  /// function will panic.
-  ///
-  /// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
-  /// ownership over a passed value - it will be copied and therefore a string parameter must be
-  /// released by the caller.
-  ///
-  /// A nullable pointer with defined `attrs` will be used to wrap provided text with
-  /// a formatting blocks. `attrs` must be a map-like type.
-  void ytext_insert(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<ffi.Char> value,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _ytext_insert(
-      txt,
-      txn,
-      index,
-      value,
-      attrs,
-    );
-  }
-
-  late final _ytext_insertPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<YInput>)>>('ytext_insert');
-  late final _ytext_insert = _ytext_insertPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>();
-
-  /// Wraps an existing piece of text within a range described by `index`-`len` parameters with
-  /// formatting blocks containing provided `attrs` metadata. `attrs` must be a map-like type.
-  void ytext_format(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int len,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _ytext_format(
-      txt,
-      txn,
-      index,
-      len,
-      attrs,
-    );
-  }
-
-  late final _ytext_formatPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32, ffi.Pointer<YInput>)>>('ytext_format');
-  late final _ytext_format = _ytext_formatPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int,
-          ffi.Pointer<YInput>)>();
-
-  /// Inserts an embed content given `index`. `index` value must be between 0 and a length of a
-  /// `YText` (inclusive, accordingly to [ytext_len] return value), otherwise this
-  /// function will panic.
-  ///
-  /// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
-  /// ownership over a passed value - it will be copied and therefore a string parameter must be
-  /// released by the caller.
-  ///
-  /// A nullable pointer with defined `attrs` will be used to wrap provided text with
-  /// a formatting blocks. `attrs` must be a map-like type.
-  void ytext_insert_embed(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<YInput> content,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _ytext_insert_embed(
-      txt,
-      txn,
-      index,
-      content,
-      attrs,
-    );
-  }
-
-  late final _ytext_insert_embedPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<YInput>,
-              ffi.Pointer<YInput>)>>('ytext_insert_embed');
-  late final _ytext_insert_embed = _ytext_insert_embedPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int,
-          ffi.Pointer<YInput>, ffi.Pointer<YInput>)>();
-
-  /// Performs a series of changes over the given `YText` shared ref type, described by the `delta`
-  /// parameter:
-  ///
-  /// - Deltas constructed with `ydelta_input_retain` will move cursor position by the given number
-  /// of elements. If formatting attributes were defined, all elements skipped over this way will be
-  /// wrapped by given formatting attributes.
-  /// - Deltas constructed with `ydelta_input_delete` will tell cursor to remove a corresponding
-  /// number of elements.
-  /// - Deltas constructed with `ydelta_input_insert` will tell cursor to insert given elements into
-  /// current cursor position. While these elements can be of any type (used for embedding ie.
-  /// shared types or binary payload like images), for the text insertion a `yinput_string`
-  /// is expected. If formatting attributes were specified, inserted elements will be wrapped by
-  /// given formatting attributes.
-  void ytext_insert_delta(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<YDeltaIn> delta,
-    int delta_len,
-  ) {
-    return _ytext_insert_delta(
-      txt,
-      txn,
-      delta,
-      delta_len,
-    );
-  }
-
-  late final _ytext_insert_deltaPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Pointer<YDeltaIn>, ffi.Uint32)>>('ytext_insert_delta');
-  late final _ytext_insert_delta = _ytext_insert_deltaPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<YDeltaIn>, int)>();
-
-  /// Creates a parameter for `ytext_insert_delta` function. This parameter will move cursor position
-  /// by the `len` of elements. If formatting `attrs` were defined, all elements skipped over this
-  /// way will be wrapped by given formatting attributes.
-  YDeltaIn ydelta_input_retain(
-    int len,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _ydelta_input_retain(
-      len,
-      attrs,
-    );
-  }
-
-  late final _ydelta_input_retainPtr = _lookup<
-          ffi
-          .NativeFunction<YDeltaIn Function(ffi.Uint32, ffi.Pointer<YInput>)>>(
-      'ydelta_input_retain');
-  late final _ydelta_input_retain = _ydelta_input_retainPtr
-      .asFunction<YDeltaIn Function(int, ffi.Pointer<YInput>)>();
-
-  /// Creates a parameter for `ytext_insert_delta` function. This parameter will tell cursor to remove
-  /// a corresponding number of elements, starting from current cursor position.
-  YDeltaIn ydelta_input_delete(
-    int len,
-  ) {
-    return _ydelta_input_delete(
-      len,
-    );
-  }
-
-  late final _ydelta_input_deletePtr =
-      _lookup<ffi.NativeFunction<YDeltaIn Function(ffi.Uint32)>>(
-          'ydelta_input_delete');
-  late final _ydelta_input_delete =
-      _ydelta_input_deletePtr.asFunction<YDeltaIn Function(int)>();
-
-  /// Creates a parameter for `ytext_insert_delta` function. This parameter will tell cursor to insert
-  /// given elements into current cursor position. While these elements can be of any type (used for
-  /// embedding ie. shared types or binary payload like images), for the text insertion a `yinput_string`
-  /// is expected. If formatting attributes were specified, inserted elements will be wrapped by
-  /// given formatting attributes.
-  YDeltaIn ydelta_input_insert(
-    ffi.Pointer<YInput> data,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _ydelta_input_insert(
-      data,
-      attrs,
-    );
-  }
-
-  late final _ydelta_input_insertPtr = _lookup<
-      ffi.NativeFunction<
-          YDeltaIn Function(ffi.Pointer<YInput>,
-              ffi.Pointer<YInput>)>>('ydelta_input_insert');
-  late final _ydelta_input_insert = _ydelta_input_insertPtr.asFunction<
-      YDeltaIn Function(ffi.Pointer<YInput>, ffi.Pointer<YInput>)>();
-
-  /// Removes a range of characters, starting a a given `index`. This range must fit within the bounds
-  /// of a current `YText`, otherwise this function call will fail.
-  ///
-  /// An `index` value must be between 0 and the length of a `YText` (exclusive, accordingly to
-  /// [ytext_len] return value).
-  ///
-  /// A `length` must be lower or equal number of characters (counted as UTF chars depending on the
-  /// encoding configured by `YDoc`) from `index` position to the end of of the string.
-  void ytext_remove_range(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int length,
-  ) {
-    return _ytext_remove_range(
-      txt,
-      txn,
-      index,
-      length,
-    );
-  }
-
-  late final _ytext_remove_rangePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32)>>('ytext_remove_range');
-  late final _ytext_remove_range = _ytext_remove_rangePtr.asFunction<
-      void Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  /// Returns a number of elements stored within current instance of `YArray`.
-  int yarray_len(
-    ffi.Pointer<Branch> array,
-  ) {
-    return _yarray_len(
-      array,
-    );
-  }
-
-  late final _yarray_lenPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Pointer<Branch>)>>(
-          'yarray_len');
-  late final _yarray_len =
-      _yarray_lenPtr.asFunction<int Function(ffi.Pointer<Branch>)>();
-
-  /// Returns a pointer to a `YOutput` value stored at a given `index` of a current `YArray`.
-  /// If `index` is outside the bounds of an array, a null pointer will be returned.
-  ///
-  /// A value returned should be eventually released using [youtput_destroy] function.
-  ffi.Pointer<YOutput> yarray_get(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-  ) {
-    return _yarray_get(
-      array,
-      txn,
-      index,
-    );
-  }
-
-  late final _yarray_getPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Uint32)>>('yarray_get');
-  late final _yarray_get = _yarray_getPtr.asFunction<
-      ffi.Pointer<YOutput> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int)>();
-
-  /// Returns a UTF-8 encoded, NULL-terminated JSON string representing a value stored in a current
-  /// YArray under a given index.
-  ///
-  /// This method will return `NULL` pointer if value was outside the bound of an array or couldn't be
-  /// serialized into JSON string.
-  ///
-  /// This method will also try to serialize complex types that don't have native JSON representation
-  /// like YMap, YArray, YText etc. in such cases their contents will be materialized into JSON values.
-  ///
-  /// A string returned should be eventually released using [ystring_destroy] function.
-  ffi.Pointer<ffi.Char> yarray_get_json(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-  ) {
-    return _yarray_get_json(
-      array,
-      txn,
-      index,
-    );
-  }
-
-  late final _yarray_get_jsonPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Uint32)>>('yarray_get_json');
-  late final _yarray_get_json = _yarray_get_jsonPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int)>();
-
-  /// Inserts a range of `items` into current `YArray`, starting at given `index`. An `items_len`
-  /// parameter is used to determine the size of `items` array - it can also be used to insert
-  /// a single element given its pointer.
-  ///
-  /// An `index` value must be between 0 and (inclusive) length of a current array (use [yarray_len]
-  /// to determine its length), otherwise it will panic at runtime.
-  ///
-  /// `YArray` doesn't take ownership over the inserted `items` data - their contents are being copied
-  /// into array structure - therefore caller is responsible for freeing all memory associated with
-  /// input params.
-  void yarray_insert_range(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<YInput> items,
-    int items_len,
-  ) {
-    return _yarray_insert_range(
-      array,
-      txn,
-      index,
-      items,
-      items_len,
-    );
-  }
-
-  late final _yarray_insert_rangePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<YInput>,
-              ffi.Uint32)>>('yarray_insert_range');
-  late final _yarray_insert_range = _yarray_insert_rangePtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int,
-          ffi.Pointer<YInput>, int)>();
-
-  /// Removes a `len` of consecutive range of elements from current `array` instance, starting at
-  /// a given `index`. Range determined by `index` and `len` must fit into boundaries of an array,
-  /// otherwise it will panic at runtime.
-  void yarray_remove_range(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int len,
-  ) {
-    return _yarray_remove_range(
-      array,
-      txn,
-      index,
-      len,
-    );
-  }
-
-  late final _yarray_remove_rangePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32)>>('yarray_remove_range');
-  late final _yarray_remove_range = _yarray_remove_rangePtr.asFunction<
-      void Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  void yarray_move(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int source,
-    int target,
-  ) {
-    return _yarray_move(
-      array,
-      txn,
-      source,
-      target,
-    );
-  }
-
-  late final _yarray_movePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32)>>('yarray_move');
-  late final _yarray_move = _yarray_movePtr.asFunction<
-      void Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  /// Returns an iterator, which can be used to traverse over all elements of an `array` (`array`'s
-  /// length can be determined using [yarray_len] function).
-  ///
-  /// Use [yarray_iter_next] function in order to retrieve a consecutive array elements.
-  /// Use [yarray_iter_destroy] function in order to close the iterator and release its resources.
-  ffi.Pointer<YArrayIter> yarray_iter(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yarray_iter(
-      array,
-      txn,
-    );
-  }
-
-  late final _yarray_iterPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YArrayIter> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('yarray_iter');
-  late final _yarray_iter = _yarray_iterPtr.asFunction<
-      ffi.Pointer<YArrayIter> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Releases all of an `YArray` iterator resources created by calling [yarray_iter].
-  void yarray_iter_destroy(
-    ffi.Pointer<YArrayIter> iter,
-  ) {
-    return _yarray_iter_destroy(
-      iter,
-    );
-  }
-
-  late final _yarray_iter_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YArrayIter>)>>(
-          'yarray_iter_destroy');
-  late final _yarray_iter_destroy = _yarray_iter_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YArrayIter>)>();
-
-  /// Moves current `YArray` iterator over to a next element, returning a pointer to it. If an iterator
-  /// comes to an end of an array, a null pointer will be returned.
-  ///
-  /// Returned values should be eventually released using [youtput_destroy] function.
-  ffi.Pointer<YOutput> yarray_iter_next(
-    ffi.Pointer<YArrayIter> iterator,
-  ) {
-    return _yarray_iter_next(
-      iterator,
-    );
-  }
-
-  late final _yarray_iter_nextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(
-              ffi.Pointer<YArrayIter>)>>('yarray_iter_next');
-  late final _yarray_iter_next = _yarray_iter_nextPtr
-      .asFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<YArrayIter>)>();
-
-  /// Returns an iterator, which can be used to traverse over all key-value pairs of a `map`.
-  ///
-  /// Use [ymap_iter_next] function in order to retrieve a consecutive (**unordered**) map entries.
-  /// Use [ymap_iter_destroy] function in order to close the iterator and release its resources.
-  ffi.Pointer<YMapIter> ymap_iter(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ymap_iter(
-      map,
-      txn,
-    );
-  }
-
-  late final _ymap_iterPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YMapIter> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('ymap_iter');
-  late final _ymap_iter = _ymap_iterPtr.asFunction<
-      ffi.Pointer<YMapIter> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Releases all of an `YMap` iterator resources created by calling [ymap_iter].
-  void ymap_iter_destroy(
-    ffi.Pointer<YMapIter> iter,
-  ) {
-    return _ymap_iter_destroy(
-      iter,
-    );
-  }
-
-  late final _ymap_iter_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YMapIter>)>>(
-          'ymap_iter_destroy');
-  late final _ymap_iter_destroy =
-      _ymap_iter_destroyPtr.asFunction<void Function(ffi.Pointer<YMapIter>)>();
-
-  /// Moves current `YMap` iterator over to a next entry, returning a pointer to it. If an iterator
-  /// comes to an end of a map, a null pointer will be returned. Yrs maps are unordered and so are
-  /// their iterators.
-  ///
-  /// Returned values should be eventually released using [ymap_entry_destroy] function.
-  ffi.Pointer<YMapEntry> ymap_iter_next(
-    ffi.Pointer<YMapIter> iter,
-  ) {
-    return _ymap_iter_next(
-      iter,
-    );
-  }
-
-  late final _ymap_iter_nextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YMapEntry> Function(
-              ffi.Pointer<YMapIter>)>>('ymap_iter_next');
-  late final _ymap_iter_next = _ymap_iter_nextPtr
-      .asFunction<ffi.Pointer<YMapEntry> Function(ffi.Pointer<YMapIter>)>();
-
-  /// Returns a number of entries stored within a `map`.
-  int ymap_len(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ymap_len(
-      map,
-      txn,
-    );
-  }
-
-  late final _ymap_lenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint32 Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('ymap_len');
-  late final _ymap_len = _ymap_lenPtr.asFunction<
-      int Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Inserts a new entry (specified as `key`-`value` pair) into a current `map`. If entry under such
-  /// given `key` already existed, its corresponding value will be replaced.
-  ///
-  /// A `key` must be a null-terminated UTF-8 encoded string, which contents will be copied into
-  /// a `map` (therefore it must be freed by the function caller).
-  ///
-  /// A `value` content is being copied into a `map`, therefore any of its content must be freed by
-  /// the function caller.
-  void ymap_insert(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> key,
-    ffi.Pointer<YInput> value,
-  ) {
-    return _ymap_insert(
-      map,
-      txn,
-      key,
-      value,
-    );
-  }
-
-  late final _ymap_insertPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>>('ymap_insert');
-  late final _ymap_insert = _ymap_insertPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>();
-
-  /// Removes a `map` entry, given its `key`. Returns `1` if the corresponding entry was successfully
-  /// removed or `0` if no entry with a provided `key` has been found inside of a `map`.
-  ///
-  /// A `key` must be a null-terminated UTF-8 encoded string.
-  int ymap_remove(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> key,
-  ) {
-    return _ymap_remove(
-      map,
-      txn,
-      key,
-    );
-  }
-
-  late final _ymap_removePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint8 Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('ymap_remove');
-  late final _ymap_remove = _ymap_removePtr.asFunction<
-      int Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>)>();
-
-  /// Returns a value stored under the provided `key`, or a null pointer if no entry with such `key`
-  /// has been found in a current `map`. A returned value is allocated by this function and therefore
-  /// should be eventually released using [youtput_destroy] function.
-  ///
-  /// A `key` must be a null-terminated UTF-8 encoded string.
-  ffi.Pointer<YOutput> ymap_get(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> key,
-  ) {
-    return _ymap_get(
-      map,
-      txn,
-      key,
-    );
-  }
-
-  late final _ymap_getPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>>('ymap_get');
-  late final _ymap_get = _ymap_getPtr.asFunction<
-      ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>();
-
-  /// Returns a value stored under the provided `key` as UTF-8 encoded, NULL-terminated JSON string.
-  /// Once not needed that string should be deallocated using `ystring_destroy`.
-  ///
-  /// This method will return `NULL` pointer if value was not found or value couldn't be serialized
-  /// into JSON string.
-  ///
-  /// This method will also try to serialize complex types that don't have native JSON representation
-  /// like YMap, YArray, YText etc. in such cases their contents will be materialized into JSON values.
-  ffi.Pointer<ffi.Char> ymap_get_json(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> key,
-  ) {
-    return _ymap_get_json(
-      map,
-      txn,
-      key,
-    );
-  }
-
-  late final _ymap_get_jsonPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('ymap_get_json');
-  late final _ymap_get_json = _ymap_get_jsonPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>();
-
-  /// Removes all entries from a current `map`.
-  void ymap_remove_all(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ymap_remove_all(
-      map,
-      txn,
-    );
-  }
-
-  late final _ymap_remove_allPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('ymap_remove_all');
-  late final _ymap_remove_all = _ymap_remove_allPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Return a name (or an XML tag) of a current `YXmlElement`. Root-level XML nodes use "UNDEFINED" as
-  /// their tag names.
-  ///
-  /// Returned value is a null-terminated UTF-8 string, which must be released using [ystring_destroy]
-  /// function.
-  ffi.Pointer<ffi.Char> yxmlelem_tag(
-    ffi.Pointer<Branch> xml,
-  ) {
-    return _yxmlelem_tag(
-      xml,
-    );
-  }
-
-  late final _yxmlelem_tagPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>)>>('yxmlelem_tag');
-  late final _yxmlelem_tag = _yxmlelem_tagPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>)>();
-
-  /// Converts current `YXmlElement` together with its children and attributes into a flat string
-  /// representation (no padding) eg. `<UNDEFINED><title key="value">sample text</title></UNDEFINED>`.
-  ///
-  /// Returned value is a null-terminated UTF-8 string, which must be released using [ystring_destroy]
-  /// function.
-  ffi.Pointer<ffi.Char> yxmlelem_string(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmlelem_string(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxmlelem_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmlelem_string');
-  late final _yxmlelem_string = _yxmlelem_stringPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Inserts an XML attribute described using `attr_name` and `attr_value`. If another attribute with
-  /// the same name already existed, its value will be replaced with a provided one.
-  ///
-  /// Both `attr_name` and `attr_value` must be a null-terminated UTF-8 encoded strings. Their
-  /// contents are being copied, therefore it's up to a function caller to properly release them.
-  void yxmlelem_insert_attr(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-    ffi.Pointer<ffi.Char> attr_value,
-  ) {
-    return _yxmlelem_insert_attr(
-      xml,
-      txn,
-      attr_name,
-      attr_value,
-    );
-  }
-
-  late final _yxmlelem_insert_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('yxmlelem_insert_attr');
-  late final _yxmlelem_insert_attr = _yxmlelem_insert_attrPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
-
-  /// Removes an attribute from a current `YXmlElement`, given its name.
-  ///
-  /// An `attr_name`must be a null-terminated UTF-8 encoded string.
-  void yxmlelem_remove_attr(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-  ) {
-    return _yxmlelem_remove_attr(
-      xml,
-      txn,
-      attr_name,
-    );
-  }
-
-  late final _yxmlelem_remove_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('yxmlelem_remove_attr');
-  late final _yxmlelem_remove_attr = _yxmlelem_remove_attrPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>)>();
-
-  /// Returns the value of a current `YXmlElement`, given its name, or a null pointer if not attribute
-  /// with such name has been found. Returned pointer is a null-terminated UTF-8 encoded string, which
-  /// should be released using [ystring_destroy] function.
-  ///
-  /// An `attr_name` must be a null-terminated UTF-8 encoded string.
-  ffi.Pointer<ffi.Char> yxmlelem_get_attr(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-  ) {
-    return _yxmlelem_get_attr(
-      xml,
-      txn,
-      attr_name,
-    );
-  }
-
-  late final _yxmlelem_get_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('yxmlelem_get_attr');
-  late final _yxmlelem_get_attr = _yxmlelem_get_attrPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>();
-
-  /// Returns an iterator over the `YXmlElement` attributes.
-  ///
-  /// Use [yxmlattr_iter_next] function in order to retrieve a consecutive (**unordered**) attributes.
-  /// Use [yxmlattr_iter_destroy] function in order to close the iterator and release its resources.
-  ffi.Pointer<YXmlAttrIter> yxmlelem_attr_iter(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmlelem_attr_iter(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxmlelem_attr_iterPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YXmlAttrIter> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmlelem_attr_iter');
-  late final _yxmlelem_attr_iter = _yxmlelem_attr_iterPtr.asFunction<
-      ffi.Pointer<YXmlAttrIter> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns an iterator over the `YXmlText` attributes.
-  ///
-  /// Use [yxmlattr_iter_next] function in order to retrieve a consecutive (**unordered**) attributes.
-  /// Use [yxmlattr_iter_destroy] function in order to close the iterator and release its resources.
-  ffi.Pointer<YXmlAttrIter> yxmltext_attr_iter(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmltext_attr_iter(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxmltext_attr_iterPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YXmlAttrIter> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmltext_attr_iter');
-  late final _yxmltext_attr_iter = _yxmltext_attr_iterPtr.asFunction<
-      ffi.Pointer<YXmlAttrIter> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Releases all of attributes iterator resources created by calling [yxmlelem_attr_iter]
-  /// or [yxmltext_attr_iter].
-  void yxmlattr_iter_destroy(
-    ffi.Pointer<YXmlAttrIter> iterator,
-  ) {
-    return _yxmlattr_iter_destroy(
-      iterator,
-    );
-  }
-
-  late final _yxmlattr_iter_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YXmlAttrIter>)>>(
-          'yxmlattr_iter_destroy');
-  late final _yxmlattr_iter_destroy = _yxmlattr_iter_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YXmlAttrIter>)>();
-
-  /// Returns a next XML attribute from an `iterator`. Attributes are returned in an unordered
-  /// manner. Once `iterator` reaches the end of attributes collection, a null pointer will be
-  /// returned.
-  ///
-  /// Returned value should be eventually released using [yxmlattr_destroy].
-  ffi.Pointer<YXmlAttr> yxmlattr_iter_next(
-    ffi.Pointer<YXmlAttrIter> iterator,
-  ) {
-    return _yxmlattr_iter_next(
-      iterator,
-    );
-  }
-
-  late final _yxmlattr_iter_nextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YXmlAttr> Function(
-              ffi.Pointer<YXmlAttrIter>)>>('yxmlattr_iter_next');
-  late final _yxmlattr_iter_next = _yxmlattr_iter_nextPtr
-      .asFunction<ffi.Pointer<YXmlAttr> Function(ffi.Pointer<YXmlAttrIter>)>();
-
-  /// Returns a next sibling of a current XML node, which can be either another `YXmlElement`
-  /// or a `YXmlText`. Together with [yxmlelem_first_child] it may be used to iterate over the direct
-  /// children of an XML node (in order to iterate over the nested XML structure use
-  /// [yxmlelem_tree_walker]).
-  ///
-  /// If current `YXmlElement` is the last child, this function returns a null pointer.
-  /// A returned value should be eventually released using [youtput_destroy] function.
-  ffi.Pointer<YOutput> yxml_next_sibling(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxml_next_sibling(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxml_next_siblingPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxml_next_sibling');
-  late final _yxml_next_sibling = _yxml_next_siblingPtr.asFunction<
-      ffi.Pointer<YOutput> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns a previous sibling of a current XML node, which can be either another `YXmlElement`
-  /// or a `YXmlText`.
-  ///
-  /// If current `YXmlElement` is the first child, this function returns a null pointer.
-  /// A returned value should be eventually released using [youtput_destroy] function.
-  ffi.Pointer<YOutput> yxml_prev_sibling(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxml_prev_sibling(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxml_prev_siblingPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxml_prev_sibling');
-  late final _yxml_prev_sibling = _yxml_prev_siblingPtr.asFunction<
-      ffi.Pointer<YOutput> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns a parent `YXmlElement` of a current node, or null pointer when current `YXmlElement` is
-  /// a root-level shared data type.
-  ffi.Pointer<Branch> yxmlelem_parent(
-    ffi.Pointer<Branch> xml,
-  ) {
-    return _yxmlelem_parent(
-      xml,
-    );
-  }
-
-  late final _yxmlelem_parentPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<Branch>)>>(
-      'yxmlelem_parent');
-  late final _yxmlelem_parent = _yxmlelem_parentPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<Branch>)>();
-
-  /// Returns a number of child nodes (both `YXmlElement` and `YXmlText`) living under a current XML
-  /// element. This function doesn't count a recursive nodes, only direct children of a current node.
-  int yxmlelem_child_len(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmlelem_child_len(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxmlelem_child_lenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint32 Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmlelem_child_len');
-  late final _yxmlelem_child_len = _yxmlelem_child_lenPtr.asFunction<
-      int Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns a first child node of a current `YXmlElement`, or null pointer if current XML node is
-  /// empty. Returned value could be either another `YXmlElement` or `YXmlText`.
-  ///
-  /// A returned value should be eventually released using [youtput_destroy] function.
-  ffi.Pointer<YOutput> yxmlelem_first_child(
-    ffi.Pointer<Branch> xml,
-  ) {
-    return _yxmlelem_first_child(
-      xml,
-    );
-  }
-
-  late final _yxmlelem_first_childPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>)>>(
-      'yxmlelem_first_child');
-  late final _yxmlelem_first_child = _yxmlelem_first_childPtr
-      .asFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>)>();
-
-  /// Returns an iterator over a nested recursive structure of a current `YXmlElement`, starting from
-  /// first of its children. Returned values can be either `YXmlElement` or `YXmlText` nodes.
-  ///
-  /// Use [yxmlelem_tree_walker_next] function in order to iterate over to a next node.
-  /// Use [yxmlelem_tree_walker_destroy] function to release resources used by the iterator.
-  ffi.Pointer<YXmlTreeWalker> yxmlelem_tree_walker(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmlelem_tree_walker(
-      xml,
-      txn,
-    );
-  }
-
-  late final _yxmlelem_tree_walkerPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YXmlTreeWalker> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmlelem_tree_walker');
-  late final _yxmlelem_tree_walker = _yxmlelem_tree_walkerPtr.asFunction<
-      ffi.Pointer<YXmlTreeWalker> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Releases resources associated with a current XML tree walker iterator.
-  void yxmlelem_tree_walker_destroy(
-    ffi.Pointer<YXmlTreeWalker> iter,
-  ) {
-    return _yxmlelem_tree_walker_destroy(
-      iter,
-    );
-  }
-
-  late final _yxmlelem_tree_walker_destroyPtr = _lookup<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YXmlTreeWalker>)>>(
-      'yxmlelem_tree_walker_destroy');
-  late final _yxmlelem_tree_walker_destroy = _yxmlelem_tree_walker_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YXmlTreeWalker>)>();
-
-  /// Moves current `iterator` to a next value (either `YXmlElement` or `YXmlText`), returning its
-  /// pointer or a null, if an `iterator` already reached the last successor node.
-  ///
-  /// Values returned by this function should be eventually released using [youtput_destroy].
-  ffi.Pointer<YOutput> yxmlelem_tree_walker_next(
-    ffi.Pointer<YXmlTreeWalker> iterator,
-  ) {
-    return _yxmlelem_tree_walker_next(
-      iterator,
-    );
-  }
-
-  late final _yxmlelem_tree_walker_nextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(
-              ffi.Pointer<YXmlTreeWalker>)>>('yxmlelem_tree_walker_next');
-  late final _yxmlelem_tree_walker_next = _yxmlelem_tree_walker_nextPtr
-      .asFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<YXmlTreeWalker>)>();
-
-  /// Inserts an `YXmlElement` as a child of a current node at the given `index` and returns its
-  /// pointer. Node created this way will have a given `name` as its tag (eg. `p` for `<p></p>` node).
-  ///
-  /// An `index` value must be between 0 and (inclusive) length of a current XML element (use
-  /// [yxmlelem_child_len] function to determine its length).
-  ///
-  /// A `name` must be a null-terminated UTF-8 encoded string, which will be copied into current
-  /// document. Therefore `name` should be freed by the function caller.
-  ffi.Pointer<Branch> yxmlelem_insert_elem(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _yxmlelem_insert_elem(
-      xml,
-      txn,
-      index,
-      name,
-    );
-  }
-
-  late final _yxmlelem_insert_elemPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('yxmlelem_insert_elem');
-  late final _yxmlelem_insert_elem = _yxmlelem_insert_elemPtr.asFunction<
-      ffi.Pointer<Branch> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, int, ffi.Pointer<ffi.Char>)>();
-
-  /// Inserts an `YXmlText` as a child of a current node at the given `index` and returns its
-  /// pointer.
-  ///
-  /// An `index` value must be between 0 and (inclusive) length of a current XML element (use
-  /// [yxmlelem_child_len] function to determine its length).
-  ffi.Pointer<Branch> yxmlelem_insert_text(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-  ) {
-    return _yxmlelem_insert_text(
-      xml,
-      txn,
-      index,
-    );
-  }
-
-  late final _yxmlelem_insert_textPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Uint32)>>('yxmlelem_insert_text');
-  late final _yxmlelem_insert_text = _yxmlelem_insert_textPtr.asFunction<
-      ffi.Pointer<Branch> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int)>();
-
-  /// Removes a consecutive range of child elements (of specified length) from the current
-  /// `YXmlElement`, starting at the given `index`. Specified range must fit into boundaries of current
-  /// XML node children, otherwise this function will panic at runtime.
-  void yxmlelem_remove_range(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int len,
-  ) {
-    return _yxmlelem_remove_range(
-      xml,
-      txn,
-      index,
-      len,
-    );
-  }
-
-  late final _yxmlelem_remove_rangePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32)>>('yxmlelem_remove_range');
-  late final _yxmlelem_remove_range = _yxmlelem_remove_rangePtr.asFunction<
-      void Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  /// Returns an XML child node (either a `YXmlElement` or `YXmlText`) stored at a given `index` of
-  /// a current `YXmlElement`. Returns null pointer if `index` was outside of the bound of current XML
-  /// node children.
-  ///
-  /// Returned value should be eventually released using [youtput_destroy].
-  ffi.Pointer<YOutput> yxmlelem_get(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-  ) {
-    return _yxmlelem_get(
-      xml,
-      txn,
-      index,
-    );
-  }
-
-  late final _yxmlelem_getPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Uint32)>>('yxmlelem_get');
-  late final _yxmlelem_get = _yxmlelem_getPtr.asFunction<
-      ffi.Pointer<YOutput> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int)>();
-
-  /// Returns the length of the `YXmlText` string content in bytes (without the null terminator
-  /// character)
-  int yxmltext_len(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmltext_len(
-      txt,
-      txn,
-    );
-  }
-
-  late final _yxmltext_lenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Uint32 Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('yxmltext_len');
-  late final _yxmltext_len = _yxmltext_lenPtr.asFunction<
-      int Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Returns a null-terminated UTF-8 encoded string content of a current `YXmlText` shared data type.
-  ///
-  /// Generated string resources should be released using [ystring_destroy] function.
-  ffi.Pointer<ffi.Char> yxmltext_string(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yxmltext_string(
-      txt,
-      txn,
-    );
-  }
-
-  late final _yxmltext_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yxmltext_string');
-  late final _yxmltext_string = _yxmltext_stringPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Inserts a null-terminated UTF-8 encoded string a a given `index`. `index` value must be between
-  /// 0 and a length of a `YXmlText` (inclusive, accordingly to [yxmltext_len] return value), otherwise
-  /// this function will panic.
-  ///
-  /// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
-  /// ownership over a passed value - it will be copied and therefore a string parameter must be
-  /// released by the caller.
-  ///
-  /// A nullable pointer with defined `attrs` will be used to wrap provided text with
-  /// a formatting blocks. `attrs` must be a map-like type.
-  void yxmltext_insert(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<ffi.Char> str,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _yxmltext_insert(
-      txt,
-      txn,
-      index,
-      str,
-      attrs,
-    );
-  }
-
-  late final _yxmltext_insertPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<YInput>)>>('yxmltext_insert');
-  late final _yxmltext_insert = _yxmltext_insertPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<YInput>)>();
-
-  /// Inserts an embed content given `index`. `index` value must be between 0 and a length of a
-  /// `YXmlText` (inclusive, accordingly to [ytext_len] return value), otherwise this
-  /// function will panic.
-  ///
-  /// A `str` parameter must be a null-terminated UTF-8 encoded string. This function doesn't take
-  /// ownership over a passed value - it will be copied and therefore a string parameter must be
-  /// released by the caller.
-  ///
-  /// A nullable pointer with defined `attrs` will be used to wrap provided text with
-  /// a formatting blocks. `attrs` must be a map-like type.
-  void yxmltext_insert_embed(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    ffi.Pointer<YInput> content,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _yxmltext_insert_embed(
-      txt,
-      txn,
-      index,
-      content,
-      attrs,
-    );
-  }
-
-  late final _yxmltext_insert_embedPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Pointer<YInput>,
-              ffi.Pointer<YInput>)>>('yxmltext_insert_embed');
-  late final _yxmltext_insert_embed = _yxmltext_insert_embedPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int,
-          ffi.Pointer<YInput>, ffi.Pointer<YInput>)>();
-
-  /// Wraps an existing piece of text within a range described by `index`-`len` parameters with
-  /// formatting blocks containing provided `attrs` metadata. `attrs` must be a map-like type.
-  void yxmltext_format(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int len,
-    ffi.Pointer<YInput> attrs,
-  ) {
-    return _yxmltext_format(
-      txt,
-      txn,
-      index,
-      len,
-      attrs,
-    );
-  }
-
-  late final _yxmltext_formatPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32, ffi.Pointer<YInput>)>>('yxmltext_format');
-  late final _yxmltext_format = _yxmltext_formatPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int,
-          ffi.Pointer<YInput>)>();
-
-  /// Removes a range of characters, starting a a given `index`. This range must fit within the bounds
-  /// of a current `YXmlText`, otherwise this function call will fail.
-  ///
-  /// An `index` value must be between 0 and the length of a `YXmlText` (exclusive, accordingly to
-  /// [yxmltext_len] return value).
-  ///
-  /// A `length` must be lower or equal number of characters (counted as UTF chars depending on the
-  /// encoding configured by `YDoc`) from `index` position to the end of of the string.
-  void yxmltext_remove_range(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    int idx,
-    int len,
-  ) {
-    return _yxmltext_remove_range(
-      txt,
-      txn,
-      idx,
-      len,
-    );
-  }
-
-  late final _yxmltext_remove_rangePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Uint32, ffi.Uint32)>>('yxmltext_remove_range');
-  late final _yxmltext_remove_range = _yxmltext_remove_rangePtr.asFunction<
-      void Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  /// Inserts an XML attribute described using `attr_name` and `attr_value`. If another attribute with
-  /// the same name already existed, its value will be replaced with a provided one.
-  ///
-  /// Both `attr_name` and `attr_value` must be a null-terminated UTF-8 encoded strings. Their
-  /// contents are being copied, therefore it's up to a function caller to properly release them.
-  void yxmltext_insert_attr(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-    ffi.Pointer<ffi.Char> attr_value,
-  ) {
-    return _yxmltext_insert_attr(
-      txt,
-      txn,
-      attr_name,
-      attr_value,
-    );
-  }
-
-  late final _yxmltext_insert_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Char>)>>('yxmltext_insert_attr');
-  late final _yxmltext_insert_attr = _yxmltext_insert_attrPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>)>();
-
-  /// Removes an attribute from a current `YXmlText`, given its name.
-  ///
-  /// An `attr_name`must be a null-terminated UTF-8 encoded string.
-  void yxmltext_remove_attr(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-  ) {
-    return _yxmltext_remove_attr(
-      txt,
-      txn,
-      attr_name,
-    );
-  }
-
-  late final _yxmltext_remove_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('yxmltext_remove_attr');
-  late final _yxmltext_remove_attr = _yxmltext_remove_attrPtr.asFunction<
-      void Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>)>();
-
-  /// Returns the value of a current `YXmlText`, given its name, or a null pointer if not attribute
-  /// with such name has been found. Returned pointer is a null-terminated UTF-8 encoded string, which
-  /// should be released using [ystring_destroy] function.
-  ///
-  /// An `attr_name` must be a null-terminated UTF-8 encoded string.
-  ffi.Pointer<ffi.Char> yxmltext_get_attr(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> attr_name,
-  ) {
-    return _yxmltext_get_attr(
-      txt,
-      txn,
-      attr_name,
-    );
-  }
-
-  late final _yxmltext_get_attrPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Char>)>>('yxmltext_get_attr');
-  late final _yxmltext_get_attr = _yxmltext_get_attrPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>();
-
-  /// Returns a collection of chunks representing pieces of `YText` rich text string grouped together
-  /// by the same formatting rules and type. `chunks_len` is used to inform about a number of chunks
-  /// generated this way.
-  ///
-  /// Returned array needs to be eventually deallocated using `ychunks_destroy`.
-  ffi.Pointer<YChunk> ytext_chunks(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Uint32> chunks_len,
-  ) {
-    return _ytext_chunks(
-      txt,
-      txn,
-      chunks_len,
-    );
-  }
-
-  late final _ytext_chunksPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YChunk> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Uint32>)>>('ytext_chunks');
-  late final _ytext_chunks = _ytext_chunksPtr.asFunction<
-      ffi.Pointer<YChunk> Function(ffi.Pointer<Branch>,
-          ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Deallocates result of `ytext_chunks` method.
-  void ychunks_destroy(
-    ffi.Pointer<YChunk> chunks,
-    int len,
-  ) {
-    return _ychunks_destroy(
-      chunks,
-      len,
-    );
-  }
-
-  late final _ychunks_destroyPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<YChunk>, ffi.Uint32)>>(
-      'ychunks_destroy');
-  late final _ychunks_destroy =
-      _ychunks_destroyPtr.asFunction<void Function(ffi.Pointer<YChunk>, int)>();
-
-  /// Releases all resources related to a corresponding `YOutput` cell.
-  void youtput_destroy(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_destroy(
-      val,
-    );
-  }
-
-  late final _youtput_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YOutput>)>>(
-          'youtput_destroy');
-  late final _youtput_destroy =
-      _youtput_destroyPtr.asFunction<void Function(ffi.Pointer<YOutput>)>();
-
-  /// Function constructor used to create JSON-like NULL `YInput` cell.
-  /// This function doesn't allocate any heap resources.
-  YInput yinput_null() {
-    return _yinput_null();
-  }
-
-  late final _yinput_nullPtr =
-      _lookup<ffi.NativeFunction<YInput Function()>>('yinput_null');
-  late final _yinput_null = _yinput_nullPtr.asFunction<YInput Function()>();
-
-  /// Function constructor used to create JSON-like undefined `YInput` cell.
-  /// This function doesn't allocate any heap resources.
-  YInput yinput_undefined() {
-    return _yinput_undefined();
-  }
-
-  late final _yinput_undefinedPtr =
-      _lookup<ffi.NativeFunction<YInput Function()>>('yinput_undefined');
-  late final _yinput_undefined =
-      _yinput_undefinedPtr.asFunction<YInput Function()>();
-
-  /// Function constructor used to create JSON-like boolean `YInput` cell.
-  /// This function doesn't allocate any heap resources.
-  YInput yinput_bool(
-    int flag,
-  ) {
-    return _yinput_bool(
-      flag,
-    );
-  }
-
-  late final _yinput_boolPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Uint8)>>('yinput_bool');
-  late final _yinput_bool = _yinput_boolPtr.asFunction<YInput Function(int)>();
-
-  /// Function constructor used to create JSON-like 64-bit floating point number `YInput` cell.
-  /// This function doesn't allocate any heap resources.
-  YInput yinput_float(
-    double num,
-  ) {
-    return _yinput_float(
-      num,
-    );
-  }
-
-  late final _yinput_floatPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Double)>>('yinput_float');
-  late final _yinput_float =
-      _yinput_floatPtr.asFunction<YInput Function(double)>();
-
-  /// Function constructor used to create JSON-like 64-bit signed integer `YInput` cell.
-  /// This function doesn't allocate any heap resources.
-  YInput yinput_long(
-    int integer,
-  ) {
-    return _yinput_long(
-      integer,
-    );
-  }
-
-  late final _yinput_longPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Int64)>>('yinput_long');
-  late final _yinput_long = _yinput_longPtr.asFunction<YInput Function(int)>();
-
-  /// Function constructor used to create a string `YInput` cell. Provided parameter must be
-  /// a null-terminated UTF-8 encoded string. This function doesn't allocate any heap resources,
-  /// and doesn't release any on its own, therefore its up to a caller to free resources once
-  /// a structure is no longer needed.
-  YInput yinput_string(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _yinput_string(
-      str,
-    );
-  }
-
-  late final _yinput_stringPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<ffi.Char>)>>(
-          'yinput_string');
-  late final _yinput_string =
-      _yinput_stringPtr.asFunction<YInput Function(ffi.Pointer<ffi.Char>)>();
-
-  /// Function constructor used to create aa `YInput` cell representing any JSON-like object.
-  /// Provided parameter must be a null-terminated UTF-8 encoded JSON string.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_json(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _yinput_json(
-      str,
-    );
-  }
-
-  late final _yinput_jsonPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<ffi.Char>)>>(
-          'yinput_json');
-  late final _yinput_json =
-      _yinput_jsonPtr.asFunction<YInput Function(ffi.Pointer<ffi.Char>)>();
-
-  /// Function constructor used to create a binary `YInput` cell of a specified length.
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_binary(
-    ffi.Pointer<ffi.Char> buf,
-    int len,
-  ) {
-    return _yinput_binary(
-      buf,
-      len,
-    );
-  }
-
-  late final _yinput_binaryPtr = _lookup<
-      ffi.NativeFunction<
-          YInput Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>>('yinput_binary');
-  late final _yinput_binary = _yinput_binaryPtr
-      .asFunction<YInput Function(ffi.Pointer<ffi.Char>, int)>();
-
-  /// Function constructor used to create a JSON-like array `YInput` cell of other JSON-like values of
-  /// a given length. This function doesn't allocate any heap resources and doesn't release any on its
-  /// own, therefore its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_json_array(
-    ffi.Pointer<YInput> values,
-    int len,
-  ) {
-    return _yinput_json_array(
-      values,
-      len,
-    );
-  }
-
-  late final _yinput_json_arrayPtr = _lookup<
-          ffi.NativeFunction<YInput Function(ffi.Pointer<YInput>, ffi.Uint32)>>(
-      'yinput_json_array');
-  late final _yinput_json_array = _yinput_json_arrayPtr
-      .asFunction<YInput Function(ffi.Pointer<YInput>, int)>();
-
-  /// Function constructor used to create a JSON-like map `YInput` cell of other JSON-like key-value
-  /// pairs. These pairs are build from corresponding indexes of `keys` and `values`, which must have
-  /// the same specified length.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_json_map(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> keys,
-    ffi.Pointer<YInput> values,
-    int len,
-  ) {
-    return _yinput_json_map(
-      keys,
-      values,
-      len,
-    );
-  }
-
-  late final _yinput_json_mapPtr = _lookup<
-      ffi.NativeFunction<
-          YInput Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<YInput>, ffi.Uint32)>>('yinput_json_map');
-  late final _yinput_json_map = _yinput_json_mapPtr.asFunction<
-      YInput Function(
-          ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<YInput>, int)>();
-
-  /// Function constructor used to create a nested `YArray` `YInput` cell prefilled with other
-  /// values of a given length. This function doesn't allocate any heap resources and doesn't release
-  /// any on its own, therefore its up to a caller to free resources once a structure is no longer
-  /// needed.
-  YInput yinput_yarray(
-    ffi.Pointer<YInput> values,
-    int len,
-  ) {
-    return _yinput_yarray(
-      values,
-      len,
-    );
-  }
-
-  late final _yinput_yarrayPtr = _lookup<
-          ffi.NativeFunction<YInput Function(ffi.Pointer<YInput>, ffi.Uint32)>>(
-      'yinput_yarray');
-  late final _yinput_yarray =
-      _yinput_yarrayPtr.asFunction<YInput Function(ffi.Pointer<YInput>, int)>();
-
-  /// Function constructor used to create a nested `YMap` `YInput` cell prefilled with other key-value
-  /// pairs. These pairs are build from corresponding indexes of `keys` and `values`, which must have
-  /// the same specified length.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_ymap(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> keys,
-    ffi.Pointer<YInput> values,
-    int len,
-  ) {
-    return _yinput_ymap(
-      keys,
-      values,
-      len,
-    );
-  }
-
-  late final _yinput_ymapPtr = _lookup<
-      ffi.NativeFunction<
-          YInput Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Pointer<YInput>, ffi.Uint32)>>('yinput_ymap');
-  late final _yinput_ymap = _yinput_ymapPtr.asFunction<
-      YInput Function(
-          ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<YInput>, int)>();
-
-  /// Function constructor used to create a nested `YText` `YInput` cell prefilled with a specified
-  /// string, which must be a null-terminated UTF-8 character pointer.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_ytext(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _yinput_ytext(
-      str,
-    );
-  }
-
-  late final _yinput_ytextPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<ffi.Char>)>>(
-          'yinput_ytext');
-  late final _yinput_ytext =
-      _yinput_ytextPtr.asFunction<YInput Function(ffi.Pointer<ffi.Char>)>();
-
-  /// Function constructor used to create a nested `YXmlElement` `YInput` cell with a specified
-  /// tag name, which must be a null-terminated UTF-8 character pointer.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_yxmlelem(
-    ffi.Pointer<ffi.Char> name,
-  ) {
-    return _yinput_yxmlelem(
-      name,
-    );
-  }
-
-  late final _yinput_yxmlelemPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<ffi.Char>)>>(
-          'yinput_yxmlelem');
-  late final _yinput_yxmlelem =
-      _yinput_yxmlelemPtr.asFunction<YInput Function(ffi.Pointer<ffi.Char>)>();
-
-  /// Function constructor used to create a nested `YXmlText` `YInput` cell prefilled with a specified
-  /// string, which must be a null-terminated UTF-8 character pointer.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_yxmltext(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _yinput_yxmltext(
-      str,
-    );
-  }
-
-  late final _yinput_yxmltextPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<ffi.Char>)>>(
-          'yinput_yxmltext');
-  late final _yinput_yxmltext =
-      _yinput_yxmltextPtr.asFunction<YInput Function(ffi.Pointer<ffi.Char>)>();
-
-  /// Function constructor used to create a nested `YDoc` `YInput` cell.
-  ///
-  /// This function doesn't allocate any heap resources and doesn't release any on its own, therefore
-  /// its up to a caller to free resources once a structure is no longer needed.
-  YInput yinput_ydoc(
-    ffi.Pointer<YDoc> doc,
-  ) {
-    return _yinput_ydoc(
-      doc,
-    );
-  }
-
-  late final _yinput_ydocPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<YDoc>)>>(
-          'yinput_ydoc');
-  late final _yinput_ydoc =
-      _yinput_ydocPtr.asFunction<YInput Function(ffi.Pointer<YDoc>)>();
-
-  /// Function constructor used to create a string `YInput` cell with weak reference to another
-  /// element(s) living inside of the same document.
-  YInput yinput_weak(
-    ffi.Pointer<Weak> weak,
-  ) {
-    return _yinput_weak(
-      weak,
-    );
-  }
-
-  late final _yinput_weakPtr =
-      _lookup<ffi.NativeFunction<YInput Function(ffi.Pointer<Weak>)>>(
-          'yinput_weak');
-  late final _yinput_weak =
-      _yinput_weakPtr.asFunction<YInput Function(ffi.Pointer<Weak>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a `YDocRef` reference to a nested
-  /// document.
-  ffi.Pointer<YDoc> youtput_read_ydoc(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_ydoc(
-      val,
-    );
-  }
-
-  late final _youtput_read_ydocPtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<YDoc> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_ydoc');
-  late final _youtput_read_ydoc = _youtput_read_ydocPtr
-      .asFunction<ffi.Pointer<YDoc> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a boolean flag, which can be either
-  /// `1` for truthy case and `0` otherwise. Returns a null pointer in case when a value stored under
-  /// current `YOutput` cell is not of a boolean type.
-  ffi.Pointer<ffi.Uint8> youtput_read_bool(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_bool(
-      val,
-    );
-  }
-
-  late final _youtput_read_boolPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Uint8> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_bool');
-  late final _youtput_read_bool = _youtput_read_boolPtr
-      .asFunction<ffi.Pointer<ffi.Uint8> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a 64-bit floating point number.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a floating point number.
-  ffi.Pointer<ffi.Double> youtput_read_float(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_float(
-      val,
-    );
-  }
-
-  late final _youtput_read_floatPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Double> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_float');
-  late final _youtput_read_float = _youtput_read_floatPtr
-      .asFunction<ffi.Pointer<ffi.Double> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a 64-bit signed integer.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a signed integer.
-  ffi.Pointer<ffi.Int64> youtput_read_long(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_long(
-      val,
-    );
-  }
-
-  late final _youtput_read_longPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Int64> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_long');
-  late final _youtput_read_long = _youtput_read_longPtr
-      .asFunction<ffi.Pointer<ffi.Int64> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a null-terminated UTF-8 encoded
-  /// string.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a string. Underlying string is released automatically as part of [youtput_destroy]
-  /// destructor.
-  ffi.Pointer<ffi.Char> youtput_read_string(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_string(
-      val,
-    );
-  }
-
-  late final _youtput_read_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_string');
-  late final _youtput_read_string = _youtput_read_stringPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a binary payload (which length is
-  /// stored within `len` filed of a cell itself).
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a binary type. Underlying binary is released automatically as part of [youtput_destroy]
-  /// destructor.
-  ffi.Pointer<ffi.Char> youtput_read_binary(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_binary(
-      val,
-    );
-  }
-
-  late final _youtput_read_binaryPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_binary');
-  late final _youtput_read_binary = _youtput_read_binaryPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a JSON-like array of `YOutput`
-  /// values (which length is stored within `len` filed of a cell itself).
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a JSON-like array. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<YOutput> youtput_read_json_array(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_json_array(
-      val,
-    );
-  }
-
-  late final _youtput_read_json_arrayPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_json_array');
-  late final _youtput_read_json_array = _youtput_read_json_arrayPtr
-      .asFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as a JSON-like map of key-value entries
-  /// (which length is stored within `len` filed of a cell itself).
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not a JSON-like map. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<YMapEntry> youtput_read_json_map(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_json_map(
-      val,
-    );
-  }
-
-  late final _youtput_read_json_mapPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YMapEntry> Function(
-              ffi.Pointer<YOutput>)>>('youtput_read_json_map');
-  late final _youtput_read_json_map = _youtput_read_json_mapPtr
-      .asFunction<ffi.Pointer<YMapEntry> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YArray`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YArray`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_yarray(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_yarray(
-      val,
-    );
-  }
-
-  late final _youtput_read_yarrayPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_yarray');
-  late final _youtput_read_yarray = _youtput_read_yarrayPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YXmlElement`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YXmlElement`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_yxmlelem(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_yxmlelem(
-      val,
-    );
-  }
-
-  late final _youtput_read_yxmlelemPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_yxmlelem');
-  late final _youtput_read_yxmlelem = _youtput_read_yxmlelemPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YMap`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YMap`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_ymap(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_ymap(
-      val,
-    );
-  }
-
-  late final _youtput_read_ymapPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_ymap');
-  late final _youtput_read_ymap = _youtput_read_ymapPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YText`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YText`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_ytext(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_ytext(
-      val,
-    );
-  }
-
-  late final _youtput_read_ytextPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_ytext');
-  late final _youtput_read_ytext = _youtput_read_ytextPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YXmlText`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YXmlText`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_yxmltext(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_yxmltext(
-      val,
-    );
-  }
-
-  late final _youtput_read_yxmltextPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_yxmltext');
-  late final _youtput_read_yxmltext = _youtput_read_yxmltextPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Attempts to read the value for a given `YOutput` pointer as an `YWeakRef`.
-  ///
-  /// Returns a null pointer in case when a value stored under current `YOutput` cell
-  /// is not an `YWeakRef`. Underlying heap resources are released automatically as part of
-  /// [youtput_destroy] destructor.
-  ffi.Pointer<Branch> youtput_read_yweak(
-    ffi.Pointer<YOutput> val,
-  ) {
-    return _youtput_read_yweak(
-      val,
-    );
-  }
-
-  late final _youtput_read_yweakPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>>(
-      'youtput_read_yweak');
-  late final _youtput_read_yweak = _youtput_read_yweakPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YOutput>)>();
-
-  /// Unsubscribe callback from the oberver event it was previously subscribed to.
-  void yunobserve(
-    ffi.Pointer<YSubscription> subscription,
-  ) {
-    return _yunobserve(
-      subscription,
-    );
-  }
-
-  late final _yunobservePtr = _lookup<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YSubscription>)>>(
-      'yunobserve');
-  late final _yunobserve =
-      _yunobservePtr.asFunction<void Function(ffi.Pointer<YSubscription>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YText` instance. Callbacks
-  /// are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> ytext_observe(
-    ffi.Pointer<Branch> txt,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YTextEvent>)>>
-        cb,
-  ) {
-    return _ytext_observe(
-      txt,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YTextEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _ytext_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YTextEvent>)>>)>>('ytext_observe');
-  late final _ytext_observe = _ytext_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YTextEvent>)>>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YMap` instance. Callbacks
-  /// are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> ymap_observe(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>
-        cb,
-  ) {
-    return _ymap_observe(
-      map,
-      state,
+/// Subscribes a given callback function `cb` to changes made by this `YMap` instance. Callbacks
+/// are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>)>(
+    symbol: 'ymap_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> ymap_observe(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _ymap_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YMapEvent>)>>)>>('ymap_observe');
-  late final _ymap_observe = _ymap_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YArray` instance. Callbacks
-  /// are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> yarray_observe(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>
-        cb,
-  ) {
-    return _yarray_observe(
-      array,
-      state,
+/// Subscribes a given callback function `cb` to changes made by this `YArray` instance. Callbacks
+/// are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>)>(
+    symbol: 'yarray_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yarray_observe(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _yarray_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YArrayEvent>)>>)>>('yarray_observe');
-  late final _yarray_observe = _yarray_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YXmlElement` instance.
-  /// Callbacks are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> yxmlelem_observe(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>
-        cb,
-  ) {
-    return _yxmlelem_observe(
-      xml,
-      state,
+/// Subscribes a given callback function `cb` to changes made by this `YXmlElement` instance.
+/// Callbacks are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>)>(
+    symbol: 'yxmlelem_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yxmlelem_observe(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _yxmlelem_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YXmlEvent>)>>)>>('yxmlelem_observe');
-  late final _yxmlelem_observe = _yxmlelem_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YXmlText` instance. Callbacks
-  /// are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> yxmltext_observe(
-    ffi.Pointer<Branch> xml,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>
-        cb,
-  ) {
-    return _yxmltext_observe(
-      xml,
-      state,
+/// Subscribes a given callback function `cb` to changes made by this `YXmlText` instance. Callbacks
+/// are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>)>(
+    symbol: 'yxmltext_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yxmltext_observe(
+  ffi.Pointer<Branch> xml,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _yxmltext_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YXmlTextEvent>)>>)>>('yxmltext_observe');
-  late final _yxmltext_observe = _yxmltext_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this shared type instance as well
-  /// as all nested shared types living within it. Callbacks are triggered whenever a
-  /// `ytransaction_commit` is called.
-  ///
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> yobserve_deep(
-    ffi.Pointer<Branch> ytype,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<YEvent>)>>
-        cb,
-  ) {
-    return _yobserve_deep(
-      ytype,
-      state,
+/// Subscribes a given callback function `cb` to changes made by this shared type instance as well
+/// as all nested shared types living within it. Callbacks are triggered whenever a
+/// `ytransaction_commit` is called.
+///
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                        ffi.Pointer<YEvent>)>>)>(
+    symbol: 'yobserve_deep', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yobserve_deep(
+  ffi.Pointer<Branch> ytype,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<YEvent>)>>
       cb,
-    );
-  }
-
-  late final _yobserve_deepPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                          ffi.Pointer<YEvent>)>>)>>('yobserve_deep');
-  late final _yobserve_deep = _yobserve_deepPtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                      ffi.Pointer<YEvent>)>>)>();
-
-  /// Returns a pointer to a shared collection, which triggered passed event `e`.
-  ffi.Pointer<Branch> ytext_event_target(
-    ffi.Pointer<YTextEvent> e,
-  ) {
-    return _ytext_event_target(
-      e,
-    );
-  }
-
-  late final _ytext_event_targetPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YTextEvent>)>>('ytext_event_target');
-  late final _ytext_event_target = _ytext_event_targetPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YTextEvent>)>();
-
-  /// Returns a pointer to a shared collection, which triggered passed event `e`.
-  ffi.Pointer<Branch> yarray_event_target(
-    ffi.Pointer<YArrayEvent> e,
-  ) {
-    return _yarray_event_target(
-      e,
-    );
-  }
-
-  late final _yarray_event_targetPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YArrayEvent>)>>('yarray_event_target');
-  late final _yarray_event_target = _yarray_event_targetPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YArrayEvent>)>();
-
-  /// Returns a pointer to a shared collection, which triggered passed event `e`.
-  ffi.Pointer<Branch> ymap_event_target(
-    ffi.Pointer<YMapEvent> e,
-  ) {
-    return _ymap_event_target(
-      e,
-    );
-  }
-
-  late final _ymap_event_targetPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YMapEvent>)>>('ymap_event_target');
-  late final _ymap_event_target = _ymap_event_targetPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YMapEvent>)>();
-
-  /// Returns a pointer to a shared collection, which triggered passed event `e`.
-  ffi.Pointer<Branch> yxmlelem_event_target(
-    ffi.Pointer<YXmlEvent> e,
-  ) {
-    return _yxmlelem_event_target(
-      e,
-    );
-  }
-
-  late final _yxmlelem_event_targetPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YXmlEvent>)>>('yxmlelem_event_target');
-  late final _yxmlelem_event_target = _yxmlelem_event_targetPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YXmlEvent>)>();
-
-  /// Returns a pointer to a shared collection, which triggered passed event `e`.
-  ffi.Pointer<Branch> yxmltext_event_target(
-    ffi.Pointer<YXmlTextEvent> e,
-  ) {
-    return _yxmltext_event_target(
-      e,
-    );
-  }
-
-  late final _yxmltext_event_targetPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(
-              ffi.Pointer<YXmlTextEvent>)>>('yxmltext_event_target');
-  late final _yxmltext_event_target = _yxmltext_event_targetPtr
-      .asFunction<ffi.Pointer<Branch> Function(ffi.Pointer<YXmlTextEvent>)>();
-
-  /// Returns a path from a root type down to a current shared collection (which can be obtained using
-  /// `ytext_event_target` function). It can consist of either integer indexes (used by sequence
-  /// components) of *char keys (used by map components). `len` output parameter is used to provide
-  /// information about length of the path.
-  ///
-  /// Path returned this way should be eventually released using `ypath_destroy`.
-  ffi.Pointer<YPathSegment> ytext_event_path(
-    ffi.Pointer<YTextEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytext_event_path(
-      e,
-      len,
-    );
-  }
-
-  late final _ytext_event_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPathSegment> Function(ffi.Pointer<YTextEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('ytext_event_path');
-  late final _ytext_event_path = _ytext_event_pathPtr.asFunction<
-      ffi.Pointer<YPathSegment> Function(
-          ffi.Pointer<YTextEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a path from a root type down to a current shared collection (which can be obtained using
-  /// `ymap_event_target` function). It can consist of either integer indexes (used by sequence
-  /// components) of *char keys (used by map components). `len` output parameter is used to provide
-  /// information about length of the path.
-  ///
-  /// Path returned this way should be eventually released using `ypath_destroy`.
-  ffi.Pointer<YPathSegment> ymap_event_path(
-    ffi.Pointer<YMapEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ymap_event_path(
-      e,
-      len,
-    );
-  }
-
-  late final _ymap_event_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPathSegment> Function(ffi.Pointer<YMapEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('ymap_event_path');
-  late final _ymap_event_path = _ymap_event_pathPtr.asFunction<
-      ffi.Pointer<YPathSegment> Function(
-          ffi.Pointer<YMapEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a path from a root type down to a current shared collection (which can be obtained using
-  /// `yxmlelem_event_path` function). It can consist of either integer indexes (used by sequence
-  /// components) of *char keys (used by map components). `len` output parameter is used to provide
-  /// information about length of the path.
-  ///
-  /// Path returned this way should be eventually released using `ypath_destroy`.
-  ffi.Pointer<YPathSegment> yxmlelem_event_path(
-    ffi.Pointer<YXmlEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmlelem_event_path(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmlelem_event_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPathSegment> Function(ffi.Pointer<YXmlEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmlelem_event_path');
-  late final _yxmlelem_event_path = _yxmlelem_event_pathPtr.asFunction<
-      ffi.Pointer<YPathSegment> Function(
-          ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a path from a root type down to a current shared collection (which can be obtained using
-  /// `yxmltext_event_path` function). It can consist of either integer indexes (used by sequence
-  /// components) of *char keys (used by map components). `len` output parameter is used to provide
-  /// information about length of the path.
-  ///
-  /// Path returned this way should be eventually released using `ypath_destroy`.
-  ffi.Pointer<YPathSegment> yxmltext_event_path(
-    ffi.Pointer<YXmlTextEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmltext_event_path(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmltext_event_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPathSegment> Function(ffi.Pointer<YXmlTextEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmltext_event_path');
-  late final _yxmltext_event_path = _yxmltext_event_pathPtr.asFunction<
-      ffi.Pointer<YPathSegment> Function(
-          ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a path from a root type down to a current shared collection (which can be obtained using
-  /// `yarray_event_target` function). It can consist of either integer indexes (used by sequence
-  /// components) of *char keys (used by map components). `len` output parameter is used to provide
-  /// information about length of the path.
-  ///
-  /// Path returned this way should be eventually released using `ypath_destroy`.
-  ffi.Pointer<YPathSegment> yarray_event_path(
-    ffi.Pointer<YArrayEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yarray_event_path(
-      e,
-      len,
-    );
-  }
-
-  late final _yarray_event_pathPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YPathSegment> Function(ffi.Pointer<YArrayEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yarray_event_path');
-  late final _yarray_event_path = _yarray_event_pathPtr.asFunction<
-      ffi.Pointer<YPathSegment> Function(
-          ffi.Pointer<YArrayEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Releases allocated memory used by objects returned from path accessor functions of shared type
-  /// events.
-  void ypath_destroy(
-    ffi.Pointer<YPathSegment> path,
-    int len,
-  ) {
-    return _ypath_destroy(
-      path,
-      len,
-    );
-  }
-
-  late final _ypath_destroyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YPathSegment>, ffi.Uint32)>>('ypath_destroy');
-  late final _ypath_destroy = _ypath_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YPathSegment>, int)>();
-
-  /// Returns a sequence of changes produced by sequence component of shared collections (such as
-  /// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
-  /// provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_delta_destroy`
-  /// function.
-  ffi.Pointer<YDeltaOut> ytext_event_delta(
-    ffi.Pointer<YTextEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ytext_event_delta(
-      e,
-      len,
-    );
-  }
-
-  late final _ytext_event_deltaPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YDeltaOut> Function(ffi.Pointer<YTextEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('ytext_event_delta');
-  late final _ytext_event_delta = _ytext_event_deltaPtr.asFunction<
-      ffi.Pointer<YDeltaOut> Function(
-          ffi.Pointer<YTextEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a sequence of changes produced by sequence component of shared collections (such as
-  /// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
-  /// provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_delta_destroy`
-  /// function.
-  ffi.Pointer<YDeltaOut> yxmltext_event_delta(
-    ffi.Pointer<YXmlTextEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmltext_event_delta(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmltext_event_deltaPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YDeltaOut> Function(ffi.Pointer<YXmlTextEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmltext_event_delta');
-  late final _yxmltext_event_delta = _yxmltext_event_deltaPtr.asFunction<
-      ffi.Pointer<YDeltaOut> Function(
-          ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a sequence of changes produced by sequence component of shared collections (such as
-  /// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
-  /// provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_delta_destroy`
-  /// function.
-  ffi.Pointer<YEventChange> yarray_event_delta(
-    ffi.Pointer<YArrayEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yarray_event_delta(
-      e,
-      len,
-    );
-  }
-
-  late final _yarray_event_deltaPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YEventChange> Function(ffi.Pointer<YArrayEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yarray_event_delta');
-  late final _yarray_event_delta = _yarray_event_deltaPtr.asFunction<
-      ffi.Pointer<YEventChange> Function(
-          ffi.Pointer<YArrayEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a sequence of changes produced by sequence component of shared collections (such as
-  /// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
-  /// provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_delta_destroy`
-  /// function.
-  ffi.Pointer<YEventChange> yxmlelem_event_delta(
-    ffi.Pointer<YXmlEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmlelem_event_delta(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmlelem_event_deltaPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YEventChange> Function(ffi.Pointer<YXmlEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmlelem_event_delta');
-  late final _yxmlelem_event_delta = _yxmlelem_event_deltaPtr.asFunction<
-      ffi.Pointer<YEventChange> Function(
-          ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Releases memory allocated by the object returned from `yevent_delta` function.
-  void ytext_delta_destroy(
-    ffi.Pointer<YDeltaOut> delta,
-    int len,
-  ) {
-    return _ytext_delta_destroy(
-      delta,
-      len,
-    );
-  }
-
-  late final _ytext_delta_destroyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YDeltaOut>, ffi.Uint32)>>('ytext_delta_destroy');
-  late final _ytext_delta_destroy = _ytext_delta_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YDeltaOut>, int)>();
-
-  /// Releases memory allocated by the object returned from `yevent_delta` function.
-  void yevent_delta_destroy(
-    ffi.Pointer<YEventChange> delta,
-    int len,
-  ) {
-    return _yevent_delta_destroy(
-      delta,
-      len,
-    );
-  }
-
-  late final _yevent_delta_destroyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YEventChange>, ffi.Uint32)>>('yevent_delta_destroy');
-  late final _yevent_delta_destroy = _yevent_delta_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YEventChange>, int)>();
-
-  /// Returns a sequence of changes produced by map component of shared collections (such as
-  /// `YMap` and `YXmlText`/`YXmlElement` attribute changes). `len` output parameter is used to
-  /// provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_keys_destroy`
-  /// function.
-  ffi.Pointer<YEventKeyChange> ymap_event_keys(
-    ffi.Pointer<YMapEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ymap_event_keys(
-      e,
-      len,
-    );
-  }
-
-  late final _ymap_event_keysPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YEventKeyChange> Function(ffi.Pointer<YMapEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('ymap_event_keys');
-  late final _ymap_event_keys = _ymap_event_keysPtr.asFunction<
-      ffi.Pointer<YEventKeyChange> Function(
-          ffi.Pointer<YMapEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a sequence of changes produced by map component of shared collections.
-  /// `len` output parameter is used to provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_keys_destroy`
-  /// function.
-  ffi.Pointer<YEventKeyChange> yxmlelem_event_keys(
-    ffi.Pointer<YXmlEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmlelem_event_keys(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmlelem_event_keysPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YEventKeyChange> Function(ffi.Pointer<YXmlEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmlelem_event_keys');
-  late final _yxmlelem_event_keys = _yxmlelem_event_keysPtr.asFunction<
-      ffi.Pointer<YEventKeyChange> Function(
-          ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Returns a sequence of changes produced by map component of shared collections.
-  /// `len` output parameter is used to provide information about number of changes produced.
-  ///
-  /// Delta returned from this function should eventually be released using `yevent_keys_destroy`
-  /// function.
-  ffi.Pointer<YEventKeyChange> yxmltext_event_keys(
-    ffi.Pointer<YXmlTextEvent> e,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _yxmltext_event_keys(
-      e,
-      len,
-    );
-  }
-
-  late final _yxmltext_event_keysPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YEventKeyChange> Function(ffi.Pointer<YXmlTextEvent>,
-              ffi.Pointer<ffi.Uint32>)>>('yxmltext_event_keys');
-  late final _yxmltext_event_keys = _yxmltext_event_keysPtr.asFunction<
-      ffi.Pointer<YEventKeyChange> Function(
-          ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Releases memory allocated by the object returned from `yxml_event_keys` and `ymap_event_keys`
-  /// functions.
-  void yevent_keys_destroy(
-    ffi.Pointer<YEventKeyChange> keys,
-    int len,
-  ) {
-    return _yevent_keys_destroy(
-      keys,
-      len,
-    );
-  }
-
-  late final _yevent_keys_destroyPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<YEventKeyChange>,
-              ffi.Uint32)>>('yevent_keys_destroy');
-  late final _yevent_keys_destroy = _yevent_keys_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YEventKeyChange>, int)>();
-
-  /// Creates a new instance of undo manager bound to a current `doc`. It can be used to track
-  /// specific shared refs via `yundo_manager_add_scope` and updates coming from specific origin
-  /// - like ability to undo/redo operations originating only at the local peer - by using
-  /// `yundo_manager_add_origin`.
-  ///
-  /// This object can be deallocated via `yundo_manager_destroy`.
-  ffi.Pointer<YUndoManager> yundo_manager(
-    ffi.Pointer<YDoc> doc,
-    ffi.Pointer<YUndoManagerOptions> options,
-  ) {
-    return _yundo_manager(
-      doc,
-      options,
-    );
-  }
-
-  late final _yundo_managerPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YUndoManager> Function(ffi.Pointer<YDoc>,
-              ffi.Pointer<YUndoManagerOptions>)>>('yundo_manager');
-  late final _yundo_manager = _yundo_managerPtr.asFunction<
-      ffi.Pointer<YUndoManager> Function(
-          ffi.Pointer<YDoc>, ffi.Pointer<YUndoManagerOptions>)>();
-
-  /// Deallocated undo manager instance created via `yundo_manager`.
-  void yundo_manager_destroy(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_destroy(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YUndoManager>)>>(
-          'yundo_manager_destroy');
-  late final _yundo_manager_destroy = _yundo_manager_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Adds an origin to be tracked by current undo manager. This way only changes made within context
-  /// of transactions created with specific origin will be subjects of undo/redo operations. This is
-  /// useful when you want to be able to revert changed done by specific user without reverting
-  /// changes made by other users that were applied in the meantime.
-  void yundo_manager_add_origin(
-    ffi.Pointer<YUndoManager> mgr,
-    int origin_len,
-    ffi.Pointer<ffi.Char> origin,
-  ) {
-    return _yundo_manager_add_origin(
-      mgr,
-      origin_len,
-      origin,
-    );
-  }
-
-  late final _yundo_manager_add_originPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<YUndoManager>, ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('yundo_manager_add_origin');
-  late final _yundo_manager_add_origin =
-      _yundo_manager_add_originPtr.asFunction<
-          void Function(
-              ffi.Pointer<YUndoManager>, int, ffi.Pointer<ffi.Char>)>();
-
-  /// Removes an origin previously added to undo manager via `yundo_manager_add_origin`.
-  void yundo_manager_remove_origin(
-    ffi.Pointer<YUndoManager> mgr,
-    int origin_len,
-    ffi.Pointer<ffi.Char> origin,
-  ) {
-    return _yundo_manager_remove_origin(
-      mgr,
-      origin_len,
-      origin,
-    );
-  }
-
-  late final _yundo_manager_remove_originPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<YUndoManager>, ffi.Uint32,
-              ffi.Pointer<ffi.Char>)>>('yundo_manager_remove_origin');
-  late final _yundo_manager_remove_origin =
-      _yundo_manager_remove_originPtr.asFunction<
-          void Function(
-              ffi.Pointer<YUndoManager>, int, ffi.Pointer<ffi.Char>)>();
-
-  /// Add specific shared type to be tracked by this instance of an undo manager.
-  void yundo_manager_add_scope(
-    ffi.Pointer<YUndoManager> mgr,
-    ffi.Pointer<Branch> ytype,
-  ) {
-    return _yundo_manager_add_scope(
-      mgr,
-      ytype,
-    );
-  }
-
-  late final _yundo_manager_add_scopePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<YUndoManager>,
-              ffi.Pointer<Branch>)>>('yundo_manager_add_scope');
-  late final _yundo_manager_add_scope = _yundo_manager_add_scopePtr.asFunction<
-      void Function(ffi.Pointer<YUndoManager>, ffi.Pointer<Branch>)>();
-
-  /// Removes all the undo/redo stack changes tracked by current undo manager. This also cleans up
-  /// all the items that couldn't be deallocated / garbage collected for the sake of possible
-  /// undo/redo operations.
-  ///
-  /// Keep in mind that this function call requires that underlying document store is not concurrently
-  /// modified by other read-write transaction. This is done by acquiring the read-only transaction
-  /// itself. If such transaction could be acquired (because of another read-write transaction is in
-  /// progress, this function will hold current thread until acquisition is possible.
-  void yundo_manager_clear(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_clear(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_clearPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YUndoManager>)>>(
-          'yundo_manager_clear');
-  late final _yundo_manager_clear = _yundo_manager_clearPtr
-      .asFunction<void Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Cuts off tracked changes, producing a new stack item on undo stack.
-  ///
-  /// By default, undo manager gathers undergoing changes together into undo stack items on periodic
-  /// basis (defined by `YUndoManagerOptions.capture_timeout_millis`). By calling this function, we're
-  /// explicitly creating a new stack item will all the changes registered since last stack item was
-  /// created.
-  void yundo_manager_stop(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_stop(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_stopPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YUndoManager>)>>(
-          'yundo_manager_stop');
-  late final _yundo_manager_stop = _yundo_manager_stopPtr
-      .asFunction<void Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Performs an undo operations, reverting all the changes defined by the last undo stack item.
-  /// These changes can be then reapplied again by calling `yundo_manager_redo` function.
-  ///
-  /// Returns `Y_TRUE` if successfully managed to do an undo operation.
-  /// Returns `Y_FALSE` if undo stack was empty or if undo couldn't be performed (because another
-  /// transaction is in progress).
-  int yundo_manager_undo(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_undo(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_undoPtr = _lookup<
-          ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<YUndoManager>)>>(
-      'yundo_manager_undo');
-  late final _yundo_manager_undo = _yundo_manager_undoPtr
-      .asFunction<int Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Performs a redo operations, reapplying changes undone by `yundo_manager_undo` operation.
-  ///
-  /// Returns `Y_TRUE` if successfully managed to do a redo operation.
-  /// Returns `Y_FALSE` if redo stack was empty or if redo couldn't be performed (because another
-  /// transaction is in progress).
-  int yundo_manager_redo(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_redo(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_redoPtr = _lookup<
-          ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<YUndoManager>)>>(
-      'yundo_manager_redo');
-  late final _yundo_manager_redo = _yundo_manager_redoPtr
-      .asFunction<int Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Returns number of elements stored on undo stack.
-  int yundo_manager_undo_stack_len(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_undo_stack_len(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_undo_stack_lenPtr = _lookup<
-          ffi.NativeFunction<ffi.Uint32 Function(ffi.Pointer<YUndoManager>)>>(
-      'yundo_manager_undo_stack_len');
-  late final _yundo_manager_undo_stack_len = _yundo_manager_undo_stack_lenPtr
-      .asFunction<int Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Returns number of elements stored on redo stack.
-  int yundo_manager_redo_stack_len(
-    ffi.Pointer<YUndoManager> mgr,
-  ) {
-    return _yundo_manager_redo_stack_len(
-      mgr,
-    );
-  }
-
-  late final _yundo_manager_redo_stack_lenPtr = _lookup<
-          ffi.NativeFunction<ffi.Uint32 Function(ffi.Pointer<YUndoManager>)>>(
-      'yundo_manager_redo_stack_len');
-  late final _yundo_manager_redo_stack_len = _yundo_manager_redo_stack_lenPtr
-      .asFunction<int Function(ffi.Pointer<YUndoManager>)>();
-
-  /// Subscribes a `callback` function pointer to a given undo manager event. This event will be
-  /// triggered every time a new undo/redo stack item is added.
-  ///
-  /// Returns a subscription pointer that can be used to cancel current callback registration via
-  /// `yunobserve`.
-  ffi.Pointer<YSubscription> yundo_manager_observe_added(
-    ffi.Pointer<YUndoManager> mgr,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>
-        callback,
-  ) {
-    return _yundo_manager_observe_added(
-      mgr,
-      state,
+);
+
+/// Returns a pointer to a shared collection, which triggered passed event `e`.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YTextEvent>)>(
+    symbol: 'ytext_event_target', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ytext_event_target(
+  ffi.Pointer<YTextEvent> e,
+);
+
+/// Returns a pointer to a shared collection, which triggered passed event `e`.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YArrayEvent>)>(
+    symbol: 'yarray_event_target', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yarray_event_target(
+  ffi.Pointer<YArrayEvent> e,
+);
+
+/// Returns a pointer to a shared collection, which triggered passed event `e`.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YMapEvent>)>(
+    symbol: 'ymap_event_target', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ymap_event_target(
+  ffi.Pointer<YMapEvent> e,
+);
+
+/// Returns a pointer to a shared collection, which triggered passed event `e`.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YXmlEvent>)>(
+    symbol: 'yxmlelem_event_target', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmlelem_event_target(
+  ffi.Pointer<YXmlEvent> e,
+);
+
+/// Returns a pointer to a shared collection, which triggered passed event `e`.
+@ffi.Native<ffi.Pointer<Branch> Function(ffi.Pointer<YXmlTextEvent>)>(
+    symbol: 'yxmltext_event_target', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> yxmltext_event_target(
+  ffi.Pointer<YXmlTextEvent> e,
+);
+
+/// Returns a path from a root type down to a current shared collection (which can be obtained using
+/// `ytext_event_target` function). It can consist of either integer indexes (used by sequence
+/// components) of *char keys (used by map components). `len` output parameter is used to provide
+/// information about length of the path.
+///
+/// Path returned this way should be eventually released using `ypath_destroy`.
+@ffi.Native<
+        ffi.Pointer<YPathSegment> Function(
+            ffi.Pointer<YTextEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytext_event_path', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPathSegment> ytext_event_path(
+  ffi.Pointer<YTextEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a path from a root type down to a current shared collection (which can be obtained using
+/// `ymap_event_target` function). It can consist of either integer indexes (used by sequence
+/// components) of *char keys (used by map components). `len` output parameter is used to provide
+/// information about length of the path.
+///
+/// Path returned this way should be eventually released using `ypath_destroy`.
+@ffi.Native<
+        ffi.Pointer<YPathSegment> Function(
+            ffi.Pointer<YMapEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ymap_event_path', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPathSegment> ymap_event_path(
+  ffi.Pointer<YMapEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a path from a root type down to a current shared collection (which can be obtained using
+/// `yxmlelem_event_path` function). It can consist of either integer indexes (used by sequence
+/// components) of *char keys (used by map components). `len` output parameter is used to provide
+/// information about length of the path.
+///
+/// Path returned this way should be eventually released using `ypath_destroy`.
+@ffi.Native<
+        ffi.Pointer<YPathSegment> Function(
+            ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmlelem_event_path', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPathSegment> yxmlelem_event_path(
+  ffi.Pointer<YXmlEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a path from a root type down to a current shared collection (which can be obtained using
+/// `yxmltext_event_path` function). It can consist of either integer indexes (used by sequence
+/// components) of *char keys (used by map components). `len` output parameter is used to provide
+/// information about length of the path.
+///
+/// Path returned this way should be eventually released using `ypath_destroy`.
+@ffi.Native<
+        ffi.Pointer<YPathSegment> Function(
+            ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmltext_event_path', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPathSegment> yxmltext_event_path(
+  ffi.Pointer<YXmlTextEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a path from a root type down to a current shared collection (which can be obtained using
+/// `yarray_event_target` function). It can consist of either integer indexes (used by sequence
+/// components) of *char keys (used by map components). `len` output parameter is used to provide
+/// information about length of the path.
+///
+/// Path returned this way should be eventually released using `ypath_destroy`.
+@ffi.Native<
+        ffi.Pointer<YPathSegment> Function(
+            ffi.Pointer<YArrayEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yarray_event_path', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YPathSegment> yarray_event_path(
+  ffi.Pointer<YArrayEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Releases allocated memory used by objects returned from path accessor functions of shared type
+/// events.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YPathSegment>, ffi.Uint32)>(
+    symbol: 'ypath_destroy', assetId: 'package:y_dart/y_dart')
+external void ypath_destroy(
+  ffi.Pointer<YPathSegment> path,
+  int len,
+);
+
+/// Returns a sequence of changes produced by sequence component of shared collections (such as
+/// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
+/// provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_delta_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YDeltaOut> Function(
+            ffi.Pointer<YTextEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ytext_event_delta', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDeltaOut> ytext_event_delta(
+  ffi.Pointer<YTextEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a sequence of changes produced by sequence component of shared collections (such as
+/// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
+/// provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_delta_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YDeltaOut> Function(
+            ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmltext_event_delta', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YDeltaOut> yxmltext_event_delta(
+  ffi.Pointer<YXmlTextEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a sequence of changes produced by sequence component of shared collections (such as
+/// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
+/// provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_delta_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YEventChange> Function(
+            ffi.Pointer<YArrayEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yarray_event_delta', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YEventChange> yarray_event_delta(
+  ffi.Pointer<YArrayEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a sequence of changes produced by sequence component of shared collections (such as
+/// `YText`, `YXmlText` and XML nodes added to `YXmlElement`). `len` output parameter is used to
+/// provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_delta_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YEventChange> Function(
+            ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmlelem_event_delta', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YEventChange> yxmlelem_event_delta(
+  ffi.Pointer<YXmlEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Releases memory allocated by the object returned from `yevent_delta` function.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YDeltaOut>, ffi.Uint32)>(
+    symbol: 'ytext_delta_destroy', assetId: 'package:y_dart/y_dart')
+external void ytext_delta_destroy(
+  ffi.Pointer<YDeltaOut> delta,
+  int len,
+);
+
+/// Releases memory allocated by the object returned from `yevent_delta` function.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YEventChange>, ffi.Uint32)>(
+    symbol: 'yevent_delta_destroy', assetId: 'package:y_dart/y_dart')
+external void yevent_delta_destroy(
+  ffi.Pointer<YEventChange> delta,
+  int len,
+);
+
+/// Returns a sequence of changes produced by map component of shared collections (such as
+/// `YMap` and `YXmlText`/`YXmlElement` attribute changes). `len` output parameter is used to
+/// provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_keys_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YEventKeyChange> Function(
+            ffi.Pointer<YMapEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ymap_event_keys', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YEventKeyChange> ymap_event_keys(
+  ffi.Pointer<YMapEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a sequence of changes produced by map component of shared collections.
+/// `len` output parameter is used to provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_keys_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YEventKeyChange> Function(
+            ffi.Pointer<YXmlEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmlelem_event_keys', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YEventKeyChange> yxmlelem_event_keys(
+  ffi.Pointer<YXmlEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Returns a sequence of changes produced by map component of shared collections.
+/// `len` output parameter is used to provide information about number of changes produced.
+///
+/// Delta returned from this function should eventually be released using `yevent_keys_destroy`
+/// function.
+@ffi.Native<
+        ffi.Pointer<YEventKeyChange> Function(
+            ffi.Pointer<YXmlTextEvent>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'yxmltext_event_keys', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YEventKeyChange> yxmltext_event_keys(
+  ffi.Pointer<YXmlTextEvent> e,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Releases memory allocated by the object returned from `yxml_event_keys` and `ymap_event_keys`
+/// functions.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YEventKeyChange>, ffi.Uint32)>(
+    symbol: 'yevent_keys_destroy', assetId: 'package:y_dart/y_dart')
+external void yevent_keys_destroy(
+  ffi.Pointer<YEventKeyChange> keys,
+  int len,
+);
+
+/// Creates a new instance of undo manager bound to a current `doc`. It can be used to track
+/// specific shared refs via `yundo_manager_add_scope` and updates coming from specific origin
+/// - like ability to undo/redo operations originating only at the local peer - by using
+/// `yundo_manager_add_origin`.
+///
+/// This object can be deallocated via `yundo_manager_destroy`.
+@ffi.Native<
+        ffi.Pointer<YUndoManager> Function(
+            ffi.Pointer<YDoc>, ffi.Pointer<YUndoManagerOptions>)>(
+    symbol: 'yundo_manager', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YUndoManager> yundo_manager(
+  ffi.Pointer<YDoc> doc,
+  ffi.Pointer<YUndoManagerOptions> options,
+);
+
+/// Deallocated undo manager instance created via `yundo_manager`.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_destroy', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_destroy(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Adds an origin to be tracked by current undo manager. This way only changes made within context
+/// of transactions created with specific origin will be subjects of undo/redo operations. This is
+/// useful when you want to be able to revert changed done by specific user without reverting
+/// changes made by other users that were applied in the meantime.
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<YUndoManager>, ffi.Uint32, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yundo_manager_add_origin', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_add_origin(
+  ffi.Pointer<YUndoManager> mgr,
+  int origin_len,
+  ffi.Pointer<ffi.Char> origin,
+);
+
+/// Removes an origin previously added to undo manager via `yundo_manager_add_origin`.
+@ffi.Native<
+        ffi.Void Function(
+            ffi.Pointer<YUndoManager>, ffi.Uint32, ffi.Pointer<ffi.Char>)>(
+    symbol: 'yundo_manager_remove_origin', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_remove_origin(
+  ffi.Pointer<YUndoManager> mgr,
+  int origin_len,
+  ffi.Pointer<ffi.Char> origin,
+);
+
+/// Add specific shared type to be tracked by this instance of an undo manager.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YUndoManager>, ffi.Pointer<Branch>)>(
+    symbol: 'yundo_manager_add_scope', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_add_scope(
+  ffi.Pointer<YUndoManager> mgr,
+  ffi.Pointer<Branch> ytype,
+);
+
+/// Removes all the undo/redo stack changes tracked by current undo manager. This also cleans up
+/// all the items that couldn't be deallocated / garbage collected for the sake of possible
+/// undo/redo operations.
+///
+/// Keep in mind that this function call requires that underlying document store is not concurrently
+/// modified by other read-write transaction. This is done by acquiring the read-only transaction
+/// itself. If such transaction could be acquired (because of another read-write transaction is in
+/// progress, this function will hold current thread until acquisition is possible.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_clear', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_clear(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Cuts off tracked changes, producing a new stack item on undo stack.
+///
+/// By default, undo manager gathers undergoing changes together into undo stack items on periodic
+/// basis (defined by `YUndoManagerOptions.capture_timeout_millis`). By calling this function, we're
+/// explicitly creating a new stack item will all the changes registered since last stack item was
+/// created.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_stop', assetId: 'package:y_dart/y_dart')
+external void yundo_manager_stop(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Performs an undo operations, reverting all the changes defined by the last undo stack item.
+/// These changes can be then reapplied again by calling `yundo_manager_redo` function.
+///
+/// Returns `Y_TRUE` if successfully managed to do an undo operation.
+/// Returns `Y_FALSE` if undo stack was empty or if undo couldn't be performed (because another
+/// transaction is in progress).
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_undo', assetId: 'package:y_dart/y_dart')
+external int yundo_manager_undo(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Performs a redo operations, reapplying changes undone by `yundo_manager_undo` operation.
+///
+/// Returns `Y_TRUE` if successfully managed to do a redo operation.
+/// Returns `Y_FALSE` if redo stack was empty or if redo couldn't be performed (because another
+/// transaction is in progress).
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_redo', assetId: 'package:y_dart/y_dart')
+external int yundo_manager_redo(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Returns number of elements stored on undo stack.
+@ffi.Native<ffi.Uint32 Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_undo_stack_len', assetId: 'package:y_dart/y_dart')
+external int yundo_manager_undo_stack_len(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Returns number of elements stored on redo stack.
+@ffi.Native<ffi.Uint32 Function(ffi.Pointer<YUndoManager>)>(
+    symbol: 'yundo_manager_redo_stack_len', assetId: 'package:y_dart/y_dart')
+external int yundo_manager_redo_stack_len(
+  ffi.Pointer<YUndoManager> mgr,
+);
+
+/// Subscribes a `callback` function pointer to a given undo manager event. This event will be
+/// triggered every time a new undo/redo stack item is added.
+///
+/// Returns a subscription pointer that can be used to cancel current callback registration via
+/// `yunobserve`.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YUndoManager>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>)>(
+    symbol: 'yundo_manager_observe_added', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yundo_manager_observe_added(
+  ffi.Pointer<YUndoManager> mgr,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>
       callback,
-    );
-  }
+);
 
-  late final _yundo_manager_observe_addedPtr = _lookup<
+/// Subscribes a `callback` function pointer to a given undo manager event. This event will be
+/// triggered every time a undo/redo operation was called.
+///
+/// Returns a subscription pointer that can be used to cancel current callback registration via
+/// `yunobserve`.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<YUndoManager>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>)>(
+    symbol: 'yundo_manager_observe_popped', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yundo_manager_observe_popped(
+  ffi.Pointer<YUndoManager> mgr,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YUndoManager>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>,
-                              ffi.Pointer<YUndoEvent>)>>)>>(
-      'yundo_manager_observe_added');
-  late final _yundo_manager_observe_added =
-      _yundo_manager_observe_addedPtr.asFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<YUndoManager>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(
-                          ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>)>();
-
-  /// Subscribes a `callback` function pointer to a given undo manager event. This event will be
-  /// triggered every time a undo/redo operation was called.
-  ///
-  /// Returns a subscription pointer that can be used to cancel current callback registration via
-  /// `yunobserve`.
-  ffi.Pointer<YSubscription> yundo_manager_observe_popped(
-    ffi.Pointer<YUndoManager> mgr,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>
-        callback,
-  ) {
-    return _yundo_manager_observe_popped(
-      mgr,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>
       callback,
-    );
-  }
+);
 
-  late final _yundo_manager_observe_poppedPtr = _lookup<
+/// Returns a value informing what kind of Yrs shared collection given `branch` represents.
+/// Returns either 0 when `branch` is null or one of values: `Y_ARRAY`, `Y_TEXT`, `Y_MAP`,
+/// `Y_XML_ELEM`, `Y_XML_TEXT`.
+@ffi.Native<ffi.Int8 Function(ffi.Pointer<Branch>)>(
+    symbol: 'ytype_kind', assetId: 'package:y_dart/y_dart')
+external int ytype_kind(
+  ffi.Pointer<Branch> branch,
+);
+
+/// Releases resources allocated by `YStickyIndex` pointers.
+@ffi.Native<ffi.Void Function(ffi.Pointer<YStickyIndex>)>(
+    symbol: 'ysticky_index_destroy', assetId: 'package:y_dart/y_dart')
+external void ysticky_index_destroy(
+  ffi.Pointer<YStickyIndex> pos,
+);
+
+/// Returns association of current `YStickyIndex`.
+/// If association is **after** the referenced inserted character, returned number will be >= 0.
+/// If association is **before** the referenced inserted character, returned number will be < 0.
+@ffi.Native<ffi.Int8 Function(ffi.Pointer<YStickyIndex>)>(
+    symbol: 'ysticky_index_assoc', assetId: 'package:y_dart/y_dart')
+external int ysticky_index_assoc(
+  ffi.Pointer<YStickyIndex> pos,
+);
+
+/// Retrieves a `YStickyIndex` corresponding to a given human-readable `index` pointing into
+/// the shared y-type `branch`. Unlike standard indexes sticky one enables to track
+/// the location inside of a shared y-types, even in the face of concurrent updates.
+///
+/// If association is >= 0, the resulting position will point to location **after** the referenced index.
+/// If association is < 0, the resulting position will point to location **before** the referenced index.
+@ffi.Native<
+        ffi.Pointer<YStickyIndex> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Uint32, ffi.Int8)>(
+    symbol: 'ysticky_index_from_index', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YStickyIndex> ysticky_index_from_index(
+  ffi.Pointer<Branch> branch,
+  ffi.Pointer<YTransaction> txn,
+  int index,
+  int assoc,
+);
+
+/// Serializes `YStickyIndex` into binary representation. `len` parameter is updated with byte
+/// length of the generated binary. Returned binary can be free'd using `ybinary_destroy`.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<YStickyIndex>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ysticky_index_encode', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ysticky_index_encode(
+  ffi.Pointer<YStickyIndex> pos,
+  ffi.Pointer<ffi.Uint32> len,
+);
+
+/// Deserializes `YStickyIndex` from the payload previously serialized using `ysticky_index_encode`.
+@ffi.Native<
+        ffi.Pointer<YStickyIndex> Function(ffi.Pointer<ffi.Char>, ffi.Uint32)>(
+    symbol: 'ysticky_index_decode', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YStickyIndex> ysticky_index_decode(
+  ffi.Pointer<ffi.Char> binary,
+  int len,
+);
+
+/// Given `YStickyIndex` and transaction reference, if computes a human-readable index in a
+/// context of the referenced shared y-type.
+///
+/// `out_branch` is getting assigned with a corresponding shared y-type reference.
+/// `out_index` will be used to store computed human-readable index.
+@ffi.Native<
+        ffi.Void Function(ffi.Pointer<YStickyIndex>, ffi.Pointer<YTransaction>,
+            ffi.Pointer<ffi.Pointer<Branch>>, ffi.Pointer<ffi.Uint32>)>(
+    symbol: 'ysticky_index_read', assetId: 'package:y_dart/y_dart')
+external void ysticky_index_read(
+  ffi.Pointer<YStickyIndex> pos,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Pointer<Branch>> out_branch,
+  ffi.Pointer<ffi.Uint32> out_index,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<Weak>)>(
+    symbol: 'yweak_destroy', assetId: 'package:y_dart/y_dart')
+external void yweak_destroy(
+  ffi.Pointer<Weak> weak,
+);
+
+@ffi.Native<
+        ffi.Pointer<YOutput> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yweak_deref', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yweak_deref(
+  ffi.Pointer<Branch> map_link,
+  ffi.Pointer<YTransaction> txn,
+);
+
+@ffi.Native<
+        ffi.Pointer<YWeakIter> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yweak_iter', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YWeakIter> yweak_iter(
+  ffi.Pointer<Branch> array_link,
+  ffi.Pointer<YTransaction> txn,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<YWeakIter>)>(
+    symbol: 'yweak_iter_destroy', assetId: 'package:y_dart/y_dart')
+external void yweak_iter_destroy(
+  ffi.Pointer<YWeakIter> iter,
+);
+
+@ffi.Native<ffi.Pointer<YOutput> Function(ffi.Pointer<YWeakIter>)>(
+    symbol: 'yweak_iter_next', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YOutput> yweak_iter_next(
+  ffi.Pointer<YWeakIter> iter,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yweak_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yweak_string(
+  ffi.Pointer<Branch> text_link,
+  ffi.Pointer<YTransaction> txn,
+);
+
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'yweak_xml_string', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> yweak_xml_string(
+  ffi.Pointer<Branch> xml_text_link,
+  ffi.Pointer<YTransaction> txn,
+);
+
+/// Subscribes a given callback function `cb` to changes made by this `YText` instance. Callbacks
+/// are triggered whenever a `ytransaction_commit` is called.
+/// Returns a subscription ID which can be then used to unsubscribe this callback by using
+/// `yunobserve` function.
+@ffi.Native<
+        ffi.Pointer<YSubscription> Function(
+            ffi.Pointer<Branch>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<
+                ffi.NativeFunction<
+                    ffi.Void Function(
+                        ffi.Pointer<ffi.Void>, ffi.Pointer<YWeakLinkEvent>)>>)>(
+    symbol: 'yweak_observe', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<YSubscription> yweak_observe(
+  ffi.Pointer<Branch> weak,
+  ffi.Pointer<ffi.Void> state,
+  ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Pointer<YSubscription> Function(
-                  ffi.Pointer<YUndoManager>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>,
-                              ffi.Pointer<YUndoEvent>)>>)>>(
-      'yundo_manager_observe_popped');
-  late final _yundo_manager_observe_popped =
-      _yundo_manager_observe_poppedPtr.asFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<YUndoManager>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(
-                          ffi.Pointer<ffi.Void>, ffi.Pointer<YUndoEvent>)>>)>();
-
-  /// Returns a value informing what kind of Yrs shared collection given `branch` represents.
-  /// Returns either 0 when `branch` is null or one of values: `Y_ARRAY`, `Y_TEXT`, `Y_MAP`,
-  /// `Y_XML_ELEM`, `Y_XML_TEXT`.
-  int ytype_kind(
-    ffi.Pointer<Branch> branch,
-  ) {
-    return _ytype_kind(
-      branch,
-    );
-  }
-
-  late final _ytype_kindPtr =
-      _lookup<ffi.NativeFunction<ffi.Int8 Function(ffi.Pointer<Branch>)>>(
-          'ytype_kind');
-  late final _ytype_kind =
-      _ytype_kindPtr.asFunction<int Function(ffi.Pointer<Branch>)>();
-
-  /// Releases resources allocated by `YStickyIndex` pointers.
-  void ysticky_index_destroy(
-    ffi.Pointer<YStickyIndex> pos,
-  ) {
-    return _ysticky_index_destroy(
-      pos,
-    );
-  }
-
-  late final _ysticky_index_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YStickyIndex>)>>(
-          'ysticky_index_destroy');
-  late final _ysticky_index_destroy = _ysticky_index_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YStickyIndex>)>();
-
-  /// Returns association of current `YStickyIndex`.
-  /// If association is **after** the referenced inserted character, returned number will be >= 0.
-  /// If association is **before** the referenced inserted character, returned number will be < 0.
-  int ysticky_index_assoc(
-    ffi.Pointer<YStickyIndex> pos,
-  ) {
-    return _ysticky_index_assoc(
-      pos,
-    );
-  }
-
-  late final _ysticky_index_assocPtr =
-      _lookup<ffi.NativeFunction<ffi.Int8 Function(ffi.Pointer<YStickyIndex>)>>(
-          'ysticky_index_assoc');
-  late final _ysticky_index_assoc = _ysticky_index_assocPtr
-      .asFunction<int Function(ffi.Pointer<YStickyIndex>)>();
-
-  /// Retrieves a `YStickyIndex` corresponding to a given human-readable `index` pointing into
-  /// the shared y-type `branch`. Unlike standard indexes sticky one enables to track
-  /// the location inside of a shared y-types, even in the face of concurrent updates.
-  ///
-  /// If association is >= 0, the resulting position will point to location **after** the referenced index.
-  /// If association is < 0, the resulting position will point to location **before** the referenced index.
-  ffi.Pointer<YStickyIndex> ysticky_index_from_index(
-    ffi.Pointer<Branch> branch,
-    ffi.Pointer<YTransaction> txn,
-    int index,
-    int assoc,
-  ) {
-    return _ysticky_index_from_index(
-      branch,
-      txn,
-      index,
-      assoc,
-    );
-  }
-
-  late final _ysticky_index_from_indexPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YStickyIndex> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Int8)>>('ysticky_index_from_index');
-  late final _ysticky_index_from_index =
-      _ysticky_index_from_indexPtr.asFunction<
-          ffi.Pointer<YStickyIndex> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>, int, int)>();
-
-  /// Serializes `YStickyIndex` into binary representation. `len` parameter is updated with byte
-  /// length of the generated binary. Returned binary can be free'd using `ybinary_destroy`.
-  ffi.Pointer<ffi.Char> ysticky_index_encode(
-    ffi.Pointer<YStickyIndex> pos,
-    ffi.Pointer<ffi.Uint32> len,
-  ) {
-    return _ysticky_index_encode(
-      pos,
-      len,
-    );
-  }
-
-  late final _ysticky_index_encodePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<YStickyIndex>,
-              ffi.Pointer<ffi.Uint32>)>>('ysticky_index_encode');
-  late final _ysticky_index_encode = _ysticky_index_encodePtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<YStickyIndex>, ffi.Pointer<ffi.Uint32>)>();
-
-  /// Deserializes `YStickyIndex` from the payload previously serialized using `ysticky_index_encode`.
-  ffi.Pointer<YStickyIndex> ysticky_index_decode(
-    ffi.Pointer<ffi.Char> binary,
-    int len,
-  ) {
-    return _ysticky_index_decode(
-      binary,
-      len,
-    );
-  }
-
-  late final _ysticky_index_decodePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YStickyIndex> Function(
-              ffi.Pointer<ffi.Char>, ffi.Uint32)>>('ysticky_index_decode');
-  late final _ysticky_index_decode = _ysticky_index_decodePtr.asFunction<
-      ffi.Pointer<YStickyIndex> Function(ffi.Pointer<ffi.Char>, int)>();
-
-  /// Given `YStickyIndex` and transaction reference, if computes a human-readable index in a
-  /// context of the referenced shared y-type.
-  ///
-  /// `out_branch` is getting assigned with a corresponding shared y-type reference.
-  /// `out_index` will be used to store computed human-readable index.
-  void ysticky_index_read(
-    ffi.Pointer<YStickyIndex> pos,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Pointer<Branch>> out_branch,
-    ffi.Pointer<ffi.Uint32> out_index,
-  ) {
-    return _ysticky_index_read(
-      pos,
-      txn,
-      out_branch,
-      out_index,
-    );
-  }
-
-  late final _ysticky_index_readPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<YStickyIndex>,
-              ffi.Pointer<YTransaction>,
-              ffi.Pointer<ffi.Pointer<Branch>>,
-              ffi.Pointer<ffi.Uint32>)>>('ysticky_index_read');
-  late final _ysticky_index_read = _ysticky_index_readPtr.asFunction<
-      void Function(ffi.Pointer<YStickyIndex>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Pointer<Branch>>, ffi.Pointer<ffi.Uint32>)>();
-
-  void yweak_destroy(
-    ffi.Pointer<Weak> weak,
-  ) {
-    return _yweak_destroy(
-      weak,
-    );
-  }
-
-  late final _yweak_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Weak>)>>(
-          'yweak_destroy');
-  late final _yweak_destroy =
-      _yweak_destroyPtr.asFunction<void Function(ffi.Pointer<Weak>)>();
-
-  ffi.Pointer<YOutput> yweak_deref(
-    ffi.Pointer<Branch> map_link,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yweak_deref(
-      map_link,
-      txn,
-    );
-  }
-
-  late final _yweak_derefPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('yweak_deref');
-  late final _yweak_deref = _yweak_derefPtr.asFunction<
-      ffi.Pointer<YOutput> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  ffi.Pointer<YWeakIter> yweak_iter(
-    ffi.Pointer<Branch> array_link,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yweak_iter(
-      array_link,
-      txn,
-    );
-  }
-
-  late final _yweak_iterPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YWeakIter> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('yweak_iter');
-  late final _yweak_iter = _yweak_iterPtr.asFunction<
-      ffi.Pointer<YWeakIter> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  void yweak_iter_destroy(
-    ffi.Pointer<YWeakIter> iter,
-  ) {
-    return _yweak_iter_destroy(
-      iter,
-    );
-  }
-
-  late final _yweak_iter_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<YWeakIter>)>>(
-          'yweak_iter_destroy');
-  late final _yweak_iter_destroy = _yweak_iter_destroyPtr
-      .asFunction<void Function(ffi.Pointer<YWeakIter>)>();
-
-  ffi.Pointer<YOutput> yweak_iter_next(
-    ffi.Pointer<YWeakIter> iter,
-  ) {
-    return _yweak_iter_next(
-      iter,
-    );
-  }
-
-  late final _yweak_iter_nextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YOutput> Function(
-              ffi.Pointer<YWeakIter>)>>('yweak_iter_next');
-  late final _yweak_iter_next = _yweak_iter_nextPtr
-      .asFunction<ffi.Pointer<YOutput> Function(ffi.Pointer<YWeakIter>)>();
-
-  ffi.Pointer<ffi.Char> yweak_string(
-    ffi.Pointer<Branch> text_link,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yweak_string(
-      text_link,
-      txn,
-    );
-  }
-
-  late final _yweak_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('yweak_string');
-  late final _yweak_string = _yweak_stringPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  ffi.Pointer<ffi.Char> yweak_xml_string(
-    ffi.Pointer<Branch> xml_text_link,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _yweak_xml_string(
-      xml_text_link,
-      txn,
-    );
-  }
-
-  late final _yweak_xml_stringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>)>>('yweak_xml_string');
-  late final _yweak_xml_string = _yweak_xml_stringPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-
-  /// Subscribes a given callback function `cb` to changes made by this `YText` instance. Callbacks
-  /// are triggered whenever a `ytransaction_commit` is called.
-  /// Returns a subscription ID which can be then used to unsubscribe this callback by using
-  /// `yunobserve` function.
-  ffi.Pointer<YSubscription> yweak_observe(
-    ffi.Pointer<Branch> weak,
-    ffi.Pointer<ffi.Void> state,
-    ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YWeakLinkEvent>)>>
-        cb,
-  ) {
-    return _yweak_observe(
-      weak,
-      state,
+              ffi.Void Function(
+                  ffi.Pointer<ffi.Void>, ffi.Pointer<YWeakLinkEvent>)>>
       cb,
-    );
-  }
+);
 
-  late final _yweak_observePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<YSubscription> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<ffi.Void>,
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YWeakLinkEvent>)>>)>>('yweak_observe');
-  late final _yweak_observe = _yweak_observePtr.asFunction<
-      ffi.Pointer<YSubscription> Function(
-          ffi.Pointer<Branch>,
-          ffi.Pointer<ffi.Void>,
-          ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YWeakLinkEvent>)>>)>();
+@ffi.Native<
+        ffi.Pointer<Weak> Function(ffi.Pointer<Branch>,
+            ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>(
+    symbol: 'ymap_link', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Weak> ymap_link(
+  ffi.Pointer<Branch> map,
+  ffi.Pointer<YTransaction> txn,
+  ffi.Pointer<ffi.Char> key,
+);
 
-  ffi.Pointer<Weak> ymap_link(
-    ffi.Pointer<Branch> map,
-    ffi.Pointer<YTransaction> txn,
-    ffi.Pointer<ffi.Char> key,
-  ) {
-    return _ymap_link(
-      map,
-      txn,
-      key,
-    );
-  }
+@ffi.Native<
+    ffi.Pointer<Weak> Function(
+        ffi.Pointer<Branch>,
+        ffi.Pointer<YTransaction>,
+        ffi.Uint32,
+        ffi.Uint32,
+        ffi.Int8,
+        ffi.Int8)>(symbol: 'ytext_quote', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Weak> ytext_quote(
+  ffi.Pointer<Branch> text,
+  ffi.Pointer<YTransaction> txn,
+  int start_index,
+  int end_index,
+  int start_exclusive,
+  int end_exclusive,
+);
 
-  late final _ymap_linkPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Weak> Function(ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>, ffi.Pointer<ffi.Char>)>>('ymap_link');
-  late final _ymap_link = _ymap_linkPtr.asFunction<
-      ffi.Pointer<Weak> Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          ffi.Pointer<ffi.Char>)>();
+@ffi.Native<
+    ffi.Pointer<Weak> Function(
+        ffi.Pointer<Branch>,
+        ffi.Pointer<YTransaction>,
+        ffi.Uint32,
+        ffi.Uint32,
+        ffi.Int8,
+        ffi.Int8)>(symbol: 'yarray_quote', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Weak> yarray_quote(
+  ffi.Pointer<Branch> array,
+  ffi.Pointer<YTransaction> txn,
+  int start_index,
+  int end_index,
+  int start_exclusive,
+  int end_exclusive,
+);
 
-  ffi.Pointer<Weak> ytext_quote(
-    ffi.Pointer<Branch> text,
-    ffi.Pointer<YTransaction> txn,
-    int start_index,
-    int end_index,
-    int start_exclusive,
-    int end_exclusive,
-  ) {
-    return _ytext_quote(
-      text,
-      txn,
-      start_index,
-      end_index,
-      start_exclusive,
-      end_exclusive,
-    );
-  }
+/// Returns a logical identifier for a given shared collection. That collection must be alive at
+/// the moment of function call.
+@ffi.Native<YBranchId Function(ffi.Pointer<Branch>)>(
+    symbol: 'ybranch_id', assetId: 'package:y_dart/y_dart')
+external YBranchId ybranch_id(
+  ffi.Pointer<Branch> branch,
+);
 
-  late final _ytext_quotePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Weak> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Uint32,
-              ffi.Int8,
-              ffi.Int8)>>('ytext_quote');
-  late final _ytext_quote = _ytext_quotePtr.asFunction<
-      ffi.Pointer<Weak> Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          int, int, int, int)>();
+/// Given a logical identifier, returns a physical pointer to a shared collection.
+/// Returns null if collection was not found - either because it was not defined or not synchronized
+/// yet.
+/// Returned pointer may still point to deleted collection. In such case a subsequent `ybranch_alive`
+/// function call is required.
+@ffi.Native<
+        ffi.Pointer<Branch> Function(
+            ffi.Pointer<YBranchId>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ybranch_get', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<Branch> ybranch_get(
+  ffi.Pointer<YBranchId> branch_id,
+  ffi.Pointer<YTransaction> txn,
+);
 
-  ffi.Pointer<Weak> yarray_quote(
-    ffi.Pointer<Branch> array,
-    ffi.Pointer<YTransaction> txn,
-    int start_index,
-    int end_index,
-    int start_exclusive,
-    int end_exclusive,
-  ) {
-    return _yarray_quote(
-      array,
-      txn,
-      start_index,
-      end_index,
-      start_exclusive,
-      end_exclusive,
-    );
-  }
+/// Check if current branch is still alive (returns `Y_TRUE`, otherwise `Y_FALSE`).
+/// If it was deleted, this branch pointer is no longer a valid pointer and cannot be used to
+/// execute any functions using it.
+@ffi.Native<ffi.Uint8 Function(ffi.Pointer<Branch>)>(
+    symbol: 'ybranch_alive', assetId: 'package:y_dart/y_dart')
+external int ybranch_alive(
+  ffi.Pointer<Branch> branch,
+);
 
-  late final _yarray_quotePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Weak> Function(
-              ffi.Pointer<Branch>,
-              ffi.Pointer<YTransaction>,
-              ffi.Uint32,
-              ffi.Uint32,
-              ffi.Int8,
-              ffi.Int8)>>('yarray_quote');
-  late final _yarray_quote = _yarray_quotePtr.asFunction<
-      ffi.Pointer<Weak> Function(ffi.Pointer<Branch>, ffi.Pointer<YTransaction>,
-          int, int, int, int)>();
-
-  /// Returns a logical identifier for a given shared collection. That collection must be alive at
-  /// the moment of function call.
-  YBranchId ybranch_id(
-    ffi.Pointer<Branch> branch,
-  ) {
-    return _ybranch_id(
-      branch,
-    );
-  }
-
-  late final _ybranch_idPtr =
-      _lookup<ffi.NativeFunction<YBranchId Function(ffi.Pointer<Branch>)>>(
-          'ybranch_id');
-  late final _ybranch_id =
-      _ybranch_idPtr.asFunction<YBranchId Function(ffi.Pointer<Branch>)>();
-
-  /// Given a logical identifier, returns a physical pointer to a shared collection.
-  /// Returns null if collection was not found - either because it was not defined or not synchronized
-  /// yet.
-  /// Returned pointer may still point to deleted collection. In such case a subsequent `ybranch_alive`
-  /// function call is required.
-  ffi.Pointer<Branch> ybranch_get(
-    ffi.Pointer<YBranchId> branch_id,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ybranch_get(
-      branch_id,
-      txn,
-    );
-  }
-
-  late final _ybranch_getPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Branch> Function(ffi.Pointer<YBranchId>,
-              ffi.Pointer<YTransaction>)>>('ybranch_get');
-  late final _ybranch_get = _ybranch_getPtr.asFunction<
-      ffi.Pointer<Branch> Function(
-          ffi.Pointer<YBranchId>, ffi.Pointer<YTransaction>)>();
-
-  /// Check if current branch is still alive (returns `Y_TRUE`, otherwise `Y_FALSE`).
-  /// If it was deleted, this branch pointer is no longer a valid pointer and cannot be used to
-  /// execute any functions using it.
-  int ybranch_alive(
-    ffi.Pointer<Branch> branch,
-  ) {
-    return _ybranch_alive(
-      branch,
-    );
-  }
-
-  late final _ybranch_alivePtr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<Branch>)>>(
-          'ybranch_alive');
-  late final _ybranch_alive =
-      _ybranch_alivePtr.asFunction<int Function(ffi.Pointer<Branch>)>();
-
-  /// Returns a UTF-8 encoded, NULL-terminated JSON string representation of the current branch
-  /// contents. Once no longer needed, this string must be explicitly deallocated by user using
-  /// `ystring_destroy`.
-  ///
-  /// If branch type couldn't be resolved (which usually happens for root-level types that were not
-  /// initialized locally) or doesn't have JSON representation a NULL pointer can be returned.
-  ffi.Pointer<ffi.Char> ybranch_json(
-    ffi.Pointer<Branch> branch,
-    ffi.Pointer<YTransaction> txn,
-  ) {
-    return _ybranch_json(
-      branch,
-      txn,
-    );
-  }
-
-  late final _ybranch_jsonPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>>('ybranch_json');
-  late final _ybranch_json = _ybranch_jsonPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(
-          ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>();
-}
+/// Returns a UTF-8 encoded, NULL-terminated JSON string representation of the current branch
+/// contents. Once no longer needed, this string must be explicitly deallocated by user using
+/// `ystring_destroy`.
+///
+/// If branch type couldn't be resolved (which usually happens for root-level types that were not
+/// initialized locally) or doesn't have JSON representation a NULL pointer can be returned.
+@ffi.Native<
+        ffi.Pointer<ffi.Char> Function(
+            ffi.Pointer<Branch>, ffi.Pointer<YTransaction>)>(
+    symbol: 'ybranch_json', assetId: 'package:y_dart/y_dart')
+external ffi.Pointer<ffi.Char> ybranch_json(
+  ffi.Pointer<Branch> branch,
+  ffi.Pointer<YTransaction> txn,
+);
 
 /// A Yrs document type. Documents are most important units of collaborative resources management.
 /// All shared collections live within a scope of their corresponding documents. All updates are

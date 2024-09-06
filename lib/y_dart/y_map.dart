@@ -8,7 +8,7 @@ final class YMap<T extends Object?> extends YType {
   T? operator [](String key) {
     return _doc._transaction((txn) {
       final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
-      final outputPtr = _bindings.ymap_get(_branch, txn, keyPtr);
+      final outputPtr = gen.ymap_get(_branch, txn, keyPtr);
       malloc.free(keyPtr);
       if (outputPtr == ffi.nullptr) return null;
       return _YOutput.toObject<T?>(outputPtr, _doc);
@@ -23,7 +23,7 @@ final class YMap<T extends Object?> extends YType {
       // destruction until the end of this block scope.
       final yInput = _YInput._(value);
       inputPtr.ref = yInput._input;
-      _bindings.ymap_insert(_branch, txn, keyPtr, inputPtr);
+      gen.ymap_insert(_branch, txn, keyPtr, inputPtr);
       malloc.free(keyPtr);
       malloc.free(inputPtr);
     });
@@ -37,8 +37,7 @@ final class YMap<T extends Object?> extends YType {
     }
   }
 
-  void clear() =>
-      _doc._transaction((txn) => _bindings.ymap_remove_all(_branch, txn));
+  void clear() => _doc._transaction((txn) => gen.ymap_remove_all(_branch, txn));
 
   Iterator<MapEntry<String, T?>> get iterator => _YMapIterator<T?>(this, _doc);
 
@@ -65,12 +64,11 @@ final class YMap<T extends Object?> extends YType {
     }
   }
 
-  int get length =>
-      _doc._transaction((txn) => _bindings.ymap_len(_branch, txn));
+  int get length => _doc._transaction((txn) => gen.ymap_len(_branch, txn));
 
   void remove(String key) {
     final keyPtr = key.toNativeUtf8().cast<ffi.Char>();
-    _doc._transaction((txn) => _bindings.ymap_remove(_branch, txn, keyPtr));
+    _doc._transaction((txn) => gen.ymap_remove(_branch, txn, keyPtr));
     malloc.free(keyPtr);
   }
 
@@ -83,7 +81,7 @@ final class _YMapIterator<T extends Object?>
     implements Iterator<YMapEntry<T?>>, ffi.Finalizable {
   _YMapIterator(this._map, this._doc) {
     _doc._transaction((txn) {
-      _iter = _bindings.ymap_iter(_map._branch, txn);
+      _iter = gen.ymap_iter(_map._branch, txn);
     });
     // This is safe even if we create new YTypes as freeing the iterator does
     // not drop the rest of the data.
@@ -104,7 +102,7 @@ final class _YMapIterator<T extends Object?>
 
   @override
   bool moveNext() {
-    final mapEntryPtr = _bindings.ymap_iter_next(_iter);
+    final mapEntryPtr = gen.ymap_iter_next(_iter);
     if (mapEntryPtr == ffi.nullptr) return false;
     final key = mapEntryPtr.ref.key.cast<Utf8>().toDartString();
     final value = _YOutput.toObject<T?>(

@@ -17,14 +17,14 @@ final class YTransaction {
     }
 
     final (ptr, originLen) = txnOriginPointer();
-    final txn = _bindings.ydoc_write_transaction(doc._doc, originLen, ptr);
+    final txn = gen.ydoc_write_transaction(doc._doc, originLen, ptr);
     malloc.free(ptr);
-    const writable = true; // _bindings.ytransaction_writeable(txn) == 1;
+    const writable = true; // gen.ytransaction_writeable(txn) == 1;
     return YTransaction._init(txn, writable);
   }
 
   void _commit() {
-    _bindings.ytransaction_commit(_txn);
+    gen.ytransaction_commit(_txn);
   }
 
   static YTransaction _fromZone() => Zone.current[YTransaction] as YTransaction;

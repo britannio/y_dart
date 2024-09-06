@@ -108,9 +108,9 @@ final class _YOutput extends YValue {
         if (yMapEntryPtr != null) {
           // In rust, YMapEntry implements the Drop trait and calls drop on the
           // value so youtput_destroy is unnecessary.
-          _bindings.ymap_entry_destroy(yMapEntryPtr);
+          gen.ymap_entry_destroy(yMapEntryPtr);
         } else {
-          _bindings.youtput_destroy(yOutPtr);
+          gen.youtput_destroy(yOutPtr);
         }
       }
     }
@@ -176,7 +176,7 @@ final class YInputJsonNull extends _YInput {
   YInputJsonNull() : super._internal();
 
   @override
-  gen.YInput get _input => _bindings.yinput_null();
+  gen.YInput get _input => gen.yinput_null();
 }
 
 final class YInputJsonBool extends _YInput {
@@ -184,7 +184,7 @@ final class YInputJsonBool extends _YInput {
   final bool value;
 
   @override
-  gen.YInput get _input => _bindings.yinput_bool(value ? 1 : 0);
+  gen.YInput get _input => gen.yinput_bool(value ? 1 : 0);
 }
 
 final class YInputJsonNum extends _YInput {
@@ -192,7 +192,7 @@ final class YInputJsonNum extends _YInput {
   final double value;
 
   @override
-  gen.YInput get _input => _bindings.yinput_float(value);
+  gen.YInput get _input => gen.yinput_float(value);
 }
 
 final class YInputJsonInt extends _YInput {
@@ -200,7 +200,7 @@ final class YInputJsonInt extends _YInput {
   final int value;
 
   @override
-  gen.YInput get _input => _bindings.yinput_long(value);
+  gen.YInput get _input => gen.yinput_long(value);
 }
 
 final class YInputJsonString extends _YInput {
@@ -210,8 +210,9 @@ final class YInputJsonString extends _YInput {
   final String value;
 
   late final _ptr = value.toNativeUtf8().cast<ffi.Char>();
+
   @override
-  late final gen.YInput _input = _bindings.yinput_string(_ptr);
+  late final gen.YInput _input = gen.yinput_string(_ptr);
 
   @override
   void dispose() {
@@ -235,7 +236,7 @@ final class YInputJsonString extends _YInput {
 //   late final _ptr = jsonEncode(value).toNativeUtf8();
 
 //   @override
-//   late final gen.YInput _input = _bindings.yinput_json(_ptr.cast());
+//   late final gen.YInput _input = gen.yinput_json(_ptr.cast());
 
 //   @override
 //   void dispose() {
@@ -260,7 +261,7 @@ final class YInputJsonBinary extends _YInput {
   @override
   late final gen.YInput _input = () {
     _ptr.asTypedList(value.length).setAll(0, value);
-    return _bindings.yinput_binary(_ptr.cast<ffi.Char>(), value.length);
+    return gen.yinput_binary(_ptr.cast<ffi.Char>(), value.length);
   }();
 
   @override
@@ -290,7 +291,7 @@ final class YInputJsonArray extends _YInput {
     for (int i = 0; i < value.length; i++) {
       _inputPtr[i] = inputs[i]._input;
     }
-    final input = _bindings.yinput_json_array(_inputPtr, inputs.length);
+    final input = gen.yinput_json_array(_inputPtr, inputs.length);
     return input;
   }();
 
@@ -343,7 +344,7 @@ final class YInputJsonMap extends _YInput {
       _valuesPtr[i] = pv.value._input;
     });
 
-    final input = _bindings.yinput_json_map(
+    final input = gen.yinput_json_map(
       _keysPtr,
       _valuesPtr,
       inputs.length,
@@ -382,7 +383,7 @@ final class YInputYArray extends _YInput {
       _liveInputs.add(value);
     }
 
-    return _bindings.yinput_yarray(_valuesPtr, value.length);
+    return gen.yinput_yarray(_valuesPtr, value.length);
   }();
 
   @override
@@ -418,7 +419,7 @@ final class YInputYMap extends _YInput {
       _valuesPtr[index] = valueInput._input;
     });
 
-    return _bindings.yinput_ymap(_keysPtr, _valuesPtr, value.length);
+    return gen.yinput_ymap(_keysPtr, _valuesPtr, value.length);
   }();
 
   @override
@@ -435,7 +436,7 @@ final class YInputYDoc extends _YInput {
   final YDoc value;
 
   @override
-  late final gen.YInput _input = _bindings.yinput_ydoc(value._doc);
+  late final gen.YInput _input = gen.yinput_ydoc(value._doc);
 }
 
 final class YInputYXmlElem extends _YInput {
@@ -447,7 +448,7 @@ final class YInputYXmlElem extends _YInput {
   late final _tagPtr = value.tag.toNativeUtf8();
 
   @override
-  gen.YInput get _input => _bindings.yinput_yxmlelem(_tagPtr.cast());
+  gen.YInput get _input => gen.yinput_yxmlelem(_tagPtr.cast());
 
   @override
   void dispose() {
@@ -465,7 +466,7 @@ final class YInputYXmlText extends _YInput {
   late final _ptr = value.toString().toNativeUtf8();
 
   @override
-  gen.YInput get _input => _bindings.yinput_yxmltext(_ptr.cast());
+  gen.YInput get _input => gen.yinput_yxmltext(_ptr.cast());
 
   @override
   void dispose() {
@@ -482,7 +483,7 @@ final class YInputYText extends _YInput {
   final YText value;
   late final _ptr = value.toString().toNativeUtf8();
   @override
-  gen.YInput get _input => _bindings.yinput_ytext(_ptr.cast());
+  gen.YInput get _input => gen.yinput_ytext(_ptr.cast());
 
   @override
   void dispose() {

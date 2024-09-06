@@ -14,7 +14,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
     bool? autoLoad,
     bool? shouldLoad,
   }) {
-    final options = _bindings.yoptions();
+    final options = gen.yoptions();
 
     options.id = id ?? options.id;
 
@@ -30,7 +30,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
     options.should_load =
         shouldLoad == null ? options.should_load : (shouldLoad ? 1 : 0);
 
-    final doc = _bindings.ydoc_new_with_options(options);
+    final doc = gen.ydoc_new_with_options(options);
     if (guidPtr != null) malloc.free(guidPtr);
     if (collectionIdPtr != null) malloc.free(collectionIdPtr);
     final yDoc = YDoc._(doc);
@@ -39,25 +39,24 @@ class YDoc with _YObservable implements ffi.Finalizable {
   }
 
   factory YDoc.clone(YDoc doc) {
-    final clonedDocPtr = _bindings.ydoc_clone(doc._doc);
+    final clonedDocPtr = gen.ydoc_clone(doc._doc);
     return YDoc._(clonedDocPtr);
   }
 
   final ffi.Pointer<gen.YDoc> _doc;
 
   /// A unique client identifier for the document.
-  late final int id = _bindings.ydoc_id(_doc);
+  late final int id = gen.ydoc_id(_doc);
 
   /// A unique identifier for the document.
   late final String guid = () {
-    final ptr = _bindings.ydoc_guid(_doc);
+    final ptr = gen.ydoc_guid(_doc);
     final String result = ptr.cast<Utf8>().toDartString();
-    _bindings.ystring_destroy(ptr);
+    gen.ystring_destroy(ptr);
     return result;
   }();
 
-  late final ffi.Pointer<ffi.Char> _collectionId =
-      _bindings.ydoc_collection_id(_doc);
+  late final ffi.Pointer<ffi.Char> _collectionId = gen.ydoc_collection_id(_doc);
 
   late final String? collectionId = _collectionId == ffi.nullptr
       ? null
@@ -65,28 +64,28 @@ class YDoc with _YObservable implements ffi.Finalizable {
 
   YText getText(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
-    final branchPtr = _bindings.ytext(_doc, namePtr);
+    final branchPtr = gen.ytext(_doc, namePtr);
     malloc.free(namePtr);
     return YText._(branchPtr, this);
   }
 
   YArray<T> getArray<T>(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
-    final branchPtr = _bindings.yarray(_doc, namePtr);
+    final branchPtr = gen.yarray(_doc, namePtr);
     malloc.free(namePtr);
     return YArray._(this, branchPtr);
   }
 
   YMap<T> getMap<T>(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
-    final branchPtr = _bindings.ymap(_doc, namePtr);
+    final branchPtr = gen.ymap(_doc, namePtr);
     malloc.free(namePtr);
     return YMap._(this, branchPtr);
   }
 
   YXmlFragment getXmlFragment(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
-    final branchPtr = _bindings.yxmlfragment(_doc, namePtr);
+    final branchPtr = gen.yxmlfragment(_doc, namePtr);
     malloc.free(namePtr);
     return YXmlFragment._(this, branchPtr);
   }
@@ -94,7 +93,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
   YUndoManager getUndoManager({int captureTimeoutMillis = 0}) {
     final options = calloc<gen.YUndoManagerOptions>();
     options.ref.capture_timeout_millis = captureTimeoutMillis;
-    final undoManagerPtr = _bindings.yundo_manager(_doc, options);
+    final undoManagerPtr = gen.yundo_manager(_doc, options);
     calloc.free(options);
     return YUndoManager._(undoManagerPtr);
   }
@@ -103,7 +102,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
     late Uint8List result;
     _transaction((txn) {
       final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
-      final stateVecBinaryPtr = _bindings.ytransaction_state_vector_v1(
+      final stateVecBinaryPtr = gen.ytransaction_state_vector_v1(
         txn,
         lenPtr,
       );
@@ -123,7 +122,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
       final stateVecPtr = malloc<ffi.Uint8>(sv.length);
       stateVecPtr.asTypedList(sv.length).setAll(0, sv);
 
-      final diffPtr = _bindings.ytransaction_state_diff_v1(
+      final diffPtr = gen.ytransaction_state_diff_v1(
         txn,
         stateVecPtr.cast<ffi.Char>(),
         sv.length,
@@ -144,7 +143,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
       final updatePtr = malloc<ffi.Uint8>(update.length);
       updatePtr.asTypedList(update.length).setAll(0, update);
 
-      _bindings.ytransaction_apply(
+      gen.ytransaction_apply(
         txn,
         updatePtr.cast<ffi.Char>(),
         update.length,
@@ -160,7 +159,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
     final streamController = _YObservable._controller<Uint8List>(idPtr);
-    // don't use _bindings.ybinary_destroy as we don't own the pointer
+    // don't use gen.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
     streamController.add(bufferCopy);
@@ -172,7 +171,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
 
     return _listen<Uint8List>(
       callback,
-      (state) => _bindings.ydoc_observe_updates_v1(_doc, state, callbackPtr),
+      (state) => gen.ydoc_observe_updates_v1(_doc, state, callbackPtr),
     );
   }
 
@@ -189,6 +188,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
       final txn = YTransaction._(this, origin);
       return runZoned(() {
         final result = callback();
+        // causing a crash for some reason??
         txn._commit();
         return result;
       }, zoneValues: {YTransaction: txn});

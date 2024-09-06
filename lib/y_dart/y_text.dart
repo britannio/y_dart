@@ -27,7 +27,7 @@ final class YText extends YType with _YObservable {
       final attrs = YInputJsonMap(attributes);
       final attrsPtr = malloc<gen.YInput>();
       attrsPtr.ref = attrs._input;
-      _bindings.ytext_insert(_branch, txn, index, textPtr, attrsPtr);
+      gen.ytext_insert(_branch, txn, index, textPtr, attrsPtr);
       malloc.free(attrsPtr);
       malloc.free(textPtr);
       attrs.dispose();
@@ -36,12 +36,12 @@ final class YText extends YType with _YObservable {
 
   int get length {
     // Technically only need a read transaction here.
-    return _doc._transaction((txn) => _bindings.ytext_len(_branch, txn));
+    return _doc._transaction((txn) => gen.ytext_len(_branch, txn));
   }
 
   void removeRange({required int start, required int length}) {
     _doc._transaction((txn) {
-      _bindings.ytext_remove_range(_branch, txn, start, length);
+      gen.ytext_remove_range(_branch, txn, start, length);
     });
   }
 
@@ -53,7 +53,7 @@ final class YText extends YType with _YObservable {
     final input = YInputJsonMap(attributes);
     final attrsPtr = malloc<gen.YInput>()..ref = input._input;
     _doc._transaction((txn) {
-      _bindings.ytext_format(_branch, txn, index, length, attrsPtr);
+      gen.ytext_format(_branch, txn, index, length, attrsPtr);
     });
     input.dispose();
     malloc.free(attrsPtr);
@@ -98,13 +98,13 @@ final class YText extends YType with _YObservable {
     if (!_YObservable._shouldEmit(idPtr)) return;
 
     final deltaLenPtr = malloc<ffi.Uint32>();
-    final delta = _bindings.ytext_event_delta(event, deltaLenPtr);
+    final delta = gen.ytext_event_delta(event, deltaLenPtr);
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
 
     final changes = List.generate(deltaLen, (i) => _convertDeltaOut(delta[i]));
 
-    _bindings.ytext_delta_destroy(delta, deltaLen);
+    gen.ytext_delta_destroy(delta, deltaLen);
 
     final streamController = _YObservable._controller<List<YTextChange>>(idPtr);
     streamController.add(changes);
@@ -118,7 +118,7 @@ final class YText extends YType with _YObservable {
 
     return _listen<List<YTextChange>>(
       callback,
-      (state) => _bindings.ytext_observe(_branch, state, callbackPtr),
+      (state) => gen.ytext_observe(_branch, state, callbackPtr),
     );
   }
 
@@ -128,17 +128,17 @@ final class YText extends YType with _YObservable {
   @override
   String toString() {
     final ptr = _doc._transaction(
-      (txn) => _bindings.ytext_string(_branch, txn),
+      (txn) => gen.ytext_string(_branch, txn),
     );
     final result = ptr.cast<Utf8>().toDartString();
-    _bindings.ystring_destroy(ptr);
+    gen.ystring_destroy(ptr);
     return result;
   }
 
   List<YTextInserted> toDelta() {
     return _doc._transaction((txn) {
       final chunksLenPtr = malloc<ffi.Uint32>();
-      final chunksPtr = _bindings.ytext_chunks(_branch, txn, chunksLenPtr);
+      final chunksPtr = gen.ytext_chunks(_branch, txn, chunksLenPtr);
       final chunksLen = chunksLenPtr.value;
       malloc.free(chunksLenPtr);
 
@@ -157,7 +157,7 @@ final class YText extends YType with _YObservable {
         }
         deltas.add(YTextInserted(content as String, attrs));
       }
-      _bindings.ychunks_destroy(chunksPtr, chunksLen);
+      gen.ychunks_destroy(chunksPtr, chunksLen);
       return deltas;
     });
   }

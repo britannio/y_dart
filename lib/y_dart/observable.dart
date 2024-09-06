@@ -32,7 +32,7 @@ mixin _YObservable {
     final ySubscription = subscribe(observeIdPtr.cast());
     final streamController = StreamController<T>(
       onCancel: () {
-        _bindings.yunobserve(ySubscription);
+        gen.yunobserve(ySubscription);
         _subscriptions.remove(observeId);
         malloc.free(observeIdPtr);
       },

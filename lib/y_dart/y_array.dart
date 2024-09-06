@@ -7,7 +7,7 @@ final class YArray<T> extends YType with _YObservable {
   YArray._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
   final YDoc _doc;
 
-  int get length => _bindings.yarray_len(_branch);
+  int get length => gen.yarray_len(_branch);
 
   // List<T> operator +(List<T> other) {
   //   // TODO: implement +
@@ -17,7 +17,7 @@ final class YArray<T> extends YType with _YObservable {
   T operator [](int index) {
     late T result;
     _doc._transaction((txn) {
-      final outputPtr = _bindings.yarray_get(_branch, txn, index);
+      final outputPtr = gen.yarray_get(_branch, txn, index);
       if (outputPtr == ffi.nullptr) {
         throw IndexError.withLength(index, length);
       }
@@ -33,7 +33,7 @@ final class YArray<T> extends YType with _YObservable {
       final input = yInput._input;
       final inputPtr = malloc<gen.YInput>();
       inputPtr.ref = input;
-      _bindings.yarray_insert_range(_branch, txn, index, inputPtr, 1);
+      gen.yarray_insert_range(_branch, txn, index, inputPtr, 1);
       malloc.free(inputPtr);
     });
   }
@@ -66,7 +66,7 @@ final class YArray<T> extends YType with _YObservable {
       final input = _YInput._(element);
       final inputPtr = malloc<gen.YInput>();
       inputPtr.ref = input._input;
-      _bindings.yarray_insert_range(_branch, txn, index, inputPtr, 1);
+      gen.yarray_insert_range(_branch, txn, index, inputPtr, 1);
       malloc.free(inputPtr);
     });
   }
@@ -78,7 +78,7 @@ final class YArray<T> extends YType with _YObservable {
       for (var i = 0; i < inputs.length; i++) {
         inputsPtr[i] = inputs[i]._input;
       }
-      _bindings.yarray_insert_range(
+      gen.yarray_insert_range(
         _branch,
         txn,
         index,
@@ -103,19 +103,19 @@ final class YArray<T> extends YType with _YObservable {
 
   void removeAt(int index) {
     _doc._transaction(
-        (txn) => _bindings.yarray_remove_range(_branch, txn, index, index + 1));
+        (txn) => gen.yarray_remove_range(_branch, txn, index, index + 1));
   }
 
   void removeLast() => removeAt(length - 1);
 
   void removeRange(int start, int end) {
     _doc._transaction(
-        (txn) => _bindings.yarray_remove_range(_branch, txn, start, end));
+        (txn) => gen.yarray_remove_range(_branch, txn, start, end));
   }
 
   void move(int source, int target) {
     _doc._transaction((txn) {
-      _bindings.yarray_move(_branch, txn, source, target);
+      gen.yarray_move(_branch, txn, source, target);
     });
   }
 
@@ -126,14 +126,14 @@ final class YArray<T> extends YType with _YObservable {
     if (!_YObservable._shouldEmit(idPtr)) return;
 
     final deltaLenPtr = malloc<ffi.Uint32>();
-    final delta = _bindings.yarray_event_delta(event, deltaLenPtr);
+    final delta = gen.yarray_event_delta(event, deltaLenPtr);
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
 
     final changes =
         List.generate(deltaLen, (i) => YArrayChange.fromEvent(delta[i]));
 
-    _bindings.yevent_delta_destroy(delta, deltaLen);
+    gen.yevent_delta_destroy(delta, deltaLen);
 
     final streamController =
         _YObservable._controller<List<YArrayChange>>(idPtr);
@@ -148,7 +148,7 @@ final class YArray<T> extends YType with _YObservable {
 
     return _listen<List<YArrayChange>>(
       callback,
-      (state) => _bindings.yarray_observe(_branch, state, callbackPtr),
+      (state) => gen.yarray_observe(_branch, state, callbackPtr),
     );
   }
 
@@ -191,7 +191,7 @@ final class YArrayIterator<T> implements Iterator<T>, ffi.Finalizable {
   YArrayIterator(this._array, this._doc) {
     print('init iterator');
     _doc._transaction((txn) {
-      _iter = _bindings.yarray_iter(_array._branch, txn);
+      _iter = gen.yarray_iter(_array._branch, txn);
     });
     print('init iterator done');
     // This is safe even if we create new YTypes as freeing the iterator does
@@ -216,7 +216,7 @@ final class YArrayIterator<T> implements Iterator<T>, ffi.Finalizable {
   bool moveNext() {
     print('moveNext');
     print(_iter);
-    final outputPtr = _bindings.yarray_iter_next(_iter);
+    final outputPtr = gen.yarray_iter_next(_iter);
     print('got ptr');
     if (outputPtr == ffi.nullptr) return false;
     // toObject takes ownership of outputPtr and destroys it via
