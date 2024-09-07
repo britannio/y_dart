@@ -196,12 +196,10 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
       );
     }
 
-    final currentOrigin = Zone.current[#y_crdt_txn_origin];
+    final currentOrigin = Zone.current[YOrigin];
     if (origin != null && currentOrigin != origin) {
       return Zone.current.fork(
-        zoneValues: {
-          #y_crdt_txn_origin: origin,
-        },
+        zoneValues: {YOrigin: origin},
       ).run(() => innerTxn());
     } else {
       return innerTxn();

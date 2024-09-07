@@ -1,8 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  demo8ArraySubWithYType();
+  demo9Map();
 }
 
 void demo1() {
@@ -170,4 +172,38 @@ Future<void> demo8ArraySubWithYType() async {
 
   print('after listen');
   print(afterListen.toString());
+}
+
+Future<void> demo9Map() async {
+  final d = YDoc();
+  final map = d.getMap<YText>('my-map');
+  map.listen((changes) {
+    print("listen: $changes");
+
+    final first = changes.first;
+    if (first is YMapChangeAdded) {
+      final txt = first.value as YText;
+      txt.append('from listener');
+      print(txt);
+    }
+  });
+
+  final text = d.getText('my-text');
+  final text2 = d.getText('my-text2');
+  text.append('hello');
+  text2.append('world');
+
+  await Future.delayed(Duration.zero);
+  print(text);
+  print(map);
+  print('before: $map');
+  map['my-text'] = text;
+  await Future.delayed(Duration.zero);
+  print('after: $map');
+  map['my-text'] = text2;
+  map.remove('my-text');
+  await Future.delayed(Duration.zero);
+
+  print('after listen');
+  print(map.toString());
 }

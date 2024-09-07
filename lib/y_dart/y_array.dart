@@ -213,7 +213,6 @@ sealed class YArrayChange {
     gen.YEventChange event,
     YDoc doc,
   ) {
-    print('YArrayChange.fromEvent: ${event.tag}');
     switch (event.tag) {
       case gen.Y_EVENT_CHANGE_ADD:
         final values = List.generate(
@@ -250,10 +249,7 @@ class YArrayInserted extends YArrayChange {
   final List<Object?> values;
 
   @override
-  String toString() {
-    print('YArrayInserted.toString: $length');
-    return '{ insert: $length, values: $values }';
-  }
+  String toString() => '{ insert: $length, values: $values }';
 }
 
 class YArrayRetained extends YArrayChange {

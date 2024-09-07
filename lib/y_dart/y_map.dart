@@ -1,6 +1,12 @@
 part of 'all.dart';
 
-final class YMap<T extends Object?> extends YType {
+typedef NativeMapObserveCallback = NativeYTypeObserveCallback<gen.YMapEvent>;
+
+typedef NativeYTypeObserveCallback<T extends ffi.NativeType> = ffi.Void
+    Function(ffi.Pointer<ffi.Void>, ffi.Pointer<T>);
+
+final class YMap<T extends Object?> extends YType
+    with _YObservable<List<YMapChange>> {
   YMap._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
 
   final YDoc _doc;
@@ -81,6 +87,51 @@ final class YMap<T extends Object?> extends YType {
   }
 
   // bool containsKey(String key) => this[key] != null;
+
+  static void _observeCallback(
+    ffi.Pointer<ffi.Void> idPtr,
+    ffi.Pointer<gen.YMapEvent> event,
+  ) {
+    if (!_YObservable._shouldEmit(idPtr)) return;
+
+    final lenPtr = malloc<ffi.Uint32>();
+    final delta = _bindings.ymap_event_keys(event, lenPtr);
+    final len = lenPtr.value;
+    malloc.free(lenPtr);
+    final doc = _YObservable._getCustomData(idPtr) as YDoc;
+
+    final changes = List.generate(
+      len,
+      (i) => YMapChange.fromEvent(delta[i], doc),
+    );
+    _bindings.yevent_keys_destroy(delta, len);
+
+    final streamController = _YObservable._controller<List<YMapChange>>(idPtr);
+    streamController.add(changes);
+  }
+
+  StreamSubscription<List<YMapChange>> listen(
+    void Function(List<YMapChange>) callback,
+  ) {
+    final callbackPtr =
+        ffi.Pointer.fromFunction<NativeMapObserveCallback>(_observeCallback);
+    return _listen(
+      callback,
+      (state) => _bindings.ymap_observe(_branch, state, callbackPtr),
+      customDataCallback: () => _doc,
+    );
+  }
+
+  @override
+  String toString() {
+    final str = StringBuffer();
+    str.write('{');
+    for (final entry in entries) {
+      str.write('${entry.key}: ${entry.value},');
+    }
+    str.write('}');
+    return str.toString();
+  }
 }
 
 typedef YMapEntry<T> = MapEntry<String, T>;
@@ -125,4 +176,75 @@ final class _YMapIterator<T extends Object?>
     _current = MapEntry(key, value);
     return true;
   }
+}
+
+sealed class YMapChange {
+  final String key;
+  final YDoc _doc;
+  const YMapChange._(this.key, this._doc);
+  factory YMapChange.fromEvent(gen.YEventKeyChange event, YDoc doc) {
+    final key = event.key.cast<Utf8>().toDartString();
+    switch (event.tag) {
+      case gen.Y_EVENT_KEY_CHANGE_ADD:
+        return YMapChangeAdded(event.new_value, key, doc);
+      case gen.Y_EVENT_KEY_CHANGE_DELETE:
+        return YMapChangeDeleted(event.old_value, key, doc);
+      case gen.Y_EVENT_KEY_CHANGE_UPDATE:
+        return YMapChangeUpdated(event.old_value, event.new_value, key, doc);
+      default:
+        throw Exception('Unknown event change tag: ${event.tag}');
+    }
+  }
+
+  static Iterable<YMapChange> fromEvents(
+    Iterable<gen.YEventKeyChange> events,
+    YDoc doc,
+  ) {
+    return events.map((e) => YMapChange.fromEvent(e, doc));
+  }
+}
+
+final class YMapChangeAdded extends YMapChange {
+  YMapChangeAdded(this._value, super.key, super._doc) : super._() {
+    value = _YOutput.toObjectInner<Object>(_value.ref, _doc);
+  }
+
+  final ffi.Pointer<gen.YOutput> _value;
+  late Object? value;
+
+  @override
+  String toString() => '{ add: $key, value: $value }';
+}
+
+final class YMapChangeDeleted extends YMapChange {
+  YMapChangeDeleted(this._value, super.key, super._doc) : super._() {
+    oldValue = _YOutput.toObjectInner<Object>(_value.ref, _doc);
+  }
+
+  final ffi.Pointer<gen.YOutput> _value;
+  late Object? oldValue;
+
+  @override
+  String toString() => '{ delete: $key, value: $oldValue }';
+}
+
+final class YMapChangeUpdated extends YMapChange {
+  YMapChangeUpdated(
+    this._oldValue,
+    this._newValue,
+    super.key,
+    super._doc,
+  ) : super._() {
+    oldValue = _YOutput.toObjectInner<Object>(_oldValue.ref, _doc);
+    newValue = _YOutput.toObjectInner<Object>(_newValue.ref, _doc);
+  }
+
+  final ffi.Pointer<gen.YOutput> _oldValue;
+  final ffi.Pointer<gen.YOutput> _newValue;
+  late Object? oldValue;
+  late Object? newValue;
+
+  @override
+  String toString() =>
+      '{ update: $key, oldValue: $oldValue, newValue: $newValue }';
 }
