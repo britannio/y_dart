@@ -194,7 +194,8 @@ class YDoc with _YObservable implements ffi.Finalizable {
       }, zoneValues: {YTransaction: txn});
     }
 
-    if (origin != null) {
+    final currentOrigin = Zone.current[#y_crdt_txn_origin];
+    if (origin != null && currentOrigin != origin) {
       return runZoned(
         () => innterTxn(),
         zoneValues: {#y_crdt_txn_origin: origin},
