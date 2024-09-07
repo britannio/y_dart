@@ -40,13 +40,19 @@ final class YMap<T extends Object?> extends YType {
   void clear() =>
       _doc._transaction((txn) => _bindings.ymap_remove_all(_branch, txn));
 
-  Iterator<MapEntry<String, T?>> get iterator => _YMapIterator<T?>(this, _doc);
+  // Iterator<MapEntry<String, T?>> get iterator => _YMapIterator<T?>(this, _doc);
 
-  Iterable<MapEntry<String, T?>> get entries sync* {
-    final iterator = this.iterator;
-    while (iterator.moveNext()) {
-      yield iterator.current;
-    }
+  Iterable<MapEntry<String, T?>> get entries {
+    // We aren't using yield and sync* as we need to guarantee that the
+    // transaction will be commited.
+    final result = <MapEntry<String, T?>>[];
+    _doc._transaction((txn) {
+      final iterator = _YMapIterator<T?>(this, _doc);
+      while (iterator.moveNext()) {
+        result.add(iterator.current);
+      }
+    });
+    return result;
   }
 
   bool get isEmpty => length == 0;
@@ -82,9 +88,13 @@ typedef YMapEntry<T> = MapEntry<String, T>;
 final class _YMapIterator<T extends Object?>
     implements Iterator<YMapEntry<T?>>, ffi.Finalizable {
   _YMapIterator(this._map, this._doc) {
-    _doc._transaction((txn) {
-      _iter = _bindings.ymap_iter(_map._branch, txn);
-    });
+    final txn = YTransaction._fromZoneNullable()?._txn;
+    if (txn == null) {
+      // We must use a transaction that outlives this iterator as iter_next
+      // is only valid using the same transaction provided to ymap_iter.
+      throw Exception('No transaction found');
+    }
+    _iter = _bindings.ymap_iter(_map._branch, txn);
     // This is safe even if we create new YTypes as freeing the iterator does
     // not drop the rest of the data.
     YFree.mapIterFinalizer.attach(this, _iter.cast<ffi.Void>());

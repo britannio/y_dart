@@ -99,7 +99,7 @@ final class YArray<T> extends YType with _YObservable {
 
   bool get isNotEmpty => !isEmpty;
 
-  Iterator<T> get iterator => YArrayIterator<T>(this, _doc);
+  Iterator<T> get iterator => YArrayIterator<T>(this);
 
   void removeAt(int index) {
     _doc._transaction(
@@ -187,44 +187,18 @@ final class YArray<T> extends YType with _YObservable {
   }
 }
 
-final class YArrayIterator<T> implements Iterator<T>, ffi.Finalizable {
-  YArrayIterator(this._array, this._doc) {
-    print('init iterator');
-    _doc._transaction((txn) {
-      _iter = _bindings.yarray_iter(_array._branch, txn);
-    });
-    print('init iterator done');
-    // This is safe even if we create new YTypes as freeing the iterator does
-    // not drop the rest of the data.
-    YFree.arrayIterFinalizer.attach(this, _iter.cast());
-    print('attach finalizer');
-  }
+final class YArrayIterator<T> implements Iterator<T> {
+  YArrayIterator(this._array);
   final YArray _array;
-  final YDoc _doc;
-  late final ffi.Pointer<gen.YArrayIter> _iter;
-  T? _current;
+  int _index = -1;
 
   @override
-  T get current {
-    if (_current == null) {
-      throw StateError('Iterator has not been moved to the first element');
-    }
-    return _current!;
-  }
+  T get current => _array[_index];
 
   @override
   bool moveNext() {
-    print('moveNext');
-    print(_iter);
-    final outputPtr = _bindings.yarray_iter_next(_iter);
-    print('got ptr');
-    if (outputPtr == ffi.nullptr) return false;
-    // toObject takes ownership of outputPtr and destroys it via
-    // youtput_destroy()
-    final value = _YOutput.toObject<T>(outputPtr, _doc);
-    print('got value');
-    _current = value;
-    return true;
+    _index++;
+    return _index < _array.length;
   }
 }
 
