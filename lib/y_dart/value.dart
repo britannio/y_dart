@@ -3,7 +3,7 @@ part of 'all.dart';
 sealed class YValue {}
 
 final class _YOutput extends YValue {
-  static Object? toObjectInner(gen.YOutput yOut, [YDoc? doc]) {
+  static T? toObjectInner<T extends Object>(gen.YOutput yOut, [YDoc? doc]) {
     late Object? result;
     assert(
       yOut.tag <= 0 || doc != null,
@@ -75,13 +75,14 @@ final class _YOutput extends YValue {
       default:
         throw Exception('Unsupported value type: ${yOut.tag}');
     }
-    return result;
+    return result as T?;
   }
 
   /// Invoked from [YArray], [YMap]
   static T toObject<T extends Object?>(
     /// Takes ownership of this pointer.
     ffi.Pointer<gen.YOutput> yOutPtr,
+    // Required if the type is a YDoc or YType
     YDoc? doc, {
     /// Used to prevent double free of nested types.
     bool disableFree = false,

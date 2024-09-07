@@ -2,15 +2,17 @@ import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  // arrayIterRepro();
+  demo8ArraySubWithYType();
 }
 
 void demo1() {
+  print('demo1');
   final d1 = YDoc();
   final text = d1.getText('test');
   d1.listen((event) {
     log('Received update of length: ${event.length}');
-    // log(event.toString());
+    log(event.toString());
+    d1.transaction(() {});
   });
 
   // Updates in a transaction are batched!
@@ -132,4 +134,40 @@ void demo7ArraySubscription() {
   arr.add('10');
 
   log(arr.toString());
+}
+
+Future<void> demo8ArraySubWithYType() async {
+  // If we cache a YType produced by the listen callback, is it still valid
+  // later on?
+
+  final d = YDoc();
+  final arr = d.getArray<YText>('my-array');
+  late YText afterListen;
+  arr.listen((changes) {
+    print('in callback');
+    print("listen: $changes");
+    for (final change in changes) {
+      switch (change) {
+        case YArrayDeleted(length: var length):
+          log("deleted: $length");
+          break;
+        case YArrayInserted(length: var length, values: var values):
+          afterListen = values.first as YText;
+          log("inserted: $length");
+          break;
+        case YArrayRetained(length: var length):
+          log("retained: $length");
+          break;
+      }
+    }
+  });
+
+  final text = d.getText('my-text');
+  text.append('hello');
+
+  arr.add(text);
+  await Future.delayed(Duration.zero);
+
+  print('after listen');
+  print(afterListen.toString());
 }

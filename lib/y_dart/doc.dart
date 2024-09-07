@@ -3,7 +3,7 @@ part of 'all.dart';
 typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-class YDoc with _YObservable implements ffi.Finalizable {
+class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
   YDoc._(this._doc);
 
   factory YDoc({
@@ -70,7 +70,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
     return YText._(branchPtr, this);
   }
 
-  YArray<T> getArray<T>(String name) {
+  YArray<T> getArray<T extends Object>(String name) {
     final namePtr = name.toNativeUtf8().cast<ffi.Char>();
     final branchPtr = _bindings.yarray(_doc, namePtr);
     malloc.free(namePtr);
@@ -170,7 +170,7 @@ class YDoc with _YObservable implements ffi.Finalizable {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeDocObserveCallback>(_observeCallback);
 
-    return _listen<Uint8List>(
+    return _listen(
       callback,
       (state) => _bindings.ydoc_observe_updates_v1(_doc, state, callbackPtr),
     );
@@ -180,28 +180,31 @@ class YDoc with _YObservable implements ffi.Finalizable {
     T Function() callback, {
     YOrigin? origin,
   }) {
-    T innterTxn() {
+    T innerTxn() {
       // If we are inside a transaction, we do not need to create a new one.
       if (YTransaction._fromZoneNullable() != null) {
         return callback();
       }
 
       final txn = YTransaction._(this, origin);
-      return runZoned(() {
-        final result = callback();
-        txn._commit();
-        return result;
-      }, zoneValues: {YTransaction: txn});
+      return Zone.current.fork(zoneValues: {YTransaction: txn}).run(
+        () {
+          final result = callback();
+          txn._commit();
+          return result;
+        },
+      );
     }
 
     final currentOrigin = Zone.current[#y_crdt_txn_origin];
     if (origin != null && currentOrigin != origin) {
-      return runZoned(
-        () => innterTxn(),
-        zoneValues: {#y_crdt_txn_origin: origin},
-      );
+      return Zone.current.fork(
+        zoneValues: {
+          #y_crdt_txn_origin: origin,
+        },
+      ).run(() => innerTxn());
     } else {
-      return innterTxn();
+      return innerTxn();
     }
   }
 

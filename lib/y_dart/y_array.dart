@@ -3,7 +3,8 @@ part of 'all.dart';
 typedef NativeArrayObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YArrayEvent>);
 
-final class YArray<T> extends YType with _YObservable {
+final class YArray<T extends Object> extends YType
+    with _YObservable<List<YArrayChange>> {
   YArray._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
   final YDoc _doc;
 
@@ -14,8 +15,8 @@ final class YArray<T> extends YType with _YObservable {
   //   throw UnimplementedError();
   // }
 
-  T operator [](int index) {
-    late T result;
+  T? operator [](int index) {
+    late T? result;
     _doc._transaction((txn) {
       final outputPtr = _bindings.yarray_get(_branch, txn, index);
       if (outputPtr == ffi.nullptr) {
@@ -38,19 +39,19 @@ final class YArray<T> extends YType with _YObservable {
     });
   }
 
-  void add(T value) => insert(length, value);
+  void add(T? value) => insert(length, value);
 
   // void addAll(Iterable<T> iterable) => insertAll(length, iterable);
 
   bool any(bool Function(T element) test) {
     for (var i = 0; i < length; i++) {
-      if (test(this[i])) return true;
+      if (test(this[i]!)) return true;
     }
     return false;
   }
 
-  Map<int, T> asMap() {
-    final result = <int, T>{};
+  Map<int, T?> asMap() {
+    final result = <int, T?>{};
     for (var i = 0; i < length; i++) {
       result[i] = this[i];
     }
@@ -59,9 +60,9 @@ final class YArray<T> extends YType with _YObservable {
 
   void clear() => removeRange(0, length);
 
-  T elementAt(int index) => this[index];
+  T? elementAt(int index) => this[index];
 
-  void insert(int index, T element) {
+  void insert(int index, T? element) {
     _doc._transaction((txn) {
       final input = _YInput._(element);
       final inputPtr = malloc<gen.YInput>();
@@ -99,7 +100,7 @@ final class YArray<T> extends YType with _YObservable {
 
   bool get isNotEmpty => !isEmpty;
 
-  Iterator<T> get iterator => YArrayIterator<T>(this);
+  Iterator<T?> get iterator => YArrayIterator<T>(this);
 
   void removeAt(int index) {
     _doc._transaction(
@@ -124,36 +125,40 @@ final class YArray<T> extends YType with _YObservable {
     ffi.Pointer<gen.YArrayEvent> event,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
-
+    final doc = _YObservable._getCustomData(idPtr) as YDoc;
     final deltaLenPtr = malloc<ffi.Uint32>();
     final delta = _bindings.yarray_event_delta(event, deltaLenPtr);
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
 
-    final changes =
-        List.generate(deltaLen, (i) => YArrayChange.fromEvent(delta[i]));
-
+    final changes = List.generate(
+      deltaLen,
+      (i) => YArrayChange.fromEvent(delta[i], doc),
+    );
     _bindings.yevent_delta_destroy(delta, deltaLen);
 
     final streamController =
         _YObservable._controller<List<YArrayChange>>(idPtr);
+
     streamController.add(changes);
   }
 
   StreamSubscription<List<YArrayChange>> listen(
     void Function(List<YArrayChange>) callback,
   ) {
-    final callbackPtr =
-        ffi.Pointer.fromFunction<NativeArrayObserveCallback>(_observeCallback);
+    final callbackPtr = ffi.Pointer.fromFunction<NativeArrayObserveCallback>(
+      _observeCallback,
+    );
 
-    return _listen<List<YArrayChange>>(
+    return _listen(
       callback,
       (state) => _bindings.yarray_observe(_branch, state, callbackPtr),
+      customDataCallback: () => _doc,
     );
   }
 
-  List<T> toList() {
-    final result = <T>[];
+  List<T?> toList() {
+    final result = <T?>[];
     final iter = iterator;
     while (iter.moveNext()) {
       result.add(iter.current);
@@ -167,7 +172,7 @@ final class YArray<T> extends YType with _YObservable {
   //   throw UnimplementedError();
   // }
 
-  Iterable<T> where(bool Function(T element) test) sync* {
+  Iterable<T?> where(bool Function(T? element) test) sync* {
     final iter = iterator;
     while (iter.moveNext()) {
       if (test(iter.current)) yield iter.current;
@@ -187,13 +192,13 @@ final class YArray<T> extends YType with _YObservable {
   }
 }
 
-final class YArrayIterator<T> implements Iterator<T> {
+final class YArrayIterator<T extends Object> implements Iterator<T?> {
   YArrayIterator(this._array);
-  final YArray _array;
+  final YArray<T> _array;
   int _index = -1;
 
   @override
-  T get current => _array[_index];
+  T? get current => _array[_index];
 
   @override
   bool moveNext() {
@@ -203,51 +208,57 @@ final class YArrayIterator<T> implements Iterator<T> {
 }
 
 sealed class YArrayChange {
-  static YArrayChange fromEvent(gen.YEventChange event) {
+  const YArrayChange._();
+  static YArrayChange fromEvent(
+    gen.YEventChange event,
+    YDoc doc,
+  ) {
+    print('YArrayChange.fromEvent: ${event.tag}');
     switch (event.tag) {
       case gen.Y_EVENT_CHANGE_ADD:
         final values = List.generate(
           event.len,
-          (i) => _YOutput.toObjectInner(event.values[i]),
+          (i) => _YOutput.toObjectInner(event.values[i], doc),
         );
-        return YArrayInserted(event.len, values);
+        return YArrayInserted(length: event.len, values: values);
       case gen.Y_EVENT_CHANGE_DELETE:
-        return YArrayDeleted(event.len);
+        return YArrayDeleted(length: event.len);
       case gen.Y_EVENT_CHANGE_RETAIN:
-        return YArrayRetained(event.len);
+        return YArrayRetained(length: event.len);
       default:
         throw Exception('Unknown event change tag: ${event.tag}');
     }
   }
 
-  static List<YArrayChange> fromEvents(List<gen.YEventChange> events) {
-    return events.map(fromEvent).toList();
+  static List<YArrayChange> fromEvents(
+      List<gen.YEventChange> events, YDoc doc) {
+    return events.map((e) => YArrayChange.fromEvent(e, doc)).toList();
   }
 }
 
 class YArrayDeleted extends YArrayChange {
+  YArrayDeleted({required this.length}) : super._();
   final int length;
-
-  YArrayDeleted(this.length);
 
   @override
   String toString() => '{ delete: $length }';
 }
 
 class YArrayInserted extends YArrayChange {
+  YArrayInserted({required this.length, required this.values}) : super._();
   final int length;
   final List<Object?> values;
 
-  YArrayInserted(this.length, this.values);
-
   @override
-  String toString() => '{ insert: $length, values: $values }';
+  String toString() {
+    print('YArrayInserted.toString: $length');
+    return '{ insert: $length, values: $values }';
+  }
 }
 
 class YArrayRetained extends YArrayChange {
+  YArrayRetained({required this.length}) : super._();
   final int length;
-
-  YArrayRetained(this.length);
 
   @override
   String toString() => '{ retain: $length }';

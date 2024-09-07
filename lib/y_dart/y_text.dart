@@ -3,7 +3,7 @@ part of 'all.dart';
 typedef NativeTextObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
 
-final class YText extends YType with _YObservable {
+final class YText extends YType with _YObservable<List<YTextChange>> {
   YText._(super._branch, this._doc) : super._();
   final YDoc _doc;
 
@@ -116,7 +116,7 @@ final class YText extends YType with _YObservable {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
 
-    return _listen<List<YTextChange>>(
+    return _listen(
       callback,
       (state) => _bindings.ytext_observe(_branch, state, callbackPtr),
     );

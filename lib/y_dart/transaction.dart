@@ -19,6 +19,9 @@ final class YTransaction {
     final (ptr, originLen) = txnOriginPointer();
     final txn = _bindings.ydoc_write_transaction(doc._doc, originLen, ptr);
     malloc.free(ptr);
+    if (txn == ffi.nullptr) {
+      throw Exception('Failed to create transaction');
+    }
     const writable = true; // _bindings.ytransaction_writeable(txn) == 1;
     return YTransaction._init(txn, writable);
   }

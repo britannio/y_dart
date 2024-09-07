@@ -1,0 +1,7 @@
+{
+    // Hides the forward button on Macbook touch bars
+    "keyboard.touchbar.ignored": [
+        "workbench.action.navigateForward",
+        "_flutter.screenshot.touchBar"
+    ],
+}
