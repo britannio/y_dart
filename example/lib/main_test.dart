@@ -12,7 +12,7 @@ void demo1() {
   final d1 = YDoc();
   final text = d1.getText('test');
   d1.listen((event) {
-    log('Received update of length: ${event.length}');
+    log('Received update of length: ${event.diff.length}');
     log(event.toString());
     d1.transaction(() {});
   });
@@ -27,7 +27,7 @@ void demo1() {
   final d2 = YDoc();
   final d2Version = d2.state();
   final diff = d1.diff(d2Version);
-  log(diff.length.toString());
+  log(diff.diff.length.toString());
   d2.sync(diff);
 
   log(d2.getText('test').toString());

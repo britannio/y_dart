@@ -3,7 +3,7 @@ part of 'all.dart';
 typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
+class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
   YDoc._(this._doc);
 
   factory YDoc({
@@ -99,7 +99,7 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
     return YUndoManager._(undoManagerPtr);
   }
 
-  Uint8List state() {
+  YVersion state() {
     late Uint8List result;
     _transaction((txn) {
       final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
@@ -112,11 +112,11 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
 
       result = stateVecBinaryPtr.asTypedListFinalized(len);
     });
-    return result;
+    return YVersion._(result);
   }
 
-  Uint8List diff(Uint8List? stateVector) {
-    final sv = stateVector ?? Uint8List.fromList([0]);
+  YDiff diff(YVersion? stateVector) {
+    final sv = stateVector?.stateVector ?? Uint8List.fromList([0]);
     late Uint8List result;
     _transaction((txn) {
       final ffi.Pointer<ffi.Uint32> lenPtr = malloc<ffi.Uint32>();
@@ -135,10 +135,11 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
 
       result = diffPtr.asTypedListFinalized(diffLen);
     });
-    return result;
+    return YDiff._(result);
   }
 
-  void sync(Uint8List update) {
+  void sync(YDiff diff) {
+    final update = diff.diff;
     _transaction((txn) {
       // Copy the buffer into native memory.
       final updatePtr = malloc<ffi.Uint8>(update.length);
@@ -159,14 +160,14 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
     ffi.Pointer<ffi.Char> data,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
-    final streamController = _YObservable._controller<Uint8List>(idPtr);
+    final streamController = _YObservable._controller<YDiff>(idPtr);
     // don't use _bindings.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
-    streamController.add(bufferCopy);
+    streamController.add(YDiff._(bufferCopy));
   }
 
-  StreamSubscription<Uint8List> listen(void Function(Uint8List) callback) {
+  StreamSubscription<YDiff> listen(void Function(YDiff) callback) {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeDocObserveCallback>(_observeCallback);
 
@@ -214,4 +215,14 @@ class YDoc with _YObservable<Uint8List> implements ffi.Finalizable {
       return callback(txn._txn);
     });
   }
+}
+
+class YVersion {
+  YVersion._(this.stateVector);
+  final Uint8List stateVector;
+}
+
+class YDiff {
+  YDiff._(this.diff);
+  final Uint8List diff;
 }
