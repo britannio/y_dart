@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 typedef NativeDocObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
@@ -34,7 +34,7 @@ class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
     if (guidPtr != null) malloc.free(guidPtr);
     if (collectionIdPtr != null) malloc.free(collectionIdPtr);
     final yDoc = YDoc._(doc);
-    YFree.yDocFinalizer.attach(yDoc, doc.cast<ffi.Void>());
+    _YFree.yDocFinalizer.attach(yDoc, doc.cast<ffi.Void>());
     return yDoc;
   }
 

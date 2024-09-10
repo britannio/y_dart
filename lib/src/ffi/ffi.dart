@@ -2,7 +2,7 @@
 // import 'dart:io';
 // import 'package:y_dart/y_dart/ffi/y_dart_bindings_generated.dart' as gen;
 
-part of '../all.dart';
+part of '../y_dart.dart';
 
 const String _libName = 'y_dart';
 
@@ -28,7 +28,7 @@ typedef NativeFreeFn = ffi.NativeFinalizerFunction;
 
 typedef FreeFn = ffi.Pointer<ffi.NativeFinalizerFunction>;
 
-abstract final class YFree {
+abstract final class _YFree {
   static final mallocFinalizer = ffi.NativeFinalizer(malloc.nativeFree);
 
   static final undoManager =
@@ -39,13 +39,13 @@ abstract final class YFree {
   static final yDocFinalizer = ffi.NativeFinalizer(yDoc);
 
   static final binary = _dylib.lookup<NativeFreeFn>('ybinary_destroy_struct');
-  static final binaryFinalizer = ffi.NativeFinalizer(binary);
+  // static final binaryFinalizer = ffi.NativeFinalizer(binary);
 
   static final mapIter = _dylib.lookup<NativeFreeFn>('ymap_iter_destroy');
   static final mapIterFinalizer = ffi.NativeFinalizer(mapIter);
 
-  static final arrayIter = _dylib.lookup<NativeFreeFn>('yarray_iter_destroy');
-  static final arrayIterFinalizer = ffi.NativeFinalizer(mapIter);
+  // static final arrayIter = _dylib.lookup<NativeFreeFn>('yarray_iter_destroy');
+  // static final arrayIterFinalizer = ffi.NativeFinalizer(mapIter);
 
   static final mapEntry = _dylib.lookup<NativeFreeFn>('ymap_entry_destroy');
   static final mapEntryFinalizer = ffi.NativeFinalizer(mapEntry);
@@ -61,7 +61,7 @@ extension PointerCharX on ffi.Pointer<ffi.Char> {
     finalizerToken.ref.binary_len = length;
     return cast<ffi.Uint8>().asTypedList(
       length,
-      finalizer: YFree.binary,
+      finalizer: _YFree.binary,
       token: finalizerToken.cast<ffi.Void>(),
     );
   }

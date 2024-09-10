@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 sealed class YTextChange {}
 

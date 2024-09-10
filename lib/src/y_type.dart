@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 abstract class YType implements ffi.Finalizable {
   // Freed by the owning YDoc or other creator.

@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 typedef NativeArrayObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YArrayEvent>);

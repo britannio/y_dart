@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 typedef NativeMapObserveCallback = NativeYTypeObserveCallback<gen.YMapEvent>;
 
@@ -148,8 +148,14 @@ final class _YMapIterator<T extends Object?>
     _iter = _bindings.ymap_iter(_map._branch, txn);
     // This is safe even if we create new YTypes as freeing the iterator does
     // not drop the rest of the data.
-    YFree.mapIterFinalizer.attach(this, _iter.cast<ffi.Void>());
+    _YFree.mapIterFinalizer.attach(this, _iter.cast<ffi.Void>(), detach: this);
   }
+
+  void dispose() {
+    _YFree.mapIterFinalizer.detach(this);
+    _bindings.ymap_iter_destroy(_iter);
+  }
+
   final YMap<T> _map;
   final YDoc _doc;
   late final ffi.Pointer<gen.YMapIter> _iter;

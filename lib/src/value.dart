@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 sealed class YValue {}
 
@@ -97,9 +97,9 @@ final class _YOutput extends YValue {
       if (yMapEntryPtr != null) {
         // In rust, YMapEntry implements the Drop trait and calls drop on the
         // value so the outputFinalizer is unnecessary.
-        YFree.mapEntryFinalizer.attach(result, yMapEntryPtr.cast<ffi.Void>());
+        _YFree.mapEntryFinalizer.attach(result, yMapEntryPtr.cast<ffi.Void>());
       } else {
-        YFree.outputFinalizer.attach(result, yOutPtr.cast<ffi.Void>());
+        _YFree.outputFinalizer.attach(result, yOutPtr.cast<ffi.Void>());
       }
     } else {
       // The YValue is a JSON object and thus we converted it to entirely live
@@ -206,7 +206,7 @@ final class YInputJsonInt extends _YInput {
 
 final class YInputJsonString extends _YInput {
   YInputJsonString(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _ptr.cast<ffi.Void>(), detach: this);
   }
   final String value;
 
@@ -217,7 +217,7 @@ final class YInputJsonString extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_ptr);
   }
 }
@@ -247,7 +247,7 @@ final class YInputJsonString extends _YInput {
 
 final class YInputJsonBinary extends _YInput {
   YInputJsonBinary(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(
+    _YFree.mallocFinalizer.attach(
       this,
       _ptr.cast<ffi.Void>(),
       externalSize: value.length,
@@ -267,14 +267,14 @@ final class YInputJsonBinary extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_ptr);
   }
 }
 
 final class YInputJsonArray extends _YInput {
   YInputJsonArray(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(
+    _YFree.mallocFinalizer.attach(
       this,
       _inputPtr.cast<ffi.Void>(),
       detach: this,
@@ -298,7 +298,7 @@ final class YInputJsonArray extends _YInput {
   @override
   void dispose() {
     // Dispose in reverse order of attachment
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_inputPtr);
     super.dispose();
   }
@@ -306,18 +306,19 @@ final class YInputJsonArray extends _YInput {
 
 final class YInputJsonMap extends _YInput {
   YInputJsonMap(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(
+    _YFree.mallocFinalizer.attach(
       this,
       _keysPtr.cast<ffi.Void>(),
       detach: this,
     );
-    YFree.mallocFinalizer.attach(
+    _YFree.mallocFinalizer.attach(
       this,
       _valuesPtr.cast<ffi.Void>(),
       detach: this,
     );
     for (final keyPtr in _keysPtrList) {
-      YFree.mallocFinalizer.attach(this, keyPtr.cast<ffi.Void>(), detach: this);
+      _YFree.mallocFinalizer
+          .attach(this, keyPtr.cast<ffi.Void>(), detach: this);
     }
   }
 
@@ -355,7 +356,7 @@ final class YInputJsonMap extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     _keysPtrList.forEach(malloc.free);
     malloc.free(_valuesPtr);
     malloc.free(_keysPtr);
@@ -364,7 +365,7 @@ final class YInputJsonMap extends _YInput {
 
 final class YInputYArray extends _YInput {
   YInputYArray(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _valuesPtr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _valuesPtr.cast(), detach: this);
   }
   final YArray value;
 
@@ -395,10 +396,10 @@ final class YInputYArray extends _YInput {
 
 final class YInputYMap extends _YInput {
   YInputYMap(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _keysPtr.cast(), detach: this);
-    YFree.mallocFinalizer.attach(this, _valuesPtr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _keysPtr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _valuesPtr.cast(), detach: this);
     for (final keyPtr in _keysPtrList) {
-      YFree.mallocFinalizer.attach(this, keyPtr.cast(), detach: this);
+      _YFree.mallocFinalizer.attach(this, keyPtr.cast(), detach: this);
     }
   }
   final YMap value;
@@ -441,7 +442,7 @@ final class YInputYDoc extends _YInput {
 
 final class YInputYXmlElem extends _YInput {
   YInputYXmlElem(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _tagPtr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _tagPtr.cast(), detach: this);
   }
   final YXmlElement value;
 
@@ -453,14 +454,14 @@ final class YInputYXmlElem extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_tagPtr);
   }
 }
 
 final class YInputYXmlText extends _YInput {
   YInputYXmlText(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
   }
   final YXmlText value;
   late final _ptr = value.toString().toNativeUtf8();
@@ -471,14 +472,14 @@ final class YInputYXmlText extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_ptr);
   }
 }
 
 final class YInputYText extends _YInput {
   YInputYText(this.value) : super._internal() {
-    YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
+    _YFree.mallocFinalizer.attach(this, _ptr.cast(), detach: this);
   }
   final YText value;
   late final _ptr = value.toString().toNativeUtf8();
@@ -488,7 +489,7 @@ final class YInputYText extends _YInput {
   @override
   void dispose() {
     super.dispose();
-    YFree.mallocFinalizer.detach(this);
+    _YFree.mallocFinalizer.detach(this);
     malloc.free(_ptr);
   }
 }

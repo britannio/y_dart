@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 final class YXmlFragment extends YType {
   YXmlFragment._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);

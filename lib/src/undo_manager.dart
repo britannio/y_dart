@@ -1,8 +1,8 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 final class YUndoManager implements ffi.Finalizable {
   YUndoManager._(this._undoManager) {
-    YFree.undoManagerFinalizer.attach(this, _undoManager.cast<ffi.Void>());
+    _YFree.undoManagerFinalizer.attach(this, _undoManager.cast<ffi.Void>());
   }
   final ffi.Pointer<gen.YUndoManager> _undoManager;
 

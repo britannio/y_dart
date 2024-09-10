@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 abstract class YOrigin {
   Uint8List toBytes();

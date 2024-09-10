@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 typedef NativeSubscription = ffi.Pointer<gen.YSubscription> Function(
     ffi.Pointer<ffi.Void> state);

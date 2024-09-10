@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 final class YTransaction {
   final ffi.Pointer<gen.TransactionInner> _txn;

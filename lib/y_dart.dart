@@ -1,3 +1,3 @@
 library y_dart;
 
-export 'y_dart/all.dart';
+export 'src/y_dart.dart';

@@ -1,4 +1,4 @@
-part of 'all.dart';
+part of 'y_dart.dart';
 
 typedef NativeTextObserveCallback = ffi.Void Function(
     ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
