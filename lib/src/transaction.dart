@@ -9,7 +9,7 @@ final class YTransaction {
   factory YTransaction._(YDoc doc, YOrigin? yOrigin) {
     (ffi.Pointer<ffi.Char> ptr, int len) txnOriginPointer() {
       if (yOrigin == null) return (ffi.nullptr, 0);
-      final origin = yOrigin.toBytes();
+      final origin = yOrigin.bytes;
       final originLen = origin.length;
       final originPtr = malloc<ffi.Uint8>(originLen);
       originPtr.asTypedList(originLen).setAll(0, origin);

@@ -1195,6 +1195,8 @@ uint8_t ydoc_auto_load(YDoc *doc);
 
 YSubscription *ydoc_observe_updates_v1(YDoc *doc, void *state, void (*cb)(void*,
                                                                           uint32_t,
+                                                                          const char*,
+                                                                          uint32_t,
                                                                           const char*));
 
 YSubscription *ydoc_observe_updates_v2(YDoc *doc, void *state, void (*cb)(void*,
@@ -2303,7 +2305,9 @@ void yunobserve(YSubscription *subscription);
  * `yunobserve` function.
  */
 YSubscription *ytext_observe(const Branch *txt, void *state, void (*cb)(void*,
-                                                                        const struct YTextEvent*));
+                                                                        const struct YTextEvent*,
+                                                                        uint32_t,
+                                                                        const char*));
 
 /**
  * Subscribes a given callback function `cb` to changes made by this `YMap` instance. Callbacks

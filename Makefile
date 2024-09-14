@@ -5,7 +5,7 @@ OUTPUT_DIR := rust
 # Files
 RUST_LIB := $(RUST_DIR)/src/lib.rs
 OUTPUT_HEADER := $(OUTPUT_DIR)/libyrs.h
-FFI_GEN_OUTPUT := lib/ydart/ffi/y_dart_bindings_generated.dart
+FFI_GEN_OUTPUT := lib/src/ffi/y_dart_bindings_generated.dart
 
 # Command
 CBINDGEN_CMD := cd $(RUST_DIR) && cbindgen --config cbindgen.toml --crate y_dart --output ../$(OUTPUT_HEADER) --lang C

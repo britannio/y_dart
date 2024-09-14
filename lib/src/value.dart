@@ -134,6 +134,7 @@ abstract class _YInput extends YValue implements ffi.Finalizable {
       // Technically could be a Y_JSON??? i.e. a string that is valid JSON
       return YInputJsonString(value);
     } else if (value is Uint8List) {
+      // TODO do we need to handle List<int> here too?
       return YInputJsonBinary(value);
     } else if (value is List) {
       // list of json like objects

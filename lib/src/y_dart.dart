@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'ffi/y_dart_bindings_generated.dart' as gen;

@@ -1,5 +1,12 @@
 part of 'y_dart.dart';
 
+class YTextChanges {
+  YTextChanges({required this.changes, required this.origin});
+
+  final List<YTextChange> changes;
+  final YOrigin? origin;
+}
+
 sealed class YTextChange {}
 
 class YTextDeleted extends YTextChange {

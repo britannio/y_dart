@@ -1,7 +1,7 @@
 part of 'y_dart.dart';
 
-typedef NativeDocObserveCallback = ffi.Void Function(
-    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>);
+typedef NativeDocObserveCallback = ffi.Void Function(ffi.Pointer<ffi.Void>,
+    ffi.Uint32, ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
 class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
   YDoc._(this._doc);
@@ -135,11 +135,15 @@ class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
 
       result = diffPtr.asTypedListFinalized(diffLen);
     });
-    return YDiff._(result);
+    return YDiff(result);
   }
 
   void sync(YDiff diff) {
     final update = diff.diff;
+    // maybe we should get the origin from this diff rather than assuming that
+    // all origins were passed into a parent transaction?
+    // or just make an assert if we're already in a transaction without a
+    // matching origin?
     _transaction((txn) {
       // Copy the buffer into native memory.
       final updatePtr = malloc<ffi.Uint8>(update.length);
@@ -158,13 +162,20 @@ class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
     ffi.Pointer<ffi.Void> idPtr,
     int dataLen,
     ffi.Pointer<ffi.Char> data,
+    int originLen,
+    ffi.Pointer<ffi.Char> origin,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
     final streamController = _YObservable._controller<YDiff>(idPtr);
     // don't use _bindings.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
-    streamController.add(YDiff._(bufferCopy));
+    YOrigin? yOrigin;
+    if (originLen > 0) {
+      final originBytes = origin.cast<ffi.Uint8>().asTypedList(originLen);
+      yOrigin = YOrigin.fromBytes(Uint8List.fromList(originBytes));
+    }
+    streamController.add(YDiff(bufferCopy, origin: yOrigin));
   }
 
   StreamSubscription<YDiff> listen(void Function(YDiff) callback) {
@@ -181,30 +192,27 @@ class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
     T Function() callback, {
     YOrigin? origin,
   }) {
-    T innerTxn() {
-      // If we are inside a transaction, we do not need to create a new one.
-      if (YTransaction._fromZoneNullable() != null) {
-        return callback();
-      }
-
-      final txn = YTransaction._(this, origin);
-      return Zone.current.fork(zoneValues: {YTransaction: txn}).run(
-        () {
-          final result = callback();
-          txn._commit();
-          return result;
-        },
-      );
-    }
-
     final currentOrigin = Zone.current[YOrigin];
-    if (origin != null && currentOrigin != origin) {
-      return Zone.current.fork(
-        zoneValues: {YOrigin: origin},
-      ).run(() => innerTxn());
-    } else {
-      return innerTxn();
+    assert(currentOrigin == null || origin == null || currentOrigin == origin,
+        'Cannot change origin inside a transaction');
+
+    // If we are inside a transaction, we do not need to create a new one.
+    if (YTransaction._fromZoneNullable() != null) {
+      return callback();
     }
+
+    final txn = YTransaction._(this, origin);
+    return Zone.current.fork(zoneValues: {YTransaction: txn}).run(
+      () {
+        late T result;
+        try {
+          result = callback();
+        } finally {
+          txn._commit();
+        }
+        return result;
+      },
+    );
   }
 
   T _transaction<T>(
@@ -223,6 +231,7 @@ class YVersion {
 }
 
 class YDiff {
-  YDiff._(this.diff);
+  YDiff(this.diff, {this.origin});
   final Uint8List diff;
+  final YOrigin? origin;
 }

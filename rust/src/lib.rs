@@ -507,19 +507,37 @@ impl CallbackState {
     }
 }
 
+fn transaction_origin_data(txn: &yrs::TransactionMut) -> (*const c_char, u32) {
+    if let Some(origin) = txn.origin() {
+        let bytes = origin.as_ref();
+        let origin_len = bytes.len() as u32;
+        let origin = bytes.as_ptr() as *const c_char;
+        (origin, origin_len)
+    } else {
+        (null(), 0)
+    }
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn ydoc_observe_updates_v1(
     doc: *mut Doc,
     state: *mut c_void,
-    cb: extern "C" fn(*mut c_void, u32, *const c_char),
+    cb: extern "C" fn(*mut c_void, u32, *const c_char, u32, *const c_char),
 ) -> *mut Subscription {
     let state = CallbackState::new(state);
     let doc = doc.as_ref().unwrap();
     let subscription = doc
-        .observe_update_v1(move |_, e| {
+        .observe_update_v1(move |txn, e| {
             let bytes = &e.update;
             let len = bytes.len() as u32;
-            cb(state.0, len, bytes.as_ptr() as *const c_char)
+            let (origin, origin_len) = transaction_origin_data(txn);
+            cb(
+                state.0,
+                len,
+                bytes.as_ptr() as *const c_char,
+                origin_len,
+                origin,
+            )
         })
         .unwrap();
     Box::into_raw(Box::new(subscription))
@@ -3703,7 +3721,7 @@ pub unsafe extern "C" fn yunobserve(subscription: *mut Subscription) {
 pub unsafe extern "C" fn ytext_observe(
     txt: *const Branch,
     state: *mut c_void,
-    cb: extern "C" fn(*mut c_void, *const YTextEvent),
+    cb: extern "C" fn(*mut c_void, *const YTextEvent, u32, *const c_char),
 ) -> *mut Subscription {
     assert!(!txt.is_null());
     let state = CallbackState::new(state);
@@ -3711,7 +3729,8 @@ pub unsafe extern "C" fn ytext_observe(
     let txt = TextRef::from_raw_branch(txt);
     let subscription = txt.observe(move |txn, e| {
         let e = YTextEvent::new(e, txn);
-        cb(state.0, &e as *const YTextEvent);
+        let (origin, origin_len) = transaction_origin_data(txn);
+        cb(state.0, &e as *const YTextEvent, origin_len, origin);
     });
     Box::into_raw(Box::new(subscription))
 }

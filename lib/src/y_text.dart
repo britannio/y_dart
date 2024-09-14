@@ -1,11 +1,11 @@
 part of 'y_dart.dart';
 
-typedef NativeTextObserveCallback = ffi.Void Function(
-    ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YTextEvent>);
+typedef NativeTextObserveCallback = ffi.Void Function(ffi.Pointer<ffi.Void>,
+    ffi.Pointer<gen.YTextEvent>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
-final class YText extends YType with _YObservable<List<YTextChange>> {
-  YText._(super._branch, this._doc) : super._();
-  final YDoc _doc;
+final class YText extends YType with _YObservable<YTextChanges> {
+  YText._(super._branch, this.doc) : super._();
+  final YDoc doc;
 
   void append(
     String text, {
@@ -22,7 +22,7 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
     required String text,
     Map<String, Object> attributes = const {},
   }) {
-    _doc._transaction((txn) {
+    doc._transaction((txn) {
       final textPtr = text.toNativeUtf8().cast<ffi.Char>();
       final attrs = YInputJsonMap(attributes);
       final attrsPtr = malloc<gen.YInput>();
@@ -36,11 +36,11 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
 
   int get length {
     // Technically only need a read transaction here.
-    return _doc._transaction((txn) => _bindings.ytext_len(_branch, txn));
+    return doc._transaction((txn) => _bindings.ytext_len(_branch, txn));
   }
 
   void removeRange({required int start, required int length}) {
-    _doc._transaction((txn) {
+    doc._transaction((txn) {
       _bindings.ytext_remove_range(_branch, txn, start, length);
     });
   }
@@ -52,7 +52,7 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
   }) {
     final input = YInputJsonMap(attributes);
     final attrsPtr = malloc<gen.YInput>()..ref = input._input;
-    _doc._transaction((txn) {
+    doc._transaction((txn) {
       _bindings.ytext_format(_branch, txn, index, length, attrsPtr);
     });
     input.dispose();
@@ -94,6 +94,8 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
   static void _observeCallback(
     ffi.Pointer<ffi.Void> idPtr,
     ffi.Pointer<gen.YTextEvent> event,
+    int originLen,
+    ffi.Pointer<ffi.Char> origin,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
 
@@ -103,15 +105,25 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
     malloc.free(deltaLenPtr);
 
     final changes = List.generate(deltaLen, (i) => _convertDeltaOut(delta[i]));
+    YOrigin? yOrigin;
+    if (originLen > 0) {
+      yOrigin = YOrigin.fromBytes(
+        origin.cast<ffi.Uint8>().asTypedList(originLen),
+      );
+    }
+    final changesWithOrigin = YTextChanges(
+      changes: changes,
+      origin: yOrigin,
+    );
 
     _bindings.ytext_delta_destroy(delta, deltaLen);
 
-    final streamController = _YObservable._controller<List<YTextChange>>(idPtr);
-    streamController.add(changes);
+    final streamController = _YObservable._controller<YTextChanges>(idPtr);
+    streamController.add(changesWithOrigin);
   }
 
-  StreamSubscription<List<YTextChange>> listen(
-    void Function(List<YTextChange>) callback,
+  StreamSubscription<YTextChanges> listen(
+    void Function(YTextChanges) callback,
   ) {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeTextObserveCallback>(_observeCallback);
@@ -127,7 +139,7 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
 
   @override
   String toString() {
-    final ptr = _doc._transaction(
+    final ptr = doc._transaction(
       (txn) => _bindings.ytext_string(_branch, txn),
     );
     final result = ptr.cast<Utf8>().toDartString();
@@ -136,7 +148,7 @@ final class YText extends YType with _YObservable<List<YTextChange>> {
   }
 
   List<YTextInserted> toDelta() {
-    return _doc._transaction((txn) {
+    return doc._transaction((txn) {
       final chunksLenPtr = malloc<ffi.Uint32>();
       final chunksPtr = _bindings.ytext_chunks(_branch, txn, chunksLenPtr);
       final chunksLen = chunksLenPtr.value;
