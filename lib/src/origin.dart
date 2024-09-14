@@ -1,45 +1,28 @@
 part of 'y_dart.dart';
 
-abstract class YOrigin {
-  Uint8List toBytes();
-  YOrigin._();
+sealed class YOrigin {
+  YOrigin._(this.bytes);
+  final Uint8List bytes;
 
   factory YOrigin.fromString(String string) => _YOriginString(string);
   factory YOrigin.fromBytes(Uint8List bytes) => _YOriginBytes(bytes);
-}
-
-class _YOriginBytes extends YOrigin {
-  final Uint8List bytes;
-
-  _YOriginBytes(this.bytes) : super._();
-
-  @override
-  Uint8List toBytes() => bytes;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _YOriginBytes && listEquals(bytes, other.bytes);
+      other is YOrigin && listEquals(bytes, other.bytes);
 
   @override
   int get hashCode => bytes.hashCode;
 }
 
+class _YOriginBytes extends YOrigin {
+  _YOriginBytes(super.bytes) : super._();
+}
+
 class _YOriginString extends YOrigin {
+  _YOriginString(this.string) : super._(utf8.encode(string));
   final String string;
-
-  _YOriginString(this.string) : super._();
-
-  @override
-  Uint8List toBytes() => Uint8List.fromList(string.codeUnits);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _YOriginString && string == other.string;
-
-  @override
-  int get hashCode => string.hashCode;
 }
 
 // Copied from flutter collections.dart

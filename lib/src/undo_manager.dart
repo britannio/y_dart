@@ -22,7 +22,7 @@ final class YUndoManager implements ffi.Finalizable {
   }
 
   void addOrigin(YOrigin origin) {
-    final originBytes = origin.toBytes();
+    final originBytes = origin.bytes;
     final originPtr = malloc<ffi.Uint8>(originBytes.length);
     originPtr.asTypedList(originBytes.length).setAll(0, originBytes);
     _bindings.yundo_manager_add_origin(
@@ -34,7 +34,7 @@ final class YUndoManager implements ffi.Finalizable {
   }
 
   void removeOrigin(YOrigin origin) {
-    final originBytes = origin.toBytes();
+    final originBytes = origin.bytes;
     final originPtr = malloc<ffi.Uint8>(originBytes.length);
     originPtr.asTypedList(originBytes.length).setAll(0, originBytes);
     _bindings.yundo_manager_remove_origin(
