@@ -7,7 +7,7 @@ sealed class YOrigin {
   factory YOrigin.fromString(String string) => _YOriginString(string);
   factory YOrigin.fromBytes(Uint8List bytes) => _YOriginBytes(bytes);
 
-  static YOrigin? fromFfi(ffi.Pointer<ffi.Char> ptr, int length) {
+  static YOrigin? _fromFfi(ffi.Pointer<ffi.Char> ptr, int length) {
     if (ptr == ffi.nullptr || length <= 0) return null;
     // We make a copy as the origin is valid for the duration of the transaction
     // where it was supplied. Observers callbacks on YDoc other Y types are
@@ -24,15 +24,28 @@ sealed class YOrigin {
 
   @override
   int get hashCode => bytes.hashCode;
+
+  /// Decodes the bytes to a string using UTF-8.
+  String asString() => utf8.decode(bytes);
 }
 
 class _YOriginBytes extends YOrigin {
   _YOriginBytes(super.bytes) : super._();
+
+  @override
+  String toString() {
+    return 'YOrigin(${bytes.toString()})';
+  }
 }
 
 class _YOriginString extends YOrigin {
   _YOriginString(this.string) : super._(utf8.encode(string));
   final String string;
+
+  @override
+  String toString() {
+    return 'YOrigin($string)';
+  }
 }
 
 // Copied from flutter collections.dart

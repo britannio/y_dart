@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_print
 
 import 'dart:developer';
+import 'dart:math' show pow;
+import 'dart:typed_data';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  demo11ReversedSync();
+  demo12IgnoreForeignOrigin();
 }
 
 void demo1() {
@@ -274,4 +276,18 @@ Future<void> demo11ReversedSync() async {
   for (int i = 0; i < 10; i++) {
     d2.sync(d1Diffs.first);
   }
+}
+
+Future<void> demo12IgnoreForeignOrigin() async {
+  final d1 = YDoc();
+  final d1Text = d1.getText('test');
+  d1Text.listen((event) {
+    final changes = event.changes;
+    final origin = event.origin;
+    print('listen: $changes from origin ${origin?.asString()}');
+  });
+
+  final alice = YOrigin.fromString('alice');
+  d1.transaction(() => d1Text.append('hello'), origin: alice);
+  d1Text.append(' world');
 }

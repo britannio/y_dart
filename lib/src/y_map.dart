@@ -106,7 +106,7 @@ final class YMap<T extends Object?> extends YType
     final len = lenPtr.value;
     malloc.free(lenPtr);
     final doc = _YObservable._getCustomData(idPtr) as YDoc;
-    final yOrigin = YOrigin.fromFfi(origin, originLen);
+    final yOrigin = YOrigin._fromFfi(origin, originLen);
     final changes = List.generate(
       len,
       (i) => YMapChange.fromEvent(delta[i], doc),

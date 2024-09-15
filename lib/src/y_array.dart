@@ -133,7 +133,7 @@ final class YArray<T extends Object> extends YType
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
 
-    final yOrigin = YOrigin.fromFfi(origin, originLen);
+    final yOrigin = YOrigin._fromFfi(origin, originLen);
     final changes = List.generate(
       deltaLen,
       (i) => YArrayChange.fromEvent(delta[i], doc),

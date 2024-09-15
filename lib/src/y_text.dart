@@ -105,7 +105,7 @@ final class YText extends YType with _YObservable<YTextChanges> {
     malloc.free(deltaLenPtr);
 
     final changes = List.generate(deltaLen, (i) => _convertDeltaOut(delta[i]));
-    final yOrigin = YOrigin.fromFfi(origin, originLen);
+    final yOrigin = YOrigin._fromFfi(origin, originLen);
     final changesWithOrigin = YTextChanges(changes: changes, origin: yOrigin);
 
     _bindings.ytext_delta_destroy(delta, deltaLen);
