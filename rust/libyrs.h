@@ -1201,6 +1201,8 @@ YSubscription *ydoc_observe_updates_v1(YDoc *doc, void *state, void (*cb)(void*,
 
 YSubscription *ydoc_observe_updates_v2(YDoc *doc, void *state, void (*cb)(void*,
                                                                           uint32_t,
+                                                                          const char*,
+                                                                          uint32_t,
                                                                           const char*));
 
 YSubscription *ydoc_observe_after_transaction(YDoc *doc,
@@ -2316,7 +2318,9 @@ YSubscription *ytext_observe(const Branch *txt, void *state, void (*cb)(void*,
  * `yunobserve` function.
  */
 YSubscription *ymap_observe(const Branch *map, void *state, void (*cb)(void*,
-                                                                       const struct YMapEvent*));
+                                                                       const struct YMapEvent*,
+                                                                       uint32_t,
+                                                                       const char*));
 
 /**
  * Subscribes a given callback function `cb` to changes made by this `YArray` instance. Callbacks
@@ -2326,7 +2330,7 @@ YSubscription *ymap_observe(const Branch *map, void *state, void (*cb)(void*,
  */
 YSubscription *yarray_observe(const Branch *array,
                               void *state,
-                              void (*cb)(void*, const struct YArrayEvent*));
+                              void (*cb)(void*, const struct YArrayEvent*, uint32_t, const char*));
 
 /**
  * Subscribes a given callback function `cb` to changes made by this `YXmlElement` instance.
@@ -2334,9 +2338,10 @@ YSubscription *yarray_observe(const Branch *array,
  * Returns a subscription ID which can be then used to unsubscribe this callback by using
  * `yunobserve` function.
  */
-YSubscription *yxmlelem_observe(const Branch *xml,
-                                void *state,
-                                void (*cb)(void*, const struct YXmlEvent*));
+YSubscription *yxmlelem_observe(const Branch *xml, void *state, void (*cb)(void*,
+                                                                           const struct YXmlEvent*,
+                                                                           uint32_t,
+                                                                           const char*));
 
 /**
  * Subscribes a given callback function `cb` to changes made by this `YXmlText` instance. Callbacks
@@ -2346,7 +2351,7 @@ YSubscription *yxmlelem_observe(const Branch *xml,
  */
 YSubscription *yxmltext_observe(const Branch *xml,
                                 void *state,
-                                void (*cb)(void*, const struct YXmlTextEvent*));
+                                void (*cb)(void*, const struct YXmlTextEvent*, uint32_t, const char*));
 
 /**
  * Subscribes a given callback function `cb` to changes made by this shared type instance as well
@@ -2358,7 +2363,9 @@ YSubscription *yxmltext_observe(const Branch *xml,
  */
 YSubscription *yobserve_deep(Branch *ytype, void *state, void (*cb)(void*,
                                                                     uint32_t,
-                                                                    const struct YEvent*));
+                                                                    const struct YEvent*,
+                                                                    uint32_t,
+                                                                    const char*));
 
 /**
  * Returns a pointer to a shared collection, which triggered passed event `e`.

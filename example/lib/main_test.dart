@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:y_dart/y_dart.dart';
 
 void main() {
-  demo9Map();
+  demo11ReversedSync();
 }
 
 void demo1() {
@@ -145,10 +145,10 @@ Future<void> demo8ArraySubWithYType() async {
   final d = YDoc();
   final arr = d.getArray<YText>('my-array');
   late YText afterListen;
-  arr.listen((changes) {
+  arr.listen((event) {
     print('in callback');
-    print("listen: $changes");
-    for (final change in changes) {
+    print("listen: $event");
+    for (final change in event.changes) {
       switch (change) {
         case YArrayDeleted(length: var length):
           log("deleted: $length");
@@ -177,10 +177,10 @@ Future<void> demo8ArraySubWithYType() async {
 Future<void> demo9Map() async {
   final d = YDoc();
   final map = d.getMap<YText>('my-map');
-  map.listen((changes) {
-    print("listen: $changes");
+  map.listen((event) {
+    print("listen: $event");
 
-    final first = changes.first;
+    final first = event.changes.first;
     if (first is YMapChangeAdded) {
       final txt = first.value as YText;
       txt.append('from listener');
@@ -206,4 +206,72 @@ Future<void> demo9Map() async {
 
   print('after listen');
   print(map.toString());
+}
+
+void demo10DoubleInit() {
+  final d1 = YDoc();
+  final d2 = YDoc();
+
+  d1.getText('test').append('hello');
+  d2.getText('test').append('world');
+
+  d1.sync(d2.diff(d1.state()));
+  d2.sync(d1.diff(d2.state()));
+
+  log(d1.getText('test').toString());
+  log(d2.getText('test').toString());
+}
+
+Future<void> flushMicrotasks() async {
+  await Future.delayed(Duration.zero);
+}
+
+Future<void> demo11ReversedSync() async {
+  final d1 = YDoc();
+  final d2 = YDoc();
+
+  final d1Diffs = <YDiff>[];
+  final d2Diffs = <YDiff>[];
+
+  d1.listen((diff) {
+    d1Diffs.add(diff);
+    print('diff1: ${diff.diff.length}');
+  });
+  d2.listen(d2Diffs.add);
+
+  final d1Text = d1.getText('test');
+  d1Text.append('a');
+  d1Text.append('bc');
+  d1Text.append('def');
+
+  d1Text.listen((changes) {
+    print('listen: $changes');
+  });
+
+  final d2Text = d2.getText('test');
+  d2Text.append('g');
+  d2Text.append('hi');
+  d2Text.append('jkl');
+
+  // d1.sync(d2.diff(d1.state()));
+  // d2.sync(d1.diff(d2.state()));
+
+  await flushMicrotasks();
+
+  d1Diffs.forEach(d2.sync);
+  d2Diffs.forEach(d1.sync);
+
+  // await flushMicrotasks();
+
+  // d1.sync(d2.diff(d1.state()));
+  // d2.sync(d1.diff(d2.state()));
+
+  print(d1Diffs);
+
+  log("d1: ${d1.getText('test')}");
+  log("d2: ${d2.getText('test')}");
+
+  for (int i = 0; i < 10; i++) {
+    d2.sync(d1Diffs.first);
+  }
 }

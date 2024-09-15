@@ -3,10 +3,15 @@ part of 'y_dart.dart';
 typedef NativeMapObserveCallback = NativeYTypeObserveCallback<gen.YMapEvent>;
 
 typedef NativeYTypeObserveCallback<T extends ffi.NativeType> = ffi.Void
-    Function(ffi.Pointer<ffi.Void>, ffi.Pointer<T>);
+    Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<T>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Char>,
+);
 
 final class YMap<T extends Object?> extends YType
-    with _YObservable<List<YMapChange>> {
+    with _YObservable<YMapChanges> {
   YMap._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
 
   final YDoc _doc;
@@ -91,6 +96,8 @@ final class YMap<T extends Object?> extends YType
   static void _observeCallback(
     ffi.Pointer<ffi.Void> idPtr,
     ffi.Pointer<gen.YMapEvent> event,
+    int originLen,
+    ffi.Pointer<ffi.Char> origin,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
 
@@ -99,19 +106,19 @@ final class YMap<T extends Object?> extends YType
     final len = lenPtr.value;
     malloc.free(lenPtr);
     final doc = _YObservable._getCustomData(idPtr) as YDoc;
-
+    final yOrigin = YOrigin.fromFfi(origin, originLen);
     final changes = List.generate(
       len,
       (i) => YMapChange.fromEvent(delta[i], doc),
     );
     _bindings.yevent_keys_destroy(delta, len);
 
-    final streamController = _YObservable._controller<List<YMapChange>>(idPtr);
-    streamController.add(changes);
+    final streamController = _YObservable._controller<YMapChanges>(idPtr);
+    streamController.add(YMapChanges._(changes: changes, origin: yOrigin));
   }
 
-  StreamSubscription<List<YMapChange>> listen(
-    void Function(List<YMapChange>) callback,
+  StreamSubscription<YMapChanges> listen(
+    void Function(YMapChanges) callback,
   ) {
     final callbackPtr =
         ffi.Pointer.fromFunction<NativeMapObserveCallback>(_observeCallback);
@@ -182,6 +189,12 @@ final class _YMapIterator<T extends Object?>
     _current = MapEntry(key, value);
     return true;
   }
+}
+
+class YMapChanges {
+  YMapChanges._({required this.changes, required this.origin});
+  final List<YMapChange> changes;
+  final YOrigin? origin;
 }
 
 sealed class YMapChange {

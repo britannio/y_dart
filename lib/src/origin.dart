@@ -7,6 +7,16 @@ sealed class YOrigin {
   factory YOrigin.fromString(String string) => _YOriginString(string);
   factory YOrigin.fromBytes(Uint8List bytes) => _YOriginBytes(bytes);
 
+  static YOrigin? fromFfi(ffi.Pointer<ffi.Char> ptr, int length) {
+    if (ptr == ffi.nullptr || length <= 0) return null;
+    // We make a copy as the origin is valid for the duration of the transaction
+    // where it was supplied. Observers callbacks on YDoc other Y types are
+    // called after the transaction is complete when the origin is no longer
+    // valid.
+    final bytes = Uint8List.fromList(ptr.cast<ffi.Uint8>().asTypedList(length));
+    return YOrigin.fromBytes(bytes);
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

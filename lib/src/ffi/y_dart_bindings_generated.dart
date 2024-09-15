@@ -2639,8 +2639,8 @@ class YDartBindings {
     ffi.Pointer<ffi.Void> state,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
+                ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                    ffi.Pointer<ffi.Char>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _ydoc_observe_updates_v2(
@@ -2657,7 +2657,11 @@ class YDartBindings {
                   ffi.Pointer<ffi.Void>,
                   ffi.Pointer<
                       ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                          ffi.Void Function(
+                              ffi.Pointer<ffi.Void>,
+                              ffi.Uint32,
+                              ffi.Pointer<ffi.Char>,
+                              ffi.Uint32,
                               ffi.Pointer<ffi.Char>)>>)>>(
       'ydoc_observe_updates_v2');
   late final _ydoc_observe_updates_v2 = _ydoc_observe_updates_v2Ptr.asFunction<
@@ -2666,7 +2670,11 @@ class YDartBindings {
           ffi.Pointer<ffi.Void>,
           ffi.Pointer<
               ffi.NativeFunction<
-                  ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                  ffi.Void Function(
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>,
+                      ffi.Uint32,
                       ffi.Pointer<ffi.Char>)>>)>();
 
   ffi.Pointer<YSubscription> ydoc_observe_after_transaction(
@@ -5501,8 +5509,8 @@ class YDartBindings {
     ffi.Pointer<ffi.Void> state,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>
+                ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>,
+                    ffi.Uint32, ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _ymap_observe(
@@ -5519,8 +5527,11 @@ class YDartBindings {
               ffi.Pointer<ffi.Void>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YMapEvent>)>>)>>('ymap_observe');
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Void>,
+                          ffi.Pointer<YMapEvent>,
+                          ffi.Uint32,
+                          ffi.Pointer<ffi.Char>)>>)>>('ymap_observe');
   late final _ymap_observe = _ymap_observePtr.asFunction<
       ffi.Pointer<YSubscription> Function(
           ffi.Pointer<Branch>,
@@ -5528,7 +5539,10 @@ class YDartBindings {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YMapEvent>)>>)>();
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Pointer<YMapEvent>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>)>>)>();
 
   /// Subscribes a given callback function `cb` to changes made by this `YArray` instance. Callbacks
   /// are triggered whenever a `ytransaction_commit` is called.
@@ -5540,7 +5554,10 @@ class YDartBindings {
     ffi.Pointer<
             ffi.NativeFunction<
                 ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<YArrayEvent>,
+                    ffi.Uint32,
+                    ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _yarray_observe(
@@ -5557,8 +5574,11 @@ class YDartBindings {
               ffi.Pointer<ffi.Void>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YArrayEvent>)>>)>>('yarray_observe');
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Void>,
+                          ffi.Pointer<YArrayEvent>,
+                          ffi.Uint32,
+                          ffi.Pointer<ffi.Char>)>>)>>('yarray_observe');
   late final _yarray_observe = _yarray_observePtr.asFunction<
       ffi.Pointer<YSubscription> Function(
           ffi.Pointer<Branch>,
@@ -5566,7 +5586,10 @@ class YDartBindings {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YArrayEvent>)>>)>();
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Pointer<YArrayEvent>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>)>>)>();
 
   /// Subscribes a given callback function `cb` to changes made by this `YXmlElement` instance.
   /// Callbacks are triggered whenever a `ytransaction_commit` is called.
@@ -5577,8 +5600,8 @@ class YDartBindings {
     ffi.Pointer<ffi.Void> state,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>
+                ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>,
+                    ffi.Uint32, ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _yxmlelem_observe(
@@ -5595,8 +5618,11 @@ class YDartBindings {
               ffi.Pointer<ffi.Void>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YXmlEvent>)>>)>>('yxmlelem_observe');
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Void>,
+                          ffi.Pointer<YXmlEvent>,
+                          ffi.Uint32,
+                          ffi.Pointer<ffi.Char>)>>)>>('yxmlelem_observe');
   late final _yxmlelem_observe = _yxmlelem_observePtr.asFunction<
       ffi.Pointer<YSubscription> Function(
           ffi.Pointer<Branch>,
@@ -5604,7 +5630,10 @@ class YDartBindings {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlEvent>)>>)>();
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Pointer<YXmlEvent>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>)>>)>();
 
   /// Subscribes a given callback function `cb` to changes made by this `YXmlText` instance. Callbacks
   /// are triggered whenever a `ytransaction_commit` is called.
@@ -5616,7 +5645,10 @@ class YDartBindings {
     ffi.Pointer<
             ffi.NativeFunction<
                 ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>
+                    ffi.Pointer<ffi.Void>,
+                    ffi.Pointer<YXmlTextEvent>,
+                    ffi.Uint32,
+                    ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _yxmltext_observe(
@@ -5633,8 +5665,11 @@ class YDartBindings {
               ffi.Pointer<ffi.Void>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>,
-                          ffi.Pointer<YXmlTextEvent>)>>)>>('yxmltext_observe');
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Void>,
+                          ffi.Pointer<YXmlTextEvent>,
+                          ffi.Uint32,
+                          ffi.Pointer<ffi.Char>)>>)>>('yxmltext_observe');
   late final _yxmltext_observe = _yxmltext_observePtr.asFunction<
       ffi.Pointer<YSubscription> Function(
           ffi.Pointer<Branch>,
@@ -5642,7 +5677,10 @@ class YDartBindings {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Void>, ffi.Pointer<YXmlTextEvent>)>>)>();
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Pointer<YXmlTextEvent>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>)>>)>();
 
   /// Subscribes a given callback function `cb` to changes made by this shared type instance as well
   /// as all nested shared types living within it. Callbacks are triggered whenever a
@@ -5655,8 +5693,8 @@ class YDartBindings {
     ffi.Pointer<ffi.Void> state,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(
-                    ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.Pointer<YEvent>)>>
+                ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
+                    ffi.Pointer<YEvent>, ffi.Uint32, ffi.Pointer<ffi.Char>)>>
         cb,
   ) {
     return _yobserve_deep(
@@ -5673,16 +5711,24 @@ class YDartBindings {
               ffi.Pointer<ffi.Void>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                          ffi.Pointer<YEvent>)>>)>>('yobserve_deep');
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Void>,
+                          ffi.Uint32,
+                          ffi.Pointer<YEvent>,
+                          ffi.Uint32,
+                          ffi.Pointer<ffi.Char>)>>)>>('yobserve_deep');
   late final _yobserve_deep = _yobserve_deepPtr.asFunction<
       ffi.Pointer<YSubscription> Function(
           ffi.Pointer<Branch>,
           ffi.Pointer<ffi.Void>,
           ffi.Pointer<
               ffi.NativeFunction<
-                  ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Uint32,
-                      ffi.Pointer<YEvent>)>>)>();
+                  ffi.Void Function(
+                      ffi.Pointer<ffi.Void>,
+                      ffi.Uint32,
+                      ffi.Pointer<YEvent>,
+                      ffi.Uint32,
+                      ffi.Pointer<ffi.Char>)>>)>();
 
   /// Returns a pointer to a shared collection, which triggered passed event `e`.
   ffi.Pointer<Branch> ytext_event_target(

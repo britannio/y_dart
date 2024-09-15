@@ -170,11 +170,7 @@ class YDoc with _YObservable<YDiff> implements ffi.Finalizable {
     // don't use _bindings.ybinary_destroy as we don't own the pointer
     final buffer = data.cast<ffi.Uint8>().asTypedList(dataLen);
     final bufferCopy = Uint8List.fromList(buffer);
-    YOrigin? yOrigin;
-    if (originLen > 0) {
-      final originBytes = origin.cast<ffi.Uint8>().asTypedList(originLen);
-      yOrigin = YOrigin.fromBytes(Uint8List.fromList(originBytes));
-    }
+    final yOrigin = YOrigin.fromFfi(origin, originLen);
     streamController.add(YDiff(bufferCopy, origin: yOrigin));
   }
 

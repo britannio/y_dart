@@ -1,10 +1,10 @@
 part of 'y_dart.dart';
 
-typedef NativeArrayObserveCallback = ffi.Void Function(
-    ffi.Pointer<ffi.Void>, ffi.Pointer<gen.YArrayEvent>);
+typedef NativeArrayObserveCallback = ffi.Void Function(ffi.Pointer<ffi.Void>,
+    ffi.Pointer<gen.YArrayEvent>, ffi.Uint32, ffi.Pointer<ffi.Char>);
 
 final class YArray<T extends Object> extends YType
-    with _YObservable<List<YArrayChange>> {
+    with _YObservable<YArrayChanges> {
   YArray._(this._doc, ffi.Pointer<gen.Branch> branch) : super._(branch);
   final YDoc _doc;
 
@@ -123,6 +123,8 @@ final class YArray<T extends Object> extends YType
   static void _observeCallback(
     ffi.Pointer<ffi.Void> idPtr,
     ffi.Pointer<gen.YArrayEvent> event,
+    int originLen,
+    ffi.Pointer<ffi.Char> origin,
   ) {
     if (!_YObservable._shouldEmit(idPtr)) return;
     final doc = _YObservable._getCustomData(idPtr) as YDoc;
@@ -131,20 +133,19 @@ final class YArray<T extends Object> extends YType
     final deltaLen = deltaLenPtr.value;
     malloc.free(deltaLenPtr);
 
+    final yOrigin = YOrigin.fromFfi(origin, originLen);
     final changes = List.generate(
       deltaLen,
       (i) => YArrayChange.fromEvent(delta[i], doc),
     );
     _bindings.yevent_delta_destroy(delta, deltaLen);
 
-    final streamController =
-        _YObservable._controller<List<YArrayChange>>(idPtr);
-
-    streamController.add(changes);
+    final streamController = _YObservable._controller<YArrayChanges>(idPtr);
+    streamController.add(YArrayChanges._(changes: changes, origin: yOrigin));
   }
 
-  StreamSubscription<List<YArrayChange>> listen(
-    void Function(List<YArrayChange>) callback,
+  StreamSubscription<YArrayChanges> listen(
+    void Function(YArrayChanges) callback,
   ) {
     final callbackPtr = ffi.Pointer.fromFunction<NativeArrayObserveCallback>(
       _observeCallback,
@@ -205,6 +206,12 @@ final class YArrayIterator<T extends Object> implements Iterator<T?> {
     _index++;
     return _index < _array.length;
   }
+}
+
+class YArrayChanges {
+  const YArrayChanges._({required this.changes, required this.origin});
+  final List<YArrayChange> changes;
+  final YOrigin? origin;
 }
 
 sealed class YArrayChange {
